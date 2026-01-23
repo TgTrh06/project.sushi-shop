@@ -36,3 +36,15 @@ export const getProductsByCategory = async (
     res.status(500).json({ message: "Internal server error." });
   }
 };
+
+export const editProduct = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const product = await service.editProduct(req.params.id, req.body);
+    res.status(200).json({ message: "Product edited successfully.", product });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+};

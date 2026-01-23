@@ -15,3 +15,10 @@ export const getProductsByCategory = async (
 ): Promise<IProduct[]> => {
   return await ProductModel.find({ category: categoryId }).populate("category");
 };
+
+export const editProduct = async (
+  productId: any,
+  data: Partial<IProduct>,
+): Promise<IProduct | null> => {
+  return await ProductModel.findByIdAndUpdate(productId, data, { new: true });
+};
