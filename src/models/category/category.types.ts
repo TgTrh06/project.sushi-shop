@@ -1,18 +1,15 @@
-export interface Category {
+// Interface for Category entity
+export interface ICategory {
   id: string;
   name: string;
   description?: string;
   createdAt: Date;
 }
 
-export interface CreateCategoryDTO {
-  name: string;
-  description?: string;
-} 
+// DTOs for creating and updating categories
+export interface CreateCategoryDTO extends Pick<ICategory, "name" | "description"> {}
 
-export interface UpdateCategoryDTO {
-  name?: string;
-  description?: string;
-}
+export interface UpdateCategoryDTO extends Partial<CreateCategoryDTO> {}
 
-export interface CategoryDocument extends Omit<Category, "id"> {}
+// Only use CategoryDocument for Mongoose schema definition and database operations
+export interface CategoryDocument extends Omit<ICategory, "id"> {}
