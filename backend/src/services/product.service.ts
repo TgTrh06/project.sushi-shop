@@ -1,4 +1,4 @@
-import { ProductModel, IProduct } from "../models/product.model";
+import { ProductModel, IProduct } from "../models/product/product.model";
 
 export const createProduct = async (
   data: Partial<IProduct>,
