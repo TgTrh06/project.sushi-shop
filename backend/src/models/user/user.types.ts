@@ -1,5 +1,5 @@
 // Business Entity
-export interface User extends Document {
+export interface UserEntity {
   id: string;
   username: string;
   email: string;
@@ -10,13 +10,13 @@ export interface User extends Document {
 
 // DTOs
 export interface CreateUserDTO extends Pick<
-  User,
+  UserEntity,
   "username" | "email" | "password"
 > {}
 
 export interface UpdateUserDTO extends Partial<CreateUserDTO> {
-  role?: User["role"];
+  role?: UserEntity["role"];
 }
 
 // Database shape (Mongoose Document)
-export interface UserDocument extends Omit<User, "id"> {}
+export interface UserDocument extends Omit<UserEntity, "id"> {}
