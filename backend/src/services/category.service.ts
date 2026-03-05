@@ -1,12 +1,12 @@
 import { CategoryModel } from "../models/category/category.model";
-import { Category } from "../models/category/category.types";
+import { CategoryEntity } from "../models/category/category.types";
 
 export const createCategory = async (
-  data: Partial<Category>,
-): Promise<Category> => {
+  data: Partial<CategoryEntity>,
+): Promise<CategoryEntity> => {
   return await CategoryModel.create(data);
 };
 
-export const getAllCategories = async (): Promise<Category[]> => {
+export const getAllCategories = async (): Promise<CategoryEntity[]> => {
   return await CategoryModel.find();
 };

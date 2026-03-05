@@ -1,5 +1,5 @@
 // Business Entity
-export interface Category {
+export interface CategoryEntity {
   id: string;
   name: string;
   description?: string;
@@ -7,9 +7,9 @@ export interface Category {
 }
 
 // DTOs
-export interface CreateCategoryDTO extends Pick<Category, "name" | "description"> {}
+export interface CreateCategoryDTO extends Pick<CategoryEntity, "name" | "description"> {}
 
 export interface UpdateCategoryDTO extends Partial<CreateCategoryDTO> {}
 
 // Database shape - Only use for Mongoose schema definition and database operations
-export interface CategoryDocument extends Omit<Category, "id"> {}
+export interface CategoryDocument extends Omit<CategoryEntity, "id"> {}

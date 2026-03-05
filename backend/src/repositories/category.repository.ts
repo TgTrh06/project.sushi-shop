@@ -1,13 +1,13 @@
 import { BaseRepository } from "./base.repository";
 import { CategoryModel } from "../models/category/category.model";
 import { 
-  Category,
+  CategoryEntity,
   CreateCategoryDTO,
   UpdateCategoryDTO
 } from "../models/category/category.types";
 
 export class CategoryRepository extends BaseRepository<
-  Category,
+  CategoryEntity,
   CreateCategoryDTO,
   UpdateCategoryDTO
 > {
@@ -15,7 +15,7 @@ export class CategoryRepository extends BaseRepository<
     super(CategoryModel);
   }
 
-  protected mapToEntity(doc: any): Category {
+  protected mapToEntity(doc: any): CategoryEntity {
     return {
       id: doc._id.toString(),
       name: doc.name,
