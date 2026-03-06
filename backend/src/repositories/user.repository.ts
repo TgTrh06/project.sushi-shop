@@ -26,8 +26,4 @@ export class UserRepository extends BaseRepository<
     const doc = await this.model.findOne({ email }).lean();
     return doc ? this.mapToEntity(doc) : null;
   }
-
-  async findRawByEmail(email: string): Promise<any> {
-    return await this.model.findOne({ email }).lean();
-  }
 }

@@ -9,12 +9,17 @@ export interface UserEntity {
 }
 
 // DTOs
-export interface CreateUserDTO extends Pick<
+export interface LoginDTO extends Pick<
+  UserEntity,
+  "email" | "password"
+> {}
+
+export interface RegisterUserDTO extends Pick<
   UserEntity,
   "username" | "email" | "password"
 > {}
 
-export interface UpdateUserDTO extends Partial<CreateUserDTO> {
+export interface UpdateUserDTO extends Partial<RegisterUserDTO> {
   role?: UserEntity["role"];
 }
 

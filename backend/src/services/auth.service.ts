@@ -1,13 +1,13 @@
 import { BadRequestError, ConflictError, UnauthorizedError } from "../common/errors";
-import { UserEntity, CreateUserDTO } from "../models/user/user.types";
+import { UserEntity, RegisterUserDTO, LoginDTO } from "../models/user/user.types";
 import { UserRepository } from "../repositories/user.repository";
 import { hashPassword, comparePassword } from "../utils/bcrypt";
 import { generateToken } from "../utils/jwt";
 
 export class AuthService {
   private repo = new UserRepository();
-  
-  async register(dto: CreateUserDTO): Promise<UserEntity> {
+
+  async register(dto: RegisterUserDTO): Promise<UserEntity> {
     if (!dto.username || !dto.email || !dto.password) {
       throw new BadRequestError("Missing required fields");
     }
@@ -27,14 +27,14 @@ export class AuthService {
     return newUser;
   }
 
-  async login(email: string, password: string) {
-    const user = await this.repo.findByEmail(email);
+  async login(dto: LoginDTO) {
+    const user = await this.repo.findByEmail(dto.email);
     
     if (!user) {
       throw new UnauthorizedError("Invalid email or password");
     }
 
-    const valid = await comparePassword(password, user.password);
+    const valid = await comparePassword(dto.password, user.password);
 
     if (!valid) {
       throw new UnauthorizedError("Invalid email or password");
