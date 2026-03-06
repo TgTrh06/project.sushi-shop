@@ -1,13 +1,10 @@
 import { UserRepository } from "../repositories/user.repository";
-import bcrypt from "bcrypt";
 import {
   UserEntity,
-  CreateUserDTO,
   UpdateUserDTO,
 } from "../models/user/user.types";
 import {
   BadRequestError,
-  ConflictError,
   NotFoundError,
 } from "../common/errors";
 
@@ -27,28 +24,6 @@ export class UserService {
 
     return user;
   }
-
-  async register(dto: CreateUserDTO): Promise<UserEntity> {
-    if (!dto.username || !dto.email || !dto.password) {
-      throw new BadRequestError("Missing required fields");
-    }
-
-    const existingUser = await this.repo.findByEmail(dto.email);
-    if (existingUser) {
-      throw new ConflictError("Email already exists");
-    }
-
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
-
-    const newUser = await this.repo.create({
-      ...dto,
-      password: hashedPassword,
-    });
-
-    return newUser;
-  }
-
-  async login() {}
 
   async updateUser(id: string, dto: UpdateUserDTO): Promise<UserEntity> {
     const existingUser = await this.repo.findById(id);
