@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 // Business Entity
-export interface Product {
+export interface ProductEntity {
   id: string;
   name: string;
   description?: string;
@@ -14,9 +14,9 @@ export interface Product {
 }
 
 // Types for DTOs
-type RequiredFields = Pick<Product, "name" | "price" | "category"> ;
+type RequiredFields = Pick<ProductEntity, "name" | "price" | "category"> ;
 
-type OptionalFields = Partial<Omit<Product, keyof RequiredFields>>;
+type OptionalFields = Partial<Omit<ProductEntity, keyof RequiredFields>>;
 
 // DTOs
 export interface CreateProductDTO extends RequiredFields, OptionalFields {}
@@ -24,4 +24,4 @@ export interface CreateProductDTO extends RequiredFields, OptionalFields {}
 export interface UpdateProductDTO extends Partial<CreateProductDTO> {}
 
 // Database shape (Mongoose Document)
-export interface ProductDocument extends Omit<Product, "id"> {}
+export interface ProductDocument extends Omit<ProductEntity, "id"> {}
