@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from "mongoose";
 
-export interface IOrder extends Document {
+export interface IOrder {
   userId?: Types.ObjectId;
   guestInfo?: {
     name: string;
@@ -9,7 +9,14 @@ export interface IOrder extends Document {
   };
   note?: string;
   totalPrice: number;
-  status: "pending" | "confirmed" | "preparing" | "delivering" | "delivered" | "canceled";
+  orderType: "DINE_IN" | "TAKEAWAY" | "DELIVERY";
+  status:
+    | "PENDING"
+    | "CONFIRMED"
+    | "PREPARING"
+    | "DELIVERING"
+    | "DELIVERED"
+    | "CANCELED";
   items: {
     productId: Types.ObjectId;
     name: string;
