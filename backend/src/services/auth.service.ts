@@ -1,4 +1,4 @@
-import { BadRequestError, ConflictError, UnauthorizedError } from "../common/errors";
+import { BadRequestError, ConflictError, UnauthorizedError } from "../utils/common/errors";
 import { UserEntity, RegisterUserDTO, LoginDTO } from "../models/user/user.types";
 import { UserRepository } from "../repositories/user.repository";
 import { hashPassword, comparePassword } from "../utils/bcrypt";

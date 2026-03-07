@@ -1,10 +1,10 @@
 import { BaseRepository } from "./base.repository";
 import { UserModel } from "../models/user/user.model";
-import { UserEntity, CreateUserDTO, UpdateUserDTO } from "../models/user/user.types";
+  import { UserEntity, RegisterUserDTO, UpdateUserDTO } from "../models/user/user.types";
 
 export class UserRepository extends BaseRepository<
   UserEntity,
-  CreateUserDTO,
+  RegisterUserDTO,
   UpdateUserDTO
 > {
   constructor() {
