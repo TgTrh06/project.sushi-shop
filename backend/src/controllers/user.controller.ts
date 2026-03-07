@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../services/user.service";
-import { successHandler } from "../common/response";
+import { successHandler } from "../utils/common/response";
 
 const userService = new UserService();
 

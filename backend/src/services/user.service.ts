@@ -6,7 +6,7 @@ import {
 import {
   BadRequestError,
   NotFoundError,
-} from "../common/errors";
+} from "../utils/common/errors";
 
 export class UserService {
   private repo = new UserRepository();
