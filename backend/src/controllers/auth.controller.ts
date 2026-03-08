@@ -24,4 +24,8 @@ export class AuthController {
       next(error);
     }
   }
+
+  static async logout(req: Request, res: Response, next: NextFunction) {
+    
+  }
 }
