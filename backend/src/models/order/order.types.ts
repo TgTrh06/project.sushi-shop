@@ -1,5 +1,15 @@
 import { Types } from "mongoose";
 
+// Types for Order
+export type OrderType = "DINE_IN" | "TAKEAWAY" | "DELIVERY";
+export type OrderStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "PREPARING"
+  | "DELIVERING"
+  | "DELIVERED"
+  | "CANCELED";
+
 // Business Entity
 export interface OrderEntity {
   userId?: Types.ObjectId;
@@ -10,14 +20,8 @@ export interface OrderEntity {
   };
   note?: string;
   totalPrice: number;
-  orderType: "DINE_IN" | "TAKEAWAY" | "DELIVERY";
-  status:
-    | "PENDING"
-    | "CONFIRMED"
-    | "PREPARING"
-    | "DELIVERING"
-    | "DELIVERED"
-    | "CANCELED";
+  orderType: OrderType;
+  status: OrderStatus;
   items: {
     productId: Types.ObjectId;
     name: string;
