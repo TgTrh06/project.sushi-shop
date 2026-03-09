@@ -18,6 +18,7 @@ export enum OrderStatus {
 
 // Business Entity
 export interface OrderEntity {
+  id: string;
   userId?: Types.ObjectId;
   guestInfo?: {
     name: string;
