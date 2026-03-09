@@ -1,14 +1,20 @@
 import { Types } from "mongoose";
 
 // Types for Order
-export type OrderType = "DINE_IN" | "TAKEAWAY" | "DELIVERY";
-export type OrderStatus =
-  | "PENDING"
-  | "CONFIRMED"
-  | "PREPARING"
-  | "DELIVERING"
-  | "DELIVERED"
-  | "CANCELED";
+export enum OrderType {
+  DINE_IN = "DINE_IN",
+  TAKEAWAY = "TAKEAWAY",
+  DELIVERY = "DELIVERY"
+}
+
+export enum OrderStatus {
+  PENDING = "PENDING",
+  CONFIRMED = "CONFIRMED",
+  PREPARING = "PREPARING",
+  DELIVERING = "DELIVERING",
+  DELIVERED = "DELIVERED",
+  CANCELED = "CANCELED"
+}
 
 // Business Entity
 export interface OrderEntity {
