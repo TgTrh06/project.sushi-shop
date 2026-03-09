@@ -26,3 +26,19 @@ export interface OrderEntity {
   }[];
   createdAt: Date;
 }
+
+// Types for DTOs
+type RequiredFields = Pick<
+  OrderEntity,
+  "totalPrice" | "orderType" | "status" | "items"
+>;
+
+type OptionalFields = Partial<Omit<OrderEntity, keyof RequiredFields>>;
+
+// DTOs
+export interface CreateOrderDTO extends RequiredFields, OptionalFields {}
+
+export interface UpdateOrderDTO extends Partial<CreateOrderDTO> {}
+
+// Database shape (Mongoose Document)
+export interface OrderDocument extends Omit<OrderEntity, "id"> {}
