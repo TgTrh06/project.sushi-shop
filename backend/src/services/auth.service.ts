@@ -11,8 +11,8 @@ export class AuthService {
     if (!dto.username || !dto.email || !dto.password) {
       throw new BadRequestError("Missing required fields");
     }
-    const exist = await this.repo.findByEmail(dto.email);
-  
+    
+    const exist = await this.repo.findByEmail(dto.email);  
     if (exist) {
       throw new ConflictError("Email already exists");
     }
@@ -27,19 +27,27 @@ export class AuthService {
     return newUser;
   }
 
+  async getUserById(id: string): Promise<UserEntity> {
+    const user = await this.repo.findById(id);
+    if (!user) {
+      throw new BadRequestError("User not found");
+    }
+    return user;
+  }
+
   async login(dto: LoginDTO) {
     const user = await this.repo.findByEmail(dto.email);
-    
     if (!user) {
       throw new UnauthorizedError("Invalid email or password");
     }
 
-    const valid = await comparePassword(dto.password, user.password);
-
-    if (!valid) {
+    const isMatch = await comparePassword(dto.password, user.password);
+    if (!isMatch) {
       throw new UnauthorizedError("Invalid email or password");
     }
+    
+    const token = generateToken(user);
 
-    return generateToken(user);
+    return token;
   }
 }
