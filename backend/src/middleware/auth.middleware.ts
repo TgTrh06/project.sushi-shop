@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
-import { UnauthorizedError } from "../utils/common/errors";
+import { ForbiddenError, UnauthorizedError } from "../utils/common/errors";
 
 interface JwtPayload {
   id: string;
@@ -10,23 +10,28 @@ interface JwtPayload {
 }
 
 const service = new AuthService();
-  
+
 export const verifyToken = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  _res: Response,
+  next: NextFunction,
 ) => {
   try {
-    const token = req.cookies?.token || req.headers?.authorization?.split(" ")[1];
+    const token =
+      req.cookies?.token || req.headers?.authorization?.split(" ")[1];
     if (!token) {
-      return next(new UnauthorizedError("Session expired or not found. Please log in again."));
+      return next(
+        new UnauthorizedError(
+          "Session expired or not found. Please log in again.",
+        ),
+      );
     }
-    
+
     const decoded = jwt.verify(token, env.JWT_SECRET as string) as JwtPayload;
     if (!decoded) {
       return next(new UnauthorizedError("Invalid token"));
     }
-    
+
     const user = await service.getUserById(decoded.id);
     if (!user) {
       return next(new UnauthorizedError("User not found"));
@@ -39,9 +44,13 @@ export const verifyToken = async (
   }
 };
 
-export const verifyAdmin = (req: Request, res: Response, next: NextFunction) => {
-  if (req.user?.role !== "admin") {
-    return res.status(403).json({ message: "Forbidden: Admins only" });
+export const verifyAdmin = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
+  if (!req.user || req.user.role !== "admin") {
+    return next(new ForbiddenError("Forbiden: Admin only"));
   }
   next();
-}
+};

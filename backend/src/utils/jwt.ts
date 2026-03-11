@@ -2,22 +2,24 @@ import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import { UserEntity } from "../models/user/user.types";
 import { Response } from "express";
 import { env } from "../config/env";
+import { COOKIE_OPTIONS, TOKEN_NAME } from "../config/cookie.config";
 
-export const generateToken = (user: UserEntity): string => {
-  const payload = { user };
-  const secret: Secret = env.JWT_SECRET as string;
-  const options: SignOptions = {
-    expiresIn: env.JWT_EXPIRES_IN as any,
+export default class JwtUtils {
+  static generateToken = (user: UserEntity): string => {
+    const payload = { id: user.id, role: user.role };
+    const secret: Secret = env.JWT_SECRET as string;
+    const options: SignOptions = {
+      expiresIn: env.JWT_EXPIRES_IN as any,
+    }
+
+    return jwt.sign(payload, secret, options);
+  };
+
+  static setCookies = (res: Response, token: string): void => {
+    res.cookie(TOKEN_NAME, token, COOKIE_OPTIONS); 
+  };
+
+  static clearCookies = (res: Response): void => {
+    res.clearCookie(TOKEN_NAME, { ...COOKIE_OPTIONS, maxAge: undefined });
   }
-
-  return jwt.sign(payload, secret, options);
-};
-
-export const setCookies = (res: Response, token: string): void => {
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  });
-};
+}
