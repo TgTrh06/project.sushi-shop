@@ -3,7 +3,7 @@ export interface UserEntity {
   id: string;
   username: string;
   email: string;
-  password: string;
+  password?: string;
   role: "customer" | "admin";
   createdAt: Date;
 }
