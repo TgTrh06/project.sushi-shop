@@ -11,10 +11,9 @@ import {
 export class UserService {
   private repo = new UserRepository();
 
-  async getAllUsers(): Promise<UserEntity[]> {
-    return await this.repo.findAll();
-  }
-
+  /* 
+    CUSTOMER SERVICE
+  */ 
   async getUserById(id: string): Promise<UserEntity | null> {
     const user = await this.repo.findById(id);
 
@@ -50,5 +49,12 @@ export class UserService {
     }
 
     await this.repo.delete(id);
+  }
+
+  /*
+    ADMIN SERVICES
+  */
+  async getAllUsers(): Promise<UserEntity[]> {
+    return await this.repo.findAll();
   }
 }
