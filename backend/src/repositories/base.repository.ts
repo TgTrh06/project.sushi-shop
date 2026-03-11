@@ -31,7 +31,8 @@ export abstract class BaseRepository<
     return doc ? this.mapToEntity(doc) : null;
   }
 
-  async delete(id: string): Promise<void> {
-    await this.model.findByIdAndDelete(id);
+  async delete(id: string): Promise<boolean> {
+    const result = await this.model.findByIdAndDelete(id);
+    return !!result; // Ensure to return a simple true of false
   }
 }
