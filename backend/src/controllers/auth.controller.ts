@@ -2,7 +2,7 @@ import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "../utils/response.utils";
 import { LoginDTO, RegisterUserDTO } from "../models/user/user.types";
-import { setCookies } from "../utils/jwt";
+import JwtUtils from "../utils/jwt";
 
 const authService = new AuthService();
 
@@ -27,7 +27,7 @@ export class AuthController {
   ) {
     try {
       const token = await authService.login(req.body);
-      setCookies(res, token);
+      JwtUtils.setCookies(res, token);
       return ResponseHandler.success(res, { token }, "Login successful");
     } catch (error) {
       next(error);
@@ -36,7 +36,7 @@ export class AuthController {
 
   static async logout(_req: Request, res: Response, next: NextFunction) {
     try {
-      res.clearCookie("token");
+      JwtUtils.clearCookies(res);
       return ResponseHandler.success(res, null, "Logout successful");
     } catch (error) {
       next(error);

@@ -2,7 +2,7 @@ import { BadRequestError, ConflictError, UnauthorizedError } from "../utils/comm
 import { UserEntity, RegisterUserDTO, LoginDTO } from "../models/user/user.types";
 import { UserRepository } from "../repositories/user.repository";
 import { hashPassword, comparePassword } from "../utils/bcrypt";
-import { generateToken } from "../utils/jwt";
+import JwtUtils from "../utils/jwt";
 
 export class AuthService {
   private repo = new UserRepository();
@@ -46,7 +46,7 @@ export class AuthService {
       throw new UnauthorizedError("Invalid email or password");
     }
     
-    const token = generateToken(user);
+    const token = JwtUtils.generateToken(user);
 
     return token;
   }

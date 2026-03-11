@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../services/user.service";
-import { successHandler } from "../utils/common/response";
+import { ResponseHandler } from "../utils/response.utils";
 
 const userService = new UserService();
 
@@ -8,7 +8,7 @@ export class UserController {
   static async getAllUsers(_req: Request, res: Response, next: NextFunction) {
     try {
       const users = await userService.getAllUsers();
-      return res.status(200).json(successHandler(200, "Users retrieved successfully.", users));
+      return ResponseHandler.success(res, users, "Users retrieved successfully.")
     } catch (error) {
       next(error);
     }
@@ -17,7 +17,7 @@ export class UserController {
   static async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await userService.getUserById(String(req.params.id));
-      return res.status(200).json(successHandler(200, "User retrieved successfully.", user));
+      return ResponseHandler.success(res, user, "User retrieved successfully.")
     } catch (error) {
       next(error);
     }
@@ -29,7 +29,7 @@ export class UserController {
         String(req.params.id),
         req.body,
       );
-      return res.status(200).json(successHandler(200, "User updated successfully.", user));
+      return ResponseHandler.success(res, user, "User updated successfully.")
     } catch (error) {
       next(error);
     }
@@ -38,7 +38,7 @@ export class UserController {
   static async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {
       await userService.deleteUser(String(req.params.id));
-      return res.status(200).json(successHandler(200, "User deleted successfully."));
+      return ResponseHandler.success(res, "User deleted successfully.")
     } catch (error) {
       next(error);
     }

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import Auth from "./auth.routes";
 import UserRoute from "./user.routes";
 import CategoryRoute from "./category.routes";
 
@@ -10,7 +11,8 @@ router.get("/", (req, res) => {
 });
 
 // API routes
-router.use("/api/categories", CategoryRoute);
+router.use("/api/auth", Auth);
 router.use("/api/users", UserRoute);
+router.use("/api/categories", CategoryRoute);
 
 export default router;
