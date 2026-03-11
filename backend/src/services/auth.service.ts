@@ -1,5 +1,5 @@
 import { BadRequestError, ConflictError, UnauthorizedError } from "../utils/common/errors";
-import { UserEntity, RegisterUserDTO, LoginDTO } from "../models/user/user.types";
+import { UserEntity, RegisterUserDTO, LoginUserDTO } from "../models/user/user.types";
 import { UserRepository } from "../repositories/user.repository";
 import { hashPassword, comparePassword } from "../utils/bcrypt";
 import JwtUtils from "../utils/jwt";
@@ -12,7 +12,7 @@ export class AuthService {
       throw new BadRequestError("Missing required fields");
     }
     
-    const exist = await this.repo.findByEmail(dto.email);  
+    const exist = await this.repo.findByEmailForAuth(dto.email);  
     if (exist) {
       throw new ConflictError("Email already exists");
     }
@@ -27,16 +27,8 @@ export class AuthService {
     return newUser;
   }
 
-  async getUserById(id: string): Promise<UserEntity> {
-    const user = await this.repo.findById(id);
-    if (!user) {
-      throw new BadRequestError("User not found");
-    }
-    return user;
-  }
-
-  async login(dto: LoginDTO) {
-    const user = await this.repo.findByEmail(dto.email);
+  async login(dto: LoginUserDTO) {
+    const user = await this.repo.findByEmailForAuth(dto.email);
     if (!user) {
       throw new UnauthorizedError("Invalid email or password");
     }

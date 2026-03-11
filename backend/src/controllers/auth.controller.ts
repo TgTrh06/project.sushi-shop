@@ -1,7 +1,7 @@
 import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "../utils/response.utils";
-import { LoginDTO, RegisterUserDTO } from "../models/user/user.types";
+import { LoginUserDTO, RegisterUserDTO } from "../models/user/user.types";
 import JwtUtils from "../utils/jwt";
 
 const authService = new AuthService();
@@ -21,7 +21,7 @@ export class AuthController {
   }
 
   static async login(
-    req: Request<{}, {}, LoginDTO>,
+    req: Request<{}, {}, LoginUserDTO>,
     res: Response,
     next: NextFunction,
   ) {
