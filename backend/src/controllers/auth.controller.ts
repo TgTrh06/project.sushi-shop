@@ -1,12 +1,17 @@
 import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "../utils/response.utils";
-import { LoginDTO } from "../models/user/user.types";
+import { LoginDTO, RegisterUserDTO } from "../models/user/user.types";
+import { setCookies } from "../utils/jwt";
 
 const authService = new AuthService();
 
 export class AuthController {
-  static async register(req: Request, res: Response, next: NextFunction) {
+  static async register(
+    req: Request<{}, {}, RegisterUserDTO>,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
       const user = await authService.register(req.body);
       return ResponseHandler.created(res, user, "User registered successfully.");
@@ -15,17 +20,26 @@ export class AuthController {
     }
   }
 
-  static async login(req: Request, res: Response, next: NextFunction) {
+  static async login(
+    req: Request<{}, {}, LoginDTO>,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
-      const loginDto: LoginDTO = req.body;
-      const token = await authService.login(loginDto);
+      const token = await authService.login(req.body);
+      setCookies(res, token);
       return ResponseHandler.success(res, { token }, "Login successful");
     } catch (error) {
       next(error);
     }
   }
 
-  static async logout(req: Request, res: Response, next: NextFunction) {
-    
+  static async logout(_req: Request, res: Response, next: NextFunction) {
+    try {
+      res.clearCookie("token");
+      return ResponseHandler.success(res, null, "Logout successful");
+    } catch (error) {
+      next(error);
+    }
   }
 }
