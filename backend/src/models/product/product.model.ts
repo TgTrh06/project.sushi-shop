@@ -6,7 +6,7 @@ const ProductSchema = new Schema<ProductDocument>({
   description: { type: String },
   price: { type: Number, required: true },
   imageUrl: { type: String },
-  category: { type: Types.ObjectId, ref: "Category", required: true },
+  categoryId: { type: Types.ObjectId, ref: "Category", required: true },
   isAvailable: { type: Boolean, default: true },
   stockQuantity: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
