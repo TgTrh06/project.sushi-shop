@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { OrderService } from "../services/order.service";
+import OrderService from "../services/order.service";
 
 const orderService = new OrderService();
 
-export class OrderController {
+export default class OrderController {
   static async createOrder(req: Request, res: Response, next: NextFunction) {
     try {
       const order = await orderService.createOrder(req.body);
