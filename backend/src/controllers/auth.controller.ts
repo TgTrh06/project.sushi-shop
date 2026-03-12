@@ -1,4 +1,4 @@
-import { AuthService } from "../services/auth.service";
+import AuthService from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "../utils/response.utils";
 import { LoginUserDTO, RegisterUserDTO } from "../models/user/user.types";
@@ -6,7 +6,7 @@ import JwtUtils from "../utils/jwt";
 
 const authService = new AuthService();
 
-export class AuthController {
+export default class AuthController {
   static async register(
     req: Request<{}, {}, RegisterUserDTO>,
     res: Response,

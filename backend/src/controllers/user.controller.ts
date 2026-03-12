@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { UserService } from "../services/user.service";
 import { ResponseHandler } from "../utils/response.utils";
+import UserService from "../services/user.service";
 
 const userService = new UserService();
 
-export class UserController {
+export default class UserController {
   static async getAllUsers(_req: Request, res: Response, next: NextFunction) {
     try {
       const users = await userService.getAllUsers();
