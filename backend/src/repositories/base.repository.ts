@@ -1,6 +1,6 @@
 import { Model } from "mongoose";
 
-export abstract class BaseRepository<
+export default abstract class BaseRepository<
   TEntity,
   TCreateDTO extends object,
   TUpdateDTO extends object,
