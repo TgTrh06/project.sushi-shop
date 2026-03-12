@@ -1,3 +1,5 @@
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+
 // Business Entity
 export interface UserEntity {
   id: string;
@@ -8,20 +10,39 @@ export interface UserEntity {
   createdAt: Date;
 }
 
-// DTOs
-export interface LoginUserDTO extends Pick<
-  UserEntity,
-  "email" | "password"
-> {}
-
-export interface RegisterUserDTO extends Pick<
-  UserEntity,
-  "username" | "email" | "password"
-> {}
-
-export interface UpdateUserDTO extends Partial<UserEntity> {
-  role?: UserEntity["role"];
-}
-
 // Database shape (Mongoose Document)
 export interface UserDocument extends Omit<UserEntity, "id"> {}
+
+// DTOs
+export class LoginUserDTO {
+  @IsString()
+  @IsNotEmpty()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
+}
+export class RegisterUserDTO {
+  @IsString()
+  @IsNotEmpty()
+  username!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
+}
+
+export class UpdateUserDTO {
+  @IsString()
+  @IsOptional()
+  username?: string;
+
+  @IsString()
+  @IsOptional()
+  password?: string;
+}
