@@ -1,25 +1,59 @@
-import { ProductModel } from "../models/product/product.model";
-import { ProductEntity } from "../models/product/product.types";
+import { CreateProductDTO, ProductEntity, UpdateProductDTO } from "../models/product/product.types";
+import ProductRepository from "../repositories/product.repository";
+import { BadRequestError, ConflictError, NotFoundError } from "../utils/common/errors";
 
-export const createProduct = async (
-  data: Partial<ProductEntity>,
-): Promise<ProductEntity> => {
-  return await ProductModel.create(data);
-};
+export default class ProductService {
+  private repo = new ProductRepository();
+  
+  async getAllProducts(): Promise<ProductEntity[]> {
+    return await this.repo.findAll();
+  }
 
-export const getAllProducts = async (): Promise<ProductEntity[]> => {
-  return await ProductModel.find().populate("category", "name");
-};
+  async getProductsByCategory(categoryId: string): Promise<ProductEntity[]> {
+    return await this.repo.findByCategory(categoryId);
+  }
+  
+  async getProductById(id: string): Promise<ProductEntity | null> {
+    const product = await this.repo.findById(id);
+    if (!product) {
+      throw new NotFoundError("Product not found.")
+    }
+    
+    return product;
+  }
+  
+  /*
+    ADMIN SERVICE
+  */
+  async createProduct(dto: CreateProductDTO): Promise<ProductEntity> {
+    const existingProduct = await this.repo.findByName(dto.name);
+    if (existingProduct) {
+      throw new ConflictError("Product already exists.");
+    }
+    
+    return await this.repo.create(dto);
+  } 
 
-export const getProductsByCategory = async (
-  categoryId: any,
-): Promise<ProductEntity[]> => {
-  return await ProductModel.find({ category: categoryId }).populate("category");
-};
+  async updateProduct(id: string, dto: UpdateProductDTO): Promise<ProductEntity> {
+    const existingProduct = await this.repo.findById(id);
+    if (!existingProduct) {
+      throw new NotFoundError("Product not found.");
+    }
 
-export const editProduct = async (
-  productId: any,
-  data: Partial<ProductEntity>,
-): Promise<ProductEntity | null> => {
-  return await ProductModel.findByIdAndUpdate(productId, data, { new: true });
-};
+    const updatedProduct = await this.repo.update(id, dto);
+    if (!updatedProduct) {
+      throw new BadRequestError("Failed to update product.");
+    }
+
+    return updatedProduct;
+  }
+
+  async deleteProduct(id: string): Promise<boolean> {
+    const existingProduct = await this.repo.findById(id);
+    if (!existingProduct) {
+      throw new NotFoundError("Product not found.");
+    }
+
+    return await this.repo.delete(id);
+  }
+}

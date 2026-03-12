@@ -1,7 +1,7 @@
-import { OrderRepository } from "../repositories/order.repository";
+import OrderRepository from "../repositories/order.repository";
 import { OrderStatus } from "../models/order/order.types";
 
-export class OrderService {
+export default class OrderService {
   private repo = new OrderRepository();
 
   async createOrder(data: any) {

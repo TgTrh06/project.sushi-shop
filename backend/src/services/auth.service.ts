@@ -1,10 +1,10 @@
 import { BadRequestError, ConflictError, UnauthorizedError } from "../utils/common/errors";
 import { UserEntity, RegisterUserDTO, LoginUserDTO } from "../models/user/user.types";
-import { UserRepository } from "../repositories/user.repository";
+import UserRepository from "../repositories/user.repository";
 import { hashPassword, comparePassword } from "../utils/bcrypt";
 import JwtUtils from "../utils/jwt";
 
-export class AuthService {
+export default class AuthService {
   private repo = new UserRepository();
 
   async register(dto: RegisterUserDTO): Promise<UserEntity> {

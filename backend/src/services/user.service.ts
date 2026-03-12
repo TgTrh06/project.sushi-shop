@@ -1,4 +1,4 @@
-import { UserRepository } from "../repositories/user.repository";
+import UserRepository from "../repositories/user.repository";
 import {
   UserEntity,
   UpdateUserDTO,
@@ -8,7 +8,7 @@ import {
   NotFoundError,
 } from "../utils/common/errors";
 
-export class UserService {
+export default class UserService {
   private repo = new UserRepository();
 
   /* 
