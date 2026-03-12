@@ -1,3 +1,5 @@
+import { IsString, IsNotEmpty, IsOptional } from "class-validator";
+
 // Business Entity
 export interface CategoryEntity {
   id: string;
@@ -6,10 +8,26 @@ export interface CategoryEntity {
   createdAt: Date;
 }
 
-// DTOs
-export interface CreateCategoryDTO extends Pick<CategoryEntity, "name" | "description"> {}
-
-export interface UpdateCategoryDTO extends Partial<CreateCategoryDTO> {}
-
 // Database shape - Only use for Mongoose schema definition and database operations
 export interface CategoryDocument extends Omit<CategoryEntity, "id"> {}
+
+// DTOs
+export class CreateCategoryDTO {
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+}
+
+export class UpdateCategoryDTO {
+  @IsString()
+  @IsNotEmpty()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+}
