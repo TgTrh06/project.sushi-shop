@@ -1,9 +1,9 @@
-import express, { Request, Response } from "express";
-
-import webRouter from "./routes";
+import express from "express";
+import cookieParser from "cookie-parser";
 
 import { globalErrorHandler } from "./middleware/error.middleware";
-import cookieParser from "cookie-parser";
+
+import webRouter from "./routes";
 
 const app = express();
 
