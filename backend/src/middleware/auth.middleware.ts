@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { env } from "../config/env";
+import { env } from "../config/env.config";
 import { Request, Response, NextFunction } from "express";
 import { ForbiddenError, UnauthorizedError } from "../utils/common/errors";
 

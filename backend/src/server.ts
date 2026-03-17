@@ -2,8 +2,8 @@
 /// <reference path="./types/express.d.ts" />
 
 import app from "./app";
-import { connectDB } from "./config/database";
-import { env } from "./config/env";
+import { connectDB } from "./config/database.config";
+import { env } from "./config/env.config";
 
 const PORT = env.PORT;
 
