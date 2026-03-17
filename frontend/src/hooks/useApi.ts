@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type AppError = {
+export type AppError = {
   message: string;
   errors?: Record<string, string>;
 };
@@ -9,7 +9,7 @@ export const useApi = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const hanldeError = (error: AppError) => {
+  const handleError = (error: AppError) => {
     if (error.errors) {
       setErrors(error.errors);
     } else {
@@ -22,6 +22,6 @@ export const useApi = () => {
     setErrors,
     loading,
     setLoading,
-    hanldeError,
+    handleError,
   };
 };
