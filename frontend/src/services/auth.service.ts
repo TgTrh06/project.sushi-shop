@@ -1,9 +1,9 @@
-import api from "../api/axios";
+import api from "../api/axiosInstance";
 import type { LoginDTO } from "../schemas/auth.schema";
 
 export const authService = {
-  login: async (data: LoginDTO) => {
-    const res = await api.post("/auth/login", data)
-    return res.data
+  login: async (dto: LoginDTO) => {
+    const res = await api.post("/auth/login", dto)
+    return res.data.data
   }
 }
