@@ -1,20 +1,16 @@
 import z from "zod";
 
-export const Role = {
-  ADMIN: "admin",
-  CUSTOMER: "customer"
-} as const;
-
-export type Role = typeof Role[keyof typeof Role];
-
-export const LoginSchema = z.object({
+export const RegisterSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be least 6 characters"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "The verification password does not match",
+  path: ["confirmPassword"]
 });
 
-export const RegisterSchema = LoginSchema.extend({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  role: z.enum([Role.ADMIN, Role.CUSTOMER]).default(Role.CUSTOMER)
-});
+export const LoginSchema = RegisterSchema.pick({ email: true, password: true });
 
-export type LoginDTO = z.infer<typeof LoginSchema>;
+export type RegisterInput = z.infer<typeof RegisterSchema>;
+export type LoginInput = z.infer<typeof LoginSchema>;

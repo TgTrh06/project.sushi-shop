@@ -1,5 +1,5 @@
 import { useAuthStore } from "../stores/auth.store"
-import { type LoginDTO, LoginSchema } from "../schemas/auth.schema";
+import { type LoginInput, LoginSchema } from "../schemas/auth.schema";
 import { authService } from "../services/auth.service";
 import { ZodError } from "zod";
 import { useApi, type AppError } from "./useApi";
@@ -9,17 +9,17 @@ export const useAuth = () => {
   const loginStore = useAuthStore((state) => state.login);
   const { errors, setErrors, loading, setLoading, handleError } = useApi();
 
-  const handleLogin = async (dto: LoginDTO) => {
+  const handleLogin = async (input: LoginInput) => {
 
     setLoading(true);
     setErrors({});
 
     try {
       // Validate
-      LoginSchema.parse(dto);
+      LoginSchema.parse(input);
 
       // Call API
-      const { token } = await authService.login(dto);
+      const { token } = await authService.login(input);
       
       // Save store
       await loginStore(token);
