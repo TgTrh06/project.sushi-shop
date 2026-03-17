@@ -14,7 +14,7 @@ export default class UserService {
   /* 
     CUSTOMER SERVICE
   */ 
-  async getUserById(id: string): Promise<UserEntity | null> {
+  async getUserById(id: string): Promise<UserEntity> {
     const user = await this.repo.findById(id);
 
     if (!user) {

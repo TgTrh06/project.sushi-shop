@@ -7,7 +7,7 @@ import JwtUtils from "../utils/jwt";
 export default class AuthService {
   private repo = new UserRepository();
 
-  async register(dto: RegisterUserDTO): Promise<UserEntity> {
+  async register(dto: RegisterUserDTO): Promise<Omit<UserEntity, "password">> {
     if (!dto.username || !dto.email || !dto.password) {
       throw new BadRequestError("Missing required fields");
     }
@@ -24,7 +24,8 @@ export default class AuthService {
       password: hashedPassword,
     });
 
-    return newUser;
+    const { password, ...safeUser } = newUser;
+    return safeUser;
   }
 
   async login(dto: LoginUserDTO) {
