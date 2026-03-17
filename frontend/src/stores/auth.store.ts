@@ -38,7 +38,7 @@ const decodeToken = (token: string): { id: string; role: Role } | null => {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       token: null,
       isAuthenticated: false,
@@ -46,22 +46,40 @@ export const useAuthStore = create<AuthState>()(
         const decoded = decodeToken(token);
         if (!decoded) return;
 
+        // Set token first for interceptor to use
+        set({ token, isAuthenticated: true });
+
         // Fetch full user info from /me
         try {
           const fullUser = await userService.getProfile();
-          set({ user: fullUser, token, isAuthenticated: true });
+          set({ user: fullUser });
         } catch {
           // If fetch fails, set partial user from token
           set({
             user: { ...decoded, email: "", username: "" },
-            token,
-            isAuthenticated: true,
           });
         }
       },
+
       logout: () => {
-        localStorage.removeItem("auth-storage");
+        // Persist auto-martically delete token in localStorage
         set({ user: null, token: null, isAuthenticated: false })
+      },
+
+      rehydrate: async () => {
+        const token = get().token;
+        if (token) {
+          const decoded = decodeToken(token);
+          if (decoded) {
+            try {
+              const fullUser = await userService.getProfile();
+              set({ user: fullUser, isAuthenticated: true });
+            } catch {
+              // If token expired or error, logout
+              get().logout();
+            }
+          }
+        }
       }
     }),
     {

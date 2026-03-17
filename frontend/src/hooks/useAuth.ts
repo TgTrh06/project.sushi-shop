@@ -56,5 +56,9 @@ export const useAuth = () => {
     }
   };
 
-  return { handleLogin, errors, loading };
-}
+  return { 
+    handleLogin, 
+    errors, 
+    loading 
+  };
+};
