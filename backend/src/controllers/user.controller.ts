@@ -8,7 +8,22 @@ export default class UserController {
   static async getAllUsers(_req: Request, res: Response, next: NextFunction) {
     try {
       const users = await userService.getAllUsers();
-      return ResponseHandler.success(res, users, "Users retrieved successfully.")
+      const safeUsers = users.map(({ password, ...user }) => user);
+      return ResponseHandler.success(res, safeUsers, "Users retrieved successfully.")
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return ResponseHandler.success(res, null, "No user logged in.");
+      }
+
+      const user = await userService.getUserById(req.user.id);
+      const { password, ...safeUser } = user;
+      return ResponseHandler.success(res, safeUser, "Profile retrieved successfully.");
     } catch (error) {
       next(error);
     }
@@ -17,7 +32,8 @@ export default class UserController {
   static async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await userService.getUserById(String(req.params.id));
-      return ResponseHandler.success(res, user, "User retrieved successfully.")
+      const { password, ...safeUser } = user;
+      return ResponseHandler.success(res, safeUser, "User retrieved successfully.")
     } catch (error) {
       next(error);
     }
@@ -29,7 +45,8 @@ export default class UserController {
         String(req.params.id),
         req.body,
       );
-      return ResponseHandler.success(res, user, "User updated successfully.")
+      const { password, ...safeUser } = user;
+      return ResponseHandler.success(res, safeUser, "User updated successfully.")
     } catch (error) {
       next(error);
     }
