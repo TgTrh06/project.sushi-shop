@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const updatedProfileSchema = z.object({
-  name: z.string().min(2),
+  username: z.string().min(2),
   // phone: z.string().optional(),
   // address: z.string().optional(),
 })
