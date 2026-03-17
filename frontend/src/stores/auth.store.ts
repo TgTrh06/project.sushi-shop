@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { jwtDecode } from "jwt-decode";
-import { Role } from "../schemas/auth.schema";
+import { Role } from "../constants/auth";
 import { userService } from "../services/user.service";
 
 interface User {
