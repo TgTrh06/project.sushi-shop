@@ -1,4 +1,4 @@
-import api from "../api/axiosInstance";
+import api from "../lib/api";
 import type { UpdateProfileDTO } from "../schemas/user.schema";
 
 export const userService = {
