@@ -40,7 +40,7 @@ api.interceptors.response.use(
       window.location.href = "/login";
     }
 
-    // LOGIN BUT DON'T HAVE PERMISSIOn
+    // LOGIN BUT DON'T HAVE PERMISSION
     if (status === 403) {
       window.location.href = "/unauthorized";
     }
