@@ -1,9 +1,11 @@
-import api from "../lib/api";
-import type { UpdateProfileDTO } from "../schemas/user.schema";
+import api from "../../lib/api";
+import type { User } from "./user.types";
+import type { UpdateProfileDTO } from "./user.schema";
+import type { ApiResponse } from "../../types/response.type";
 
 export const userService = {
-  getProfile: async () => {
-    const res = await api.get("/users/me")
+  getMe: async (): Promise<User> => {
+    const res = await api.get<ApiResponse<User>>("/users/me")
     return res.data.data
   },
 
