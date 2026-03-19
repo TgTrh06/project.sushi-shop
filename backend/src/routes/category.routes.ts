@@ -1,8 +1,8 @@
 import { Router } from "express";
-import * as controller from "../controllers/category.controller";
+import * as controller from "../modules/categories/category.controller";
 import { verifyAdmin, verifyToken } from "../middleware/auth.middleware";
 import { validationMiddleware } from "../middleware/validation.middleware";
-import { CreateCategoryDTO } from "../models/category/category.types";
+import { CreateCategoryDTO } from "../modules/categories/category/category.types";
 
 const router = Router();
 

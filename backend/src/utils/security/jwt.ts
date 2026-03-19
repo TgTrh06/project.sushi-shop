@@ -1,8 +1,8 @@
 import jwt, { Secret, SignOptions } from "jsonwebtoken";
-import { UserEntity } from "../models/user/user.types";
+import { UserEntity } from "../../modules/users/user/user.types";
 import { Response } from "express";
-import { env } from "../config/env.config";
-import { COOKIE_OPTIONS, TOKEN_NAME } from "../config/cookie.config";
+import { env } from "../../config/env.config";
+import { COOKIE_OPTIONS, TOKEN_NAME } from "../../config/cookie.config";
 
 export default class JwtUtils {
   static generateToken = (user: UserEntity): string => {

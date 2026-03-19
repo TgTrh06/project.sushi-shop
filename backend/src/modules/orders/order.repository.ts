@@ -1,10 +1,10 @@
-import BaseRepository from "./base.repository";
+import BaseRepository from "../../core/base.repository";
 import {
   OrderEntity,
   CreateOrderDTO,
   UpdateOrderDTO,
-} from "../models/order/order.types";
-import { OrderModel } from "../models/order/order.model";
+} from "./order/order.types";
+import { OrderModel } from "./order/order.model";
 
 export default class OrderRepository extends BaseRepository<
   OrderEntity,

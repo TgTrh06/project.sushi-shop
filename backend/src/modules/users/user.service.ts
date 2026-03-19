@@ -1,12 +1,12 @@
-import UserRepository from "../repositories/user.repository";
+import UserRepository from "./user.repository";
 import {
   UserEntity,
   UpdateUserDTO,
-} from "../models/user/user.types";
+} from "./user/user.types";
 import {
   BadRequestError,
   NotFoundError,
-} from "../utils/common/errors";
+} from "../../utils/common/error";
 
 export default class UserService {
   private repo = new UserRepository();

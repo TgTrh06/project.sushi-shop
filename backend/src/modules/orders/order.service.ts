@@ -1,5 +1,5 @@
-import OrderRepository from "../repositories/order.repository";
-import { OrderStatus } from "../models/order/order.types";
+import OrderRepository from "./order.repository";
+import { OrderStatus } from "./order/order.types";
 
 export default class OrderService {
   private repo = new OrderRepository();

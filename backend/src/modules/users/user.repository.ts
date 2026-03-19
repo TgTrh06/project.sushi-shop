@@ -1,6 +1,6 @@
-import BaseRepository from "./base.repository";
-import { UserModel } from "../models/user/user.model";
-import { UserEntity, RegisterUserDTO, UpdateUserDTO } from "../models/user/user.types";
+import BaseRepository from "../../core/base.repository";
+import { UserModel } from "./user/user.model";
+import { UserEntity, RegisterUserDTO, UpdateUserDTO } from "./user/user.types";
 
 export default class UserRepository extends BaseRepository<
   UserEntity,

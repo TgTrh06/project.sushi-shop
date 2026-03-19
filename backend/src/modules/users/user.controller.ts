@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ResponseHandler } from "../utils/response.utils";
-import UserService from "../services/user.service";
+import { ResponseHandler } from "../../utils/common/response";
+import UserService from "./user.service";
 
 const userService = new UserService();
 
