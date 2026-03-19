@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { jwtDecode } from "jwt-decode";
-import { Role } from "../constants/role";
+import { Role } from "../../config/constants/role";
 
 interface MinimalUser {
   id: string;

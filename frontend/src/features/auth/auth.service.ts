@@ -1,6 +1,6 @@
-import api from "../lib/api";
-import type { LoginInput, RegisterInput } from "../schemas/auth.schema";
-import { type ApiResponse } from "../types/api.type";
+import api from "../../lib/api";
+import type { LoginInput, RegisterInput } from "./auth.schema";
+import { type ApiResponse } from "../../types/response.type";
 
 export interface AuthResponse {
   token: string;

@@ -1,12 +1,12 @@
-import { useAuthStore } from "../stores/authStore";
-import { type LoginInput, LoginSchema, type RegisterInput, RegisterSchema } from "../schemas/auth.schema";
-import { authService } from "../services/auth.service";
+import { useAuthStore } from "./authStore";
+import { type LoginInput, LoginSchema, type RegisterInput, RegisterSchema } from "./auth.schema";
+import { authService } from "./auth.service";
 import { ZodError } from "zod";
-import { useApi } from "./useApi";
-import { showError, showSuccess } from "../lib/toast";
+import { useApi } from "../../hooks/useApi";
+import { showError, showSuccess } from "../../lib/toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Role } from "../constants/role";
-import type { AppError } from "../types/error.type";
+import { Role } from "../../config/constants/role";
+import type { AppError } from "../../types/error.type";
 
 export const useAuth = () => {
   const { setToken, logout } = useAuthStore();
