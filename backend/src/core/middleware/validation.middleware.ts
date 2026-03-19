@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
 import { validate, ValidationError } from "class-validator";
 import { NextFunction, Request, Response } from "express";
-import { BadRequestError } from "../utils/common/error.utils";
+import { BadRequestError } from "../../core/utils/common/error.utils";
 
 export function validationMiddleware(dtoClass: any) {
   return async (req: Request, _res: Response, next: NextFunction) => {
