@@ -1,4 +1,4 @@
-import BaseRepository from "../../core/base.repository";
+import BaseRepository from "../../core/repository";
 import {
   OrderEntity,
   CreateOrderDTO,

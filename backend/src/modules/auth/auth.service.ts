@@ -1,9 +1,9 @@
-import { BadRequestError, ConflictError, UnauthorizedError } from "../../utils/common/error.utils";
+import { BadRequestError, ConflictError, UnauthorizedError } from "../../core/utils/common/error.utils";
 import { RegisterUserDTO, LoginUserDTO } from "../users/user.types";
 import UserRepository from "../users/user.repository";
-import { hashPassword, comparePassword } from "../../utils/security/bcrypt.utils";
-import JwtUtils from "../../utils/security/jwt.utils";
-import { sanitizeUser } from "../../utils/security/sanitize.utils";
+import { hashPassword, comparePassword } from "../../core/utils/security/bcrypt.utils";
+import JwtUtils from "../../core/utils/security/jwt.utils";
+import { sanitizeUser } from "../../core/utils/security/sanitize.utils";
 
 export default class AuthService {
   private repo = new UserRepository();
