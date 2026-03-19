@@ -13,8 +13,11 @@ export default class AuthController {
     next: NextFunction,
   ) {
     try {
-      const user = await authService.register(req.body);
-      return ResponseHandler.created(res, user, "User registered successfully.");
+      const { token, user } = await authService.register(req.body);
+
+      JwtUtils.setCookies(res, token);
+
+      return ResponseHandler.created(res, { user }, "User registered successfully.");
     } catch (error) {
       next(error);
     }
@@ -26,9 +29,11 @@ export default class AuthController {
     next: NextFunction,
   ) {
     try {
-      const token = await authService.login(req.body);
+      const { token, user } = await authService.login(req.body);
+
       JwtUtils.setCookies(res, token);
-      return ResponseHandler.success(res, { token }, "Login successful");
+
+      return ResponseHandler.success(res, { user }, "Login successful");
     } catch (error) {
       next(error);
     }
@@ -37,6 +42,7 @@ export default class AuthController {
   static async logout(_req: Request, res: Response, next: NextFunction) {
     try {
       JwtUtils.clearCookies(res);
+      
       return ResponseHandler.success(res, null, "Logout successful");
     } catch (error) {
       next(error);

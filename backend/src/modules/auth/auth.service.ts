@@ -26,27 +26,26 @@ export default class AuthService {
     });
 
     const { password, ...safeUser } = newUser;
-    
     const token = JwtUtils.generateToken(newUser);
-
-    return token;
     
-    // return safeUser;
+    return { token, user: safeUser };
   }
 
   async login(dto: LoginUserDTO) {
-    const user = await this.repo.findByEmailForAuth(dto.email);
-    if (!user) {
+    const existUser = await this.repo.findByEmailForAuth(dto.email);
+    if (!existUser) {
       throw new UnauthorizedError("Invalid email or password");
     }
 
-    const isMatch = await comparePassword(dto.password, user.password);
+    const isMatch = await comparePassword(dto.password, existUser.password);
     if (!isMatch) {
       throw new UnauthorizedError("Invalid email or password");
     }
     
-    const token = JwtUtils.generateToken(user);
+    const token = JwtUtils.generateToken(existUser);
 
-    return token;
+    const { password, ...safeUser } = existUser;
+    
+    return { token, user: safeUser };
   }
 }

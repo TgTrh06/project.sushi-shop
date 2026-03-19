@@ -23,7 +23,7 @@ export default class UserRepository extends BaseRepository<
   }
 
   async findByEmailForAuth(email: string): Promise<UserEntity | null> {
-    const doc = await this.model.findOne({ email }).lean().select("+password");
+    const doc = await this.model.findOne({ email }).select("+password").lean();
     return doc ? this.mapToEntity(doc) : null;
   }
 }
