@@ -3,6 +3,7 @@ import { RegisterUserDTO, LoginUserDTO } from "../users/user.types";
 import UserRepository from "../users/user.repository";
 import { hashPassword, comparePassword } from "../../utils/security/bcrypt";
 import JwtUtils from "../../utils/security/jwt";
+import { sanitizeUser } from "../../utils/security/sanitize";
 
 export default class AuthService {
   private repo = new UserRepository();
@@ -25,10 +26,11 @@ export default class AuthService {
       password: hashedPassword,
     });
 
-    const { password, ...safeUser } = newUser;
     const token = JwtUtils.generateToken(newUser);
+
+    const user = sanitizeUser(newUser);
     
-    return { token, user: safeUser };
+    return { token, user };
   }
 
   async login(dto: LoginUserDTO) {
@@ -44,8 +46,8 @@ export default class AuthService {
     
     const token = JwtUtils.generateToken(existUser);
 
-    const { password, ...safeUser } = existUser;
+    const user = sanitizeUser(existUser);
     
-    return { token, user: safeUser };
+    return { token, user };
   }
 }

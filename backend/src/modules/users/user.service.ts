@@ -1,60 +1,54 @@
 import UserRepository from "./user.repository";
 import {
-  UserEntity,
+  SafeUser,
   UpdateUserDTO,
 } from "./user.types";
 import {
   BadRequestError,
   NotFoundError,
 } from "../../utils/common/error";
+import { sanitizeUser } from "../../utils/security/sanitize";
 
 export default class UserService {
   private repo = new UserRepository();
 
-  /* 
-    CUSTOMER SERVICE
-  */ 
-  async getUserById(id: string): Promise<UserEntity> {
+  /* CUSTOMER SERVICE */ 
+  async getUserById(id: string): Promise<SafeUser> {
     const user = await this.repo.findById(id);
 
-    if (!user) {
-      throw new NotFoundError("User not found");
-    }
+    if (!user) throw new NotFoundError("User not found");
 
-    return user;
+    return sanitizeUser(user);
   }
 
-  async updateUser(id: string, dto: UpdateUserDTO): Promise<UserEntity> {
+  async updateProfile(id: string, dto: UpdateUserDTO): Promise<SafeUser> {
     const existingUser = await this.repo.findById(id);
-    if (!existingUser) {
-      throw new NotFoundError("User not found");
-    }
+    if (!existingUser) throw new NotFoundError("User not found");
 
     const updatedUser = await this.repo.update(id, dto);
-    if (!updatedUser) {
-      throw new BadRequestError("Failed to update user");
-    }
+    if (!updatedUser) throw new BadRequestError("Failed to update user");
 
-    return updatedUser;
+    return sanitizeUser(updatedUser);
   }
 
-  async deleteUser(id: string): Promise<void> {
-    const existingUser = await this.repo.findById(id);
-    if (!existingUser) {
-      throw new NotFoundError("User not found");
-    }
+  /* ADMIN SERVICES */
+  async getAllUsers(): Promise<SafeUser[]> {
+    const users = await this.repo.findAll();
+    return users.map(sanitizeUser);
+  }  
+
+  async deleteUser(targetId: string, currentUserId: string): Promise<void> {
+    const existingUser = await this.repo.findById(targetId);
+    if (!existingUser) throw new NotFoundError("User not found");
+
+    if (targetId === currentUserId) {
+      throw new BadRequestError("You cannot delete your own admin account");
+    };
 
     if (existingUser.role === "admin") {
-      throw new BadRequestError("Cannot delete admin users");
-    }
+      throw new BadRequestError("Cannot delete other admin users");
+    };
 
-    await this.repo.delete(id);
-  }
-
-  /*
-    ADMIN SERVICES
-  */
-  async getAllUsers(): Promise<UserEntity[]> {
-    return await this.repo.findAll();
+    await this.repo.delete(targetId);
   }
 }

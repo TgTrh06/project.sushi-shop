@@ -10,6 +10,8 @@ export interface UserEntity {
   createdAt: Date;
 }
 
+export type SafeUser = Omit<UserEntity, "password">;
+
 // Database shape (Mongoose Document)
 export interface UserDocument extends Omit<UserEntity, "id"> {}
 

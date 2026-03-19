@@ -7,6 +7,8 @@ import JwtUtils from "../../utils/security/jwt";
 const authService = new AuthService();
 
 export default class AuthController {
+  
+  // POST /auth/register
   static async register(
     req: Request<{}, {}, RegisterUserDTO>,
     res: Response,
@@ -23,6 +25,7 @@ export default class AuthController {
     }
   }
 
+  // POST /auth/login
   static async login(
     req: Request<{}, {}, LoginUserDTO>,
     res: Response,
@@ -39,10 +42,11 @@ export default class AuthController {
     }
   }
 
+  // POST /auth/logout
   static async logout(_req: Request, res: Response, next: NextFunction) {
     try {
       JwtUtils.clearCookies(res);
-      
+
       return ResponseHandler.success(res, null, "Logout successful");
     } catch (error) {
       next(error);
