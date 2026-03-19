@@ -1,15 +1,16 @@
 import { Router } from "express";
 import UserController from "../modules/users/user.controller";
-import { verifyToken } from "../middleware/auth.middleware";
+import { verifyToken, verifyAdmin } from "../middleware/auth.middleware";
 
 const router = Router();
 
-// Route to get profile of the current logged-in user
+// 1. API for CUSTOMER
 router.get("/me", verifyToken, UserController.getProfile);
+router.put("/me", verifyToken, UserController.getProfile);
 
-router.get("/", UserController.getAllUsers);
-router.get("/:id", UserController.getUserById);
-router.put("/:id", UserController.updateUser);
-router.delete("/:id", UserController.deleteUser);
+// 2. API for ADMIN
+router.get("/", verifyToken, verifyAdmin, UserController.getAllUsers);
+router.get("/:id", verifyToken, verifyAdmin, UserController.getUserById);
+router.delete("/:id", verifyToken, verifyAdmin, UserController.deleteUser);
 
 export default router;
