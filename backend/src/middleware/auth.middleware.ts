@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { env } from "../config/env.config";
 import { Request, Response, NextFunction } from "express";
-import { ForbiddenError, UnauthorizedError } from "../utils/common/error";
+import { ForbiddenError, UnauthorizedError } from "../utils/common/error.utils";
 import { TOKEN_NAME } from "../config/cookie.config";
 
 export interface JwtPayload {

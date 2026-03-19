@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import ProductService from "./product.service";
-import { ResponseHandler } from "../../utils/common/response";
+import { ResponseHandler } from "../../utils/common/response.utils";
 
 const productService = new ProductService();
 
