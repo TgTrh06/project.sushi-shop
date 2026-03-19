@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { env } from "../config/env.config";
 import { Request, Response, NextFunction } from "express";
 import { ForbiddenError, UnauthorizedError } from "../utils/common/error";
+import { TOKEN_NAME } from "../config/cookie.config";
 
 export interface JwtPayload {
   id: string;
@@ -14,25 +15,18 @@ export const verifyToken = async (
   next: NextFunction,
 ) => {
   try {
-    const token =
-      req.cookies?.token || req.headers?.authorization?.split(" ")[1];
+    const token = req.cookies?.[TOKEN_NAME] || req.headers?.authorization?.split(" ")[1];
+    
     if (!token) {
-      return next(
-        new UnauthorizedError(
-          "Session expired or not found. Please log in again.",
-        ),
-      );
+      throw new UnauthorizedError("Session expired or not found. Please log in again.");
     }
 
     const decoded = jwt.verify(token, env.JWT_SECRET as string) as JwtPayload;
-    if (!decoded) {
-      return next(new UnauthorizedError("Invalid token"));
-    }
 
     req.user = decoded;
     next();
   } catch (error) {
-    return next(new UnauthorizedError("Invalid token"));
+    return next(new UnauthorizedError("Invalid or expired token."));
   }
 };
 
