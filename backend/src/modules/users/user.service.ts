@@ -6,8 +6,8 @@ import {
 import {
   BadRequestError,
   NotFoundError,
-} from "../../utils/common/error";
-import { sanitizeUser } from "../../utils/security/sanitize";
+} from "../../utils/common/error.utils";
+import { sanitizeUser } from "../../utils/security/sanitize.utils";
 
 export default class UserService {
   private repo = new UserRepository();
