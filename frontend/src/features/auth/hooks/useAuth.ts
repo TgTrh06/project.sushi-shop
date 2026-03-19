@@ -5,11 +5,12 @@ import { showSuccess } from "../../../lib/toast";
 import { useApi } from "../../../hooks/useApi";
 import { Role } from "../../../config/constants/role";
 import type { LoginInput, RegisterInput } from "../auth.schema";
-import type { User } from "../auth.types";
+import type { User } from "../../users/user.types";
+import type { AppError } from "../../../types/error.type";
 
 export const useAuthActions = () => {
   const { setUser, logout: clearStore } = useAuthStore();
-  const { globalError, setGlobalError, loading, setLoading } = useApi();
+  const { loading, setLoading } = useApi();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,7 +31,6 @@ export const useAuthActions = () => {
 
   const handleRegister = async (input: RegisterInput) => {
     setLoading(true);
-    setGlobalError(null);
 
     try {
       const result = await authService.register(input);
@@ -38,8 +38,9 @@ export const useAuthActions = () => {
 
       showSuccess("Register Successful");
       return { success: true };
-    } catch (error) {
-      throw String(error); // Throw to Form Component
+    } catch (err) {
+      const error = err as AppError;
+      throw error; // Throw to Form Component
     } finally {
       setLoading(false);
     }
@@ -47,7 +48,6 @@ export const useAuthActions = () => {
 
   const handleLogin = async (input: LoginInput) => {
     setLoading(true);
-    setGlobalError(null);
 
     try {
       const result = await authService.login(input);
@@ -55,8 +55,9 @@ export const useAuthActions = () => {
 
       showSuccess("Login Successful");
       return { success: true };
-    } catch (error) {
-      throw String(error);
+    } catch (err) {
+      const error = err as AppError;
+      throw error; // Throw to Form Component
     } finally {
       setLoading(false)
     }
@@ -65,8 +66,9 @@ export const useAuthActions = () => {
   const handleLogout = async () => {
     try {
       await authService.logout();
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      const error = err as AppError;
+      throw error; // Throw to Form Component
     } finally {
       clearStore();
       navigate("/login", { replace: true });
@@ -77,8 +79,6 @@ export const useAuthActions = () => {
     handleRegister,
     handleLogin, 
     handleLogout,
-    globalError,
-    setGlobalError, 
     loading 
   };
 };

@@ -10,7 +10,10 @@ export const RegisterSchema = z.object({
   path: ["confirmPassword"]
 });
 
-export const LoginSchema = RegisterSchema.pick({ email: true, password: true });
+export const LoginSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string(),
+});
 
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
