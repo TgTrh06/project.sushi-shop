@@ -3,8 +3,8 @@ import {
   OrderEntity,
   CreateOrderDTO,
   UpdateOrderDTO,
-} from "./order/order.types";
-import { OrderModel } from "./order/order.model";
+} from "./order.types";
+import { OrderModel } from "./order.model";
 
 export default class OrderRepository extends BaseRepository<
   OrderEntity,
