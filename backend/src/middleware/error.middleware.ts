@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/common/logger";
+import { env } from "../config/env.config";
 
 export const globalErrorHandler = (
   err: any,
@@ -7,14 +8,23 @@ export const globalErrorHandler = (
   res: Response,
   _next: NextFunction,
 ) => {
+  const statusCode = err.status || 500;
+
+  // Log detail error into "path"
   logger.error(err.message, {
-    stack: err.stack,
-    path: req.path,
-    method: req.method,
+    metadata: {
+      stack: err.stack,
+      path: req.path,
+      method: req.method,
+      ip: req.ip,
+    }
   });
   
-  res.status(err.status || 500).json({
+  // Setup response
+  res.status(statusCode).json({
     success: false,
-    message: err.message || "Internal Server Error",
+    message: statusCode === 500 ? "Internal Server Error" : err.message, // Hide error 500
+    // Only show when on dev enviroment for debugging
+    ...(env.NODE_ENV === "development" && { stack: err.stack }),
   });
 };
