@@ -1,7 +1,7 @@
 import api from "../../lib/api";
 import type { LoginInput, RegisterInput } from "./auth.schema";
 import { type ApiResponse } from "../../types/response.type";
-import type { User } from "./auth.types";
+import type { User } from "../users/user.types";
 
 export interface AuthResponse {
   user: User;
