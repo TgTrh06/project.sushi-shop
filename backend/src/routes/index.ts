@@ -1,8 +1,8 @@
 import { Router } from "express";
-import Auth from "./auth.routes";
-import UserRoute from "./user.routes";
-import CategoryRoute from "./category.routes";
-import ProductRoute from "./product.routes";
+import authRoutes from "../modules/auth/auth.routes";
+import userRoutes from "../modules/users/user.routes";
+import categoryRoutes from "../modules/categories/category.routes";
+import productRoutes from "../modules/products/product.routes";
 
 const router = Router();
 
@@ -12,9 +12,9 @@ router.get("/", (req, res) => {
 });
 
 // API routes
-router.use("/api/auth", Auth);
-router.use("/api/users", UserRoute);
-router.use("/api/categories", CategoryRoute);
-router.use("/api/products", ProductRoute)
+router.use("/auth", authRoutes);
+router.use("/users", userRoutes);
+router.use("/categories", categoryRoutes);
+router.use("/products", productRoutes)
 
 export default router;
