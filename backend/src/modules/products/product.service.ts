@@ -1,4 +1,4 @@
-import { CreateProductDTO, ProductEntity, UpdateProductDTO } from "./product/product.types";
+import { CreateProductDTO, ProductEntity, UpdateProductDTO } from "./product.types";
 import ProductRepository from "./product.repository";
 import { BadRequestError, ConflictError, NotFoundError } from "../../utils/common/error";
 

@@ -3,8 +3,8 @@ import {
   ProductEntity,
   CreateProductDTO,
   UpdateProductDTO 
-} from "./product/product.types";
-import { ProductModel } from "./product/product.model";
+} from "./product.types";
+import { ProductModel } from "./product.model";
 
 export default class ProductRepository extends BaseRepository <
   ProductEntity,

@@ -2,7 +2,7 @@ import UserRepository from "./user.repository";
 import {
   UserEntity,
   UpdateUserDTO,
-} from "./user/user.types";
+} from "./user.types";
 import {
   BadRequestError,
   NotFoundError,

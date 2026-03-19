@@ -1,5 +1,5 @@
 import { BadRequestError, ConflictError, UnauthorizedError } from "../../utils/common/error";
-import { RegisterUserDTO, LoginUserDTO } from "../users/user/user.types";
+import { RegisterUserDTO, LoginUserDTO } from "../users/user.types";
 import UserRepository from "../users/user.repository";
 import { hashPassword, comparePassword } from "../../utils/security/bcrypt";
 import JwtUtils from "../../utils/security/jwt";

@@ -1,10 +1,10 @@
 import BaseRepository from "../../core/base.repository";
-import { CategoryModel } from "./category/category.model";
+import { CategoryModel } from "./category.model";
 import { 
   CategoryEntity,
   CreateCategoryDTO,
   UpdateCategoryDTO
-} from "./category/category.types";
+} from "./category.types";
 
 export default class CategoryRepository extends BaseRepository<
   CategoryEntity,
