@@ -1,8 +1,8 @@
-import { BadRequestError, ConflictError, UnauthorizedError } from "../utils/common/errors";
-import { UserEntity, RegisterUserDTO, LoginUserDTO } from "../models/user/user.types";
-import UserRepository from "../repositories/user.repository";
-import { hashPassword, comparePassword } from "../utils/bcrypt";
-import JwtUtils from "../utils/jwt";
+import { BadRequestError, ConflictError, UnauthorizedError } from "../../utils/common/error";
+import { RegisterUserDTO, LoginUserDTO } from "../users/user/user.types";
+import UserRepository from "../users/user.repository";
+import { hashPassword, comparePassword } from "../../utils/security/bcrypt";
+import JwtUtils from "../../utils/security/jwt";
 
 export default class AuthService {
   private repo = new UserRepository();

@@ -1,10 +1,10 @@
-import BaseRepository from "./base.repository";
+import BaseRepository from "../../core/base.repository";
 import { 
   ProductEntity,
   CreateProductDTO,
   UpdateProductDTO 
-} from "../models/product/product.types";
-import { ProductModel } from "../models/product/product.model";
+} from "./product/product.types";
+import { ProductModel } from "./product/product.model";
 
 export default class ProductRepository extends BaseRepository <
   ProductEntity,

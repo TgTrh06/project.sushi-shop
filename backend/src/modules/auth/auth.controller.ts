@@ -1,8 +1,8 @@
-import AuthService from "../services/auth.service";
+import AuthService from "./auth.service";
 import { Request, Response, NextFunction } from "express";
-import { ResponseHandler } from "../utils/response.utils";
-import { LoginUserDTO, RegisterUserDTO } from "../models/user/user.types";
-import JwtUtils from "../utils/jwt";
+import { ResponseHandler } from "../../utils/common/response";
+import { LoginUserDTO, RegisterUserDTO } from "../users/user/user.types";
+import JwtUtils from "../../utils/security/jwt";
 
 const authService = new AuthService();
 

@@ -1,5 +1,5 @@
-import { CategoryModel } from "../models/category/category.model";
-import { CategoryEntity } from "../models/category/category.types";
+import { CategoryModel } from "./category/category.model";
+import { CategoryEntity } from "./category/category.types";
 
 export const createCategory = async (
   data: Partial<CategoryEntity>,

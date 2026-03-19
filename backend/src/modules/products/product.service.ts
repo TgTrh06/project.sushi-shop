@@ -1,6 +1,6 @@
-import { CreateProductDTO, ProductEntity, UpdateProductDTO } from "../models/product/product.types";
-import ProductRepository from "../repositories/product.repository";
-import { BadRequestError, ConflictError, NotFoundError } from "../utils/common/errors";
+import { CreateProductDTO, ProductEntity, UpdateProductDTO } from "./product/product.types";
+import ProductRepository from "./product.repository";
+import { BadRequestError, ConflictError, NotFoundError } from "../../utils/common/error";
 
 export default class ProductService {
   private repo = new ProductRepository();
