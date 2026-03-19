@@ -1,22 +1,12 @@
 import axios from "axios";
-import { useAuthStore } from "../features/auth/authStore";
+import { useAuthStore } from "../features/auth/auth.store";
 
 export const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:5000/api/v1",
   withCredentials: true,
-});
-
-// REQUEST INTERCEPTOR
-api.interceptors.request.use((config) => {
-  // Get token from store instead of localStorage
-  const token = useAuthStore.getState().token;
-
-  // Attach token to header for reuse
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  headers: {
+    "Content-Type": "application/json",
   }
-
-  return config;
 });
 
 // RESPONSE INTERCEPTOR
@@ -24,18 +14,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-
     const payload = error.response?.data || {};
     const errors = payload.errors;
-    
-    const message =
-      payload.message || error.message || "Something went wrong";
+    const message = payload.message || error.message || "Something went wrong";
 
-    const normalizedError = {
-      message,
-      errors,
-      status,
-    };
+    const normalizedError = { message, errors, status };
 
     // AUTO LOGOUT IF TOKEN IS EXPIRED
     if (status === 401) {
