@@ -29,11 +29,6 @@ export default class ProductRepository extends BaseRepository <
     }
   }
 
-  async findByName(name: string): Promise<ProductEntity | null> {
-    const doc = await this.model.findOne({ name }).lean();
-    return doc ? this.mapToEntity(doc) : null;
-  }
-
   async findByCategory(categoryId: string): Promise<ProductEntity[]> {
     const doc = await this.model.find({ categoryId }).lean();
     return doc.map(this.mapToEntity);
