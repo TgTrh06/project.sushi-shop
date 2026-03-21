@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import * as service from "./category.service";
+import CategoryService from "./category.service";
+import { ResponseHandler } from "../../core/utils/common/response.utils";
+
+const categoryService = new CategoryService();
 
 export const createCategory = async (
   req: Request, 
@@ -7,11 +10,8 @@ export const createCategory = async (
   next: NextFunction
 ) => {
   try {
-    const newCategory = await service.createCategory(req.body);
-    res.status(201).json({
-      message: "Category created successfully.",
-      category: newCategory,
-    });
+    const newCategory = await categoryService.createCategory(req.body);
+    return ResponseHandler.created(res, newCategory, "Category created successfully.");
   } catch (error) {
     next(error);
   }
@@ -23,11 +23,8 @@ export const getAllCategories = async (
   next: NextFunction
 ) => {
   try {
-    const categories = await service.getAllCategories();
-    res.status(200).json({
-      message: "Categories retrieved successfully.",
-      categories,
-    });
+    const categories = await categoryService.getAllCategories();
+    return ResponseHandler.success(res, categories, "Categories retrieved successfully.");
   } catch (error) {
     next(error);
   }
