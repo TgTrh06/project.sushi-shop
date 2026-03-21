@@ -24,6 +24,11 @@ export default abstract class BaseRepository<
     return doc ? this.mapToEntity(doc) : null;
   }
 
+  async findByName(name: string): Promise<TEntity | null> {
+    const doc = await this.model.findOne({ name }).lean();
+    return doc ? this.mapToEntity(doc) : null;
+  }
+
   async update(id: string, dto: TUpdateDTO): Promise<TEntity | null> {
     const doc = await this.model
       .findByIdAndUpdate(id, dto, { new: true })
