@@ -50,8 +50,8 @@ export const LoginForm = () => {
             disabled={loading}
             className={`w-full border p-2 rounded ${errors.password ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
         </div>
+        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.root?.message}</p>}
 
         <button
           type="submit"
