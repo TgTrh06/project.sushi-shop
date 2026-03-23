@@ -2,15 +2,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../auth.store";
 import { authService } from "../auth.service";
 import { showSuccess } from "../../../lib/toast";
-import { useApi } from "../../../hooks/useApi";
 import { Role } from "../../../config/constants/role";
 import type { LoginInput, RegisterInput } from "../auth.schema";
 import type { User } from "../../users/user.types";
 import type { AppError } from "../../../types/error.type";
+import { useState } from "react";
 
 export const useAuthActions = () => {
   const { setUser, logout: clearStore } = useAuthStore();
-  const { loading, setLoading } = useApi();
+  const [ loading, setLoading ] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
