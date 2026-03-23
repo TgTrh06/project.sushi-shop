@@ -9,7 +9,7 @@ import type { AppError } from "../../../types/error.type";
 import { useState } from "react";
 
 export const useAuthActions = () => {
-  const { setUser, logout: clearStore } = useAuthStore();
+  const { setUser, clearStore } = useAuthStore();
   const [ loading, setLoading ] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
