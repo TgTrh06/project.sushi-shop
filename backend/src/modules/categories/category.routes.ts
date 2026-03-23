@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as controller from "./category.controller";
+import CategoryController from "./category.controller";
 import { verifyAdmin, verifyToken } from "../../core/middleware/auth.middleware";
 import { validationMiddleware } from "../../core/middleware/validation.middleware";
 import { CreateCategoryDTO } from "./category.types";
@@ -11,8 +11,8 @@ router.post(
   verifyToken, 
   verifyAdmin, 
   validationMiddleware(CreateCategoryDTO), 
-  controller.createCategory
+  CategoryController.createCategory
 );
-router.get("/", controller.getAllCategories);
+router.get("/", CategoryController.getAllCategories);
 
 export default router;
