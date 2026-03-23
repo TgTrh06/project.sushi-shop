@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types", "./src/core/types"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"]
 }
