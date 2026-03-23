@@ -5,7 +5,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   setUser: (user: User) => void;
-  logout: () => void;
+  clearStore: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user, isAuthenticated: true });
   },
 
-  logout: () => {
+  clearStore: () => {
     // Persist auto-martically delete token in localStorage
     set({ user: null, isAuthenticated: false });
   },
