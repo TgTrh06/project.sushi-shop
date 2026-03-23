@@ -8,7 +8,6 @@ import { sanitizeUser } from "../../core/utils/security/sanitize.utils";
 export default class AuthService {
   private repo = new UserRepository();
 
-  // async register(dto: RegisterUserDTO): Promise<Omit<UserEntity, "password">> {
   async register(dto: RegisterUserDTO) {
     if (!dto.username || !dto.email || !dto.password) {
       throw new BadRequestError("Missing required fields");
