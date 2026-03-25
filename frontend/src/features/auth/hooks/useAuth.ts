@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../auth.store";
 import { authService } from "../auth.service";
-import { showSuccess } from "../../../lib/toast";
+import ToastNoti from "../../../lib/toast";
 import { Role } from "../../../config/constants/role";
 import type { LoginInput, RegisterInput } from "../auth.schema";
 import type { User } from "../../users/user.types";
@@ -13,6 +13,7 @@ export const useAuthActions = () => {
   const [ loading, setLoading ] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const toastNoti = new ToastNoti()
 
   const handleAuthSuccess = async (user: User) => {
     setUser(user);
@@ -36,7 +37,7 @@ export const useAuthActions = () => {
       const result = await authService.register(input);
       handleAuthSuccess(result.user);
 
-      showSuccess("Register Successful");
+      toastNoti.showSuccess("Register Successful");
       return { success: true };
     } catch (err) {
       const error = err as AppError;
@@ -53,7 +54,7 @@ export const useAuthActions = () => {
       const result = await authService.login(input);
       handleAuthSuccess(result.user);
 
-      showSuccess("Login Successful");
+      toastNoti.showSuccess("Login Successful");
       return { success: true };
     } catch (err) {
       const error = err as AppError;
