@@ -1,4 +1,5 @@
 import { Model } from "mongoose";
+import { UserEntity } from "../../modules/users/user.types";
 
 export default abstract class BaseRepository<
   TEntity,
@@ -17,6 +18,18 @@ export default abstract class BaseRepository<
   async findAll(): Promise<TEntity[]> {
     const docs = await this.model.find().lean();
     return docs.map(this.mapToEntity);
+  }
+  
+  async findPaginated(limit: number, offset: number): Promise<{ docs: TEntity[], total: number }> {
+    const [docs, total] = await Promise.all([
+      this.model.find().skip(offset).limit(limit).lean(),
+      this.model.countDocuments()
+    ]);
+
+    return {
+      docs: docs.map(doc => this.mapToEntity(doc)),
+      total
+    };
   }
 
   async findById(id: string): Promise<TEntity | null> {
