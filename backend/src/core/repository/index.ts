@@ -1,4 +1,4 @@
-import { Model, QueryFilter } from "mongoose";
+import { Model } from "mongoose";
 
 export default abstract class BaseRepository<
   TEntity,
@@ -21,12 +21,11 @@ export default abstract class BaseRepository<
 
   async findPaginated(
     limit: number,
-    offset: number,
-    filter: QueryFilter<any> = {}
+    offset: number
   ): Promise<{ docs: TEntity[]; total: number }> {
     const [docs, total] = await Promise.all([
-      this.model.find(filter).skip(offset).limit(limit).lean(),
-      this.model.countDocuments(filter),
+      this.model.find().skip(offset).limit(limit).lean(),
+      this.model.countDocuments(),
     ]);
 
     return {
