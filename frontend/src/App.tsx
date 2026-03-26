@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "react-hot-toast"; // Đừng quên import cái này để chạy showSuccess, showError
+import { Toaster } from "react-hot-toast";
 import { AppRoutes } from "./routes/AppRoutes";
 import { useAuthStore } from "./features/auth/auth.store";
 import { userService } from "./features/users/user.service";
@@ -9,7 +9,7 @@ import { Navbar } from "./components/layout/Navbar";
 function App() {
   // State để chặn render UI cho đến khi check API xong
   const [isInitializing, setIsInitializing] = useState(true);
-  const { isAuthenticated, setUser, logout } = useAuthStore();
+  const { isAuthenticated, setUser, clearStore } = useAuthStore();
 
   useEffect(() => {
     const verifySession = async () => {
@@ -20,7 +20,7 @@ function App() {
           setUser(user); // Cập nhật lại thông tin mới nhất (VD: lỡ Admin vừa đổi role của user)
         } catch {
           // Cookie hết hạn hoặc không hợp lệ -> Xóa store để văng ra trang Login
-          logout();
+          clearStore();
         }
       }
       // Dù thành công hay thất bại cũng tắt màn hình loading
@@ -28,7 +28,7 @@ function App() {
     };
 
     verifySession();
-  }, [isAuthenticated, setUser, logout]);
+  }, [isAuthenticated, setUser, clearStore]);
 
   // Màn hình chờ lúc mới F5 (Bạn có thể thay bằng Spinner đẹp hơn)
   if (isInitializing) {
