@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "../../core/utils/common/response.utils";
 import UserService from "./user.service";
+import { PaginationUtils } from "../../core/utils/common/pagination.utils";
 
 const userService = new UserService();
 
@@ -39,11 +40,13 @@ export default class UserController {
   // =========================================================
 
   // GET /admin/users
-  static async getAllUsers(_req: Request, res: Response, next: NextFunction) {
+  static async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const safeUsers = await userService.getAllUsers();
+      const { page, limit, offset } = PaginationUtils.extract(req.query);
+
+      const paginatedUsers = await userService.getAllUsers(page, limit, offset);
       
-      return ResponseHandler.success(res, safeUsers, "Users retrieved successfully.")
+      return ResponseHandler.success(res, paginatedUsers, "Users retrieved successfully.")
     } catch (error) {
       next(error);
     }

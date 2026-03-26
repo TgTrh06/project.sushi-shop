@@ -1,18 +1,19 @@
 import UserRepository from "./user.repository";
-import {
-  SafeUser,
-  UpdateUserDTO,
-} from "./user.types";
+import { SafeUser, UpdateUserDTO } from "./user.types";
 import {
   BadRequestError,
   NotFoundError,
 } from "../../core/utils/common/error.utils";
 import { sanitizeUser } from "../../core/utils/security/sanitize.utils";
+import {
+  PaginationResult,
+  PaginationUtils,
+} from "../../core/utils/common/pagination.utils";
 
 export default class UserService {
   private repo = new UserRepository();
 
-  /* CUSTOMER SERVICE */ 
+  /* CUSTOMER SERVICE */
   async getUserById(id: string): Promise<SafeUser> {
     const user = await this.repo.findById(id);
 
@@ -32,10 +33,17 @@ export default class UserService {
   }
 
   /* ADMIN SERVICES */
-  async getAllUsers(): Promise<SafeUser[]> {
-    const users = await this.repo.findAll();
-    return users.map(sanitizeUser);
-  }  
+  async getAllUsers(
+    page: number,
+    limit: number,
+    offset: number
+  ): Promise<PaginationResult<SafeUser>> {
+    const { docs, total } = await this.repo.findPaginated(limit, offset);
+
+    const safeData = docs.map(sanitizeUser);
+
+    return PaginationUtils.format(safeData, total, page, limit);
+  }
 
   async deleteUser(targetId: string, currentUserId: string): Promise<void> {
     const existingUser = await this.repo.findById(targetId);
@@ -43,11 +51,11 @@ export default class UserService {
 
     if (targetId === currentUserId) {
       throw new BadRequestError("You cannot delete your own admin account");
-    };
+    }
 
     if (existingUser.role === "admin") {
       throw new BadRequestError("Cannot delete other admin users");
-    };
+    }
 
     await this.repo.delete(targetId);
   }
