@@ -22,7 +22,7 @@ api.interceptors.response.use(
 
     // AUTO LOGOUT IF TOKEN IS EXPIRED
     if (status === 401) {
-      useAuthStore.getState().logout();
+      useAuthStore.getState().clearStore();
       window.location.href = "/login";
     }
 
