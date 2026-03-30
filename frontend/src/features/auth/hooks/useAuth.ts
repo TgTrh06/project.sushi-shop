@@ -1,33 +1,26 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../auth.store";
 import { authService } from "../auth.service";
 import { Role } from "../../../config/constants/role";
-import type { LoginInput, RegisterInput } from "../auth.schema";
+import type { LoginInput, RegisterInput, ResetPasswordInput } from "../auth.schema";
 import type { User } from "../../users/user.types";
 import type { AppError } from "../../../types/error.type";
 import { useState } from "react";
-import { showSuccess } from "../../../lib/toast";
+import { showError, showSuccess } from "../../../lib/toast";
 
 export const useAuthActions = () => {
   const { setUser, clearStore } = useAuthStore();
-  const [ loading, setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleAuthSuccess = async (user: User) => {
     setUser(user);
 
-    // Get to location before or Back to Home
-    const from = location.state?.from?.pathname;
-
-    if (from) {
-      navigate(from, { replace: true });
-    } else {
-      // Default navigate
-      if (user.role === Role.ADMIN) navigate("/admin/dashboard", { replace: true });
-      else navigate("/shop", { replace: true });
-    }
-  }
+    // Default navigate
+    if (user.role === Role.ADMIN)
+      navigate("/admin/dashboard", { replace: true });
+    else navigate("/shop", { replace: true });
+  };
 
   const handleRegister = async (input: RegisterInput) => {
     setLoading(true);
@@ -40,6 +33,7 @@ export const useAuthActions = () => {
       return { success: true };
     } catch (err) {
       const error = err as AppError;
+      showError(error.message);
       throw error; // Throw to Form Component
     } finally {
       setLoading(false);
@@ -57,9 +51,10 @@ export const useAuthActions = () => {
       return { success: true };
     } catch (err) {
       const error = err as AppError;
+      showError(error.message);
       throw error; // Throw to Form Component
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -68,17 +63,35 @@ export const useAuthActions = () => {
       await authService.logout();
     } catch (err) {
       const error = err as AppError;
-      throw error; // Throw to Form Component
+      showError(error.message);
+      throw error;
     } finally {
       clearStore();
       navigate("/login", { replace: true });
     }
-  }
+  };
 
-  return { 
+  const handleResetPassword = async (input: ResetPasswordInput) => {
+    setLoading(true);
+    try {
+      await authService.resetPassword(input);
+      showSuccess("Password reset successful. Please login.");
+      navigate("/login", { replace: true });
+      return { success: true };
+    } catch (err) {
+      const error = err as AppError;
+      showError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
     handleRegister,
-    handleLogin, 
+    handleLogin,
     handleLogout,
-    loading 
+    handleResetPassword,
+    loading,
   };
 };

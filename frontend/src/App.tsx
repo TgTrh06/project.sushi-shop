@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AppRoutes } from "./routes/AppRoutes";
@@ -7,14 +7,13 @@ import { userService } from "./features/users/user.service";
 import { Navbar } from "./components/layout/Navbar";
 
 function App() {
-  // State để chặn render UI cho đến khi check API xong
-  const [isInitializing, setIsInitializing] = useState(true);
-  const { isAuthenticated, setUser, clearStore } = useAuthStore();
+  const { setUser, clearStore, isInitializing, setInitializing } = useAuthStore();
 
   useEffect(() => {
     const verifySession = async () => {
-      // Chỉ kiểm tra API nếu LocalStorage báo là đã từng đăng nhập
-      if (isAuthenticated) {
+      const hasSession = localStorage.getItem("hasSession");
+
+      if (hasSession === "true") {
         try {
           const user = await userService.getMe();
           setUser(user); // Cập nhật lại thông tin mới nhất (VD: lỡ Admin vừa đổi role của user)
@@ -24,11 +23,11 @@ function App() {
         }
       }
       // Dù thành công hay thất bại cũng tắt màn hình loading
-      setIsInitializing(false);
+      setInitializing(false);
     };
 
     verifySession();
-  }, [isAuthenticated, setUser, clearStore]);
+  }, [setUser, clearStore, setInitializing]);
 
   // Màn hình chờ lúc mới F5 (Bạn có thể thay bằng Spinner đẹp hơn)
   if (isInitializing) {
