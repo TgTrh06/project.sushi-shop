@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios, { type AxiosInstance } from "axios";
 import { useAuthStore } from "../features/auth/auth.store";
 
-export const api = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "/api/v1",
   withCredentials: true,
   headers: {
