@@ -4,11 +4,10 @@ import { Role } from "../config/constants/role";
 
 import { LoginForm } from "../features/auth/components/LoginForm";
 import { RegisterForm } from "../features/auth/components/RegisterForm";
+import { ResetPasswordForm } from "../features/auth/components/ResetPasswordForm";
 import { HomePage } from "../pages/HomePage";
 import { AboutPage } from "../pages/AboutPage";
 import { ShopPage } from "../pages/ShopPage";
-// import AdminDashboard from "../pages/AdminDashboard";
-// import ShopPage from "../pages/ShopPage";
 
 export const AppRoutes = () => {
   return (
@@ -18,6 +17,7 @@ export const AppRoutes = () => {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/login" element={<LoginForm />} />
       <Route path="/register" element={<RegisterForm />} />
+      <Route path="/reset-password" element={<ResetPasswordForm />} />
       <Route path="/unauthorized" element={<h2>You don't have permission!</h2>} />
 
       {/* Admin Routes (Chỉ Admin mới vào được) */}
