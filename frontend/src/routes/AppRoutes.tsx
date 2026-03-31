@@ -7,7 +7,8 @@ import { RegisterForm } from "../features/auth/components/RegisterForm";
 import { ResetPasswordForm } from "../features/auth/components/ResetPasswordForm";
 import { HomePage } from "../pages/HomePage";
 import { AboutPage } from "../pages/AboutPage";
-import { ShopPage } from "../pages/ShopPage";
+import MenuPage from "../pages/MenuPage";
+import BookingPage from "../pages/BookingPage";
 
 export const AppRoutes = () => {
   return (
@@ -27,9 +28,10 @@ export const AppRoutes = () => {
       </Route>
 
       {/* Shop / Customer Routes (Bất kỳ ai đăng nhập đều vào được) */}
-      <Route element={<ProtectedRoute allowedRoles={[Role.CUSTOMER, Role.ADMIN]} />}>
-        <Route path="/shop" element={<ShopPage />} />
-      </Route>
+      {/* <Route element={<ProtectedRoute allowedRoles={[Role.CUSTOMER, Role.ADMIN]} />}> */}
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/booking" element={<BookingPage />} />
+      {/* </Route> */}
 
       {/* Redirect 404 */}
       <Route path="*" element={<Navigate to="/login" />} />
