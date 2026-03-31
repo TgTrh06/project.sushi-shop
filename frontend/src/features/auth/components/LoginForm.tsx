@@ -15,7 +15,7 @@ export const LoginForm = () => {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(LoginSchema),
-    mode: "onTouched",
+    mode: "onSubmit",
   });
 
   const onSubmit = async (data: LoginInput) => {
@@ -47,7 +47,7 @@ export const LoginForm = () => {
                 Email
               </label>
               <input
-                {...register("email")}
+                {...register("email", { required: "Email is required" })}
                 type="email"
                 autoComplete="email"
                 disabled={loading}
