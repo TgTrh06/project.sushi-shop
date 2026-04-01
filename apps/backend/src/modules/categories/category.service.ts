@@ -1,4 +1,4 @@
-import { ConflictError } from "../../core/utils/common/error.utils";
+import { ConflictError } from "../../utils/common/error.utils";
 import CategoryRepository from "./category.repository";
 import { CategoryEntity, CreateCategoryDTO } from "./category.types";
 

@@ -3,12 +3,12 @@ import { SafeUser, UpdateUserDTO } from "./user.types";
 import {
   BadRequestError,
   NotFoundError,
-} from "../../core/utils/common/error.utils";
-import { sanitizeUser } from "../../core/utils/security/sanitize.utils";
+} from "../../utils/common/error.utils";
+import { sanitizeUser } from "../../utils/security/sanitize.utils";
 import {
   PaginationResult,
   PaginationUtils,
-} from "../../core/utils/common/pagination.utils";
+} from "../../utils/common/pagination.utils";
 
 export default class UserService {
   private repo = new UserRepository();

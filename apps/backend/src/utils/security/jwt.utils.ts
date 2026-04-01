@@ -1,5 +1,5 @@
 import jwt, { Secret, SignOptions } from "jsonwebtoken";
-import { UserEntity } from "../../../modules/users/user.types";
+import { UserEntity } from "../../modules/users/user.types";
 import { Response } from "express";
 import { env } from "../../config/env.config";
 import { COOKIE_OPTIONS, TOKEN_NAME } from "../../config/cookie.config";

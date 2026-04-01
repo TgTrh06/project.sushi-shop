@@ -1,9 +1,9 @@
 // reference custom Express types (no runtime import)
-/// <reference path="./core/types/express.d.ts" />
+/// <reference path="./types/express.d.ts" />
 
 import app from "./app";
-import { connectDB } from "./core/config/database.config";
-import { env } from "./core/config/env.config";
+import { connectDB } from "./config/database.config";
+import { env } from "./config/env.config";
 
 const PORT = env.PORT;
 

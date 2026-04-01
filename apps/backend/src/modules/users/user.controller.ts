@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ResponseHandler } from "../../core/utils/common/response.utils";
+import { ResponseHandler } from "../../utils/common/response.utils";
 import UserService from "./user.service";
-import { PaginationUtils } from "../../core/utils/common/pagination.utils";
+import { PaginationUtils } from "../../utils/common/pagination.utils";
 
 const userService = new UserService();
 
