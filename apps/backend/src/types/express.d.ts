@@ -1,7 +1,4 @@
-import { JwtPayload } from "../middleware/auth.middleware";
-
-// augment Express request to include user property
-// using a module-level export helps TypeScript treat this as a module
+import { JwtPayload } from "./jwt.type";
 
 declare global {
   namespace Express {
@@ -11,4 +8,4 @@ declare global {
   }
 }
 
-export {};
+export { };
