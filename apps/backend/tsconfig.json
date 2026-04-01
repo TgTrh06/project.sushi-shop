@@ -5,11 +5,17 @@
     "rootDir": "src",
     "outDir": "dist",
     "strict": true,
+    "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "typeRoots": ["./node_modules/@types", "src/types"]
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts"]
-}
+  "files": ["src/types/express.d.ts"],
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

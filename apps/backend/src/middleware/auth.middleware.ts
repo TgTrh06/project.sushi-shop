@@ -3,11 +3,7 @@ import { env } from "../config/env.config";
 import { Request, Response, NextFunction } from "express";
 import { ForbiddenError, UnauthorizedError } from "../utils/common/error.utils";
 import { TOKEN_NAME } from "../config/cookie.config";
-
-export interface JwtPayload {
-  id: string;
-  role: string;
-}
+import { JwtPayload } from "../types/jwt.type";
 
 export const verifyToken = async (
   req: Request,
