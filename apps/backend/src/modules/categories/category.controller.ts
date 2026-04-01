@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import CategoryService from "./category.service";
-import { ResponseHandler } from "../../core/utils/common/response.utils";
+import { ResponseHandler } from "../../utils/common/response.utils";
 
 const categoryService = new CategoryService();
 

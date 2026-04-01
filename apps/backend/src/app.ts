@@ -1,9 +1,9 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { globalErrorHandler } from "./core/middleware/error.middleware";
+import { globalErrorHandler } from "./middleware/error.middleware";
 
-import mainRouter from "./core/routes";
+import mainRouter from "./routes";
 
 const app = express();
 

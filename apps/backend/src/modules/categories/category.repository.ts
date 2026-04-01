@@ -1,4 +1,4 @@
-import BaseRepository from "../../core/repository";
+import BaseRepository from "../../repository";
 import { CategoryModel } from "./category.model";
 import { 
   CategoryEntity,
