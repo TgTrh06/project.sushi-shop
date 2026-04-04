@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
 import { env } from "@/config/env.config";
-import { refreshCookieOptions, REFRESH_TOKEN_COOKIE_NAME } from "@/config/cookie.config";
+import { REFRESH_COOKIE_OPTIONS, REFRESH_TOKEN_NAME } from "@/config/cookie.config";
 import { UnauthorizedError } from "@/utils/common/error.utils";
 
 interface AccessTokenPayload {
@@ -38,9 +38,9 @@ export function verifyRefreshToken(token: string): RefreshTokenPayload {
 }
 
 export function setRefreshCookie(res: Response, token: string): void {
-  res.cookie(REFRESH_TOKEN_COOKIE_NAME, token, refreshCookieOptions);
+  res.cookie(REFRESH_TOKEN_NAME, token, REFRESH_COOKIE_OPTIONS);
 }
 
 export function clearRefreshCookie(res: Response): void {
-  res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { ...refreshCookieOptions, maxAge: undefined });
+  res.clearCookie(REFRESH_TOKEN_NAME, { ...REFRESH_COOKIE_OPTIONS, maxAge: undefined });
 }

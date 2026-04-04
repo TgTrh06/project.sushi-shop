@@ -1,96 +1,92 @@
-import { ConflictError, UnauthorizedError } from "../../utils/common/error.utils";
-import { create, findByToken, revokeToken, revokeAllForUser } from "./refreshToken.repository";
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/security/jwt.utils";
-import UserRepository from "../users/user.repository";
-import { hashPassword, comparePassword } from "../../utils/security/bcrypt.utils";
-import { sanitizeUser } from "../../utils/security/sanitize.utils";
-import { LoginInput, RegisterInput } from "@shared/schemas/auth.schema";
+import { ConflictError, ForbiddenError, UnauthorizedError } from "@/utils/common/error.utils";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "@/utils/security/jwt.utils";
+import { hashPassword, comparePassword } from "@/utils/security/bcrypt.utils";
+import { LoginInput, RegisterInput, Role } from "@shared/schemas/auth.schema";
+import { UserEntity } from "@/modules/users/user.model";
+import UserRepository from "@/modules/users/user.repository";
+import SessionRepository from "./session.repository";
+import { REFRESH_TOKEN_EXPIRY } from "@/config/cookie.config";
 
 export class AuthService {
-  private repo = new UserRepository();
+  private userRepo = new UserRepository();
+  private sessionRepo = new SessionRepository();
+
+  private async generateAuthResponse(user: UserEntity) {
+    // Generate tokens
+    const accessToken = generateAccessToken({ id: user.id, role: user.role });
+    const refreshToken = generateRefreshToken({ id: user.id });
+
+    // Store refresh token in DB with expiration
+    const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRY);
+    await this.sessionRepo.createSession(user.id, refreshToken, expiresAt);
+
+    // Exclude hashedPassword from user object before returning
+    const { hashedPassword, ...safeUser } = user;
+
+    return {
+      accessToken,
+      refreshToken,
+      user: safeUser,
+    };
+  }
 
   async register(dto: RegisterInput) {
-    const existing = await this.repo.findByEmailForAuth(dto.email);
-    if (existing) {
-      throw new ConflictError("Email already exists");
-    }
+    const existing = await this.userRepo.exists(dto.email);
+    if (existing) throw new ConflictError("Email already exists");
 
     const hashedPassword = await hashPassword(dto.password);
 
-    const newUser = await this.repo.create({
+    const newUser = await this.userRepo.create({
       email: dto.email,
-      username: dto.username ?? dto.email,
-      password: hashedPassword,
-      confirmPassword: hashedPassword,
-      role: "customer",
-    } as RegisterInput);
+      username: dto.username,
+      hashedPassword: hashedPassword,
+      role: dto.role || Role.CUSTOMER,
+    } as any);
 
-    const accessToken = generateAccessToken({ id: newUser.id, role: newUser.role });
-    const refreshToken = generateRefreshToken(newUser.id);
-
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    await create(newUser.id, refreshToken, expiresAt);
-
-    const user = sanitizeUser(newUser);
-
-    return { accessToken, refreshToken, user };
+    return this.generateAuthResponse(newUser);
   }
 
   async login(dto: LoginInput) {
-    const existingUser = await this.repo.findByEmailForAuth(dto.email);
-    if (!existingUser) {
-      throw new UnauthorizedError("Invalid email or password");
-    }
+    const existingUser = await this.userRepo.findByEmail(dto.email, true);
+    if (!existingUser) throw new UnauthorizedError("Invalid email or password");
 
-    const isMatch = await comparePassword(dto.password, existingUser.password);
-    if (!isMatch) {
-      throw new UnauthorizedError("Invalid email or password");
-    }
+    const isMatch = await comparePassword(dto.password, existingUser.hashedPassword);
+    if (!isMatch) throw new UnauthorizedError("Invalid email or password");
 
-    const accessToken = generateAccessToken({ id: existingUser.id, role: existingUser.role });
-    const refreshToken = generateRefreshToken(existingUser.id);
-
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    await create(existingUser.id, refreshToken, expiresAt);
-
-    const user = sanitizeUser(existingUser);
-
-    return { accessToken, refreshToken, user };
+    return this.generateAuthResponse(existingUser);
   }
 
-  async refresh(token: string) {
-    const payload = verifyRefreshToken(token);
+  async logout(refreshToken: string | undefined): Promise<void> {
+    if (!refreshToken) return;
+
+    await this.sessionRepo.deleteByToken(refreshToken);
+  }
+
+  async refresh(refreshToken: string) {
+    // 1. Verify token and extract payload
+    const payload = verifyRefreshToken(refreshToken);
     const userId = payload.id;
 
-    const record = await findByToken(token);
-
-    if (!record) {
-      await revokeAllForUser(userId);
-      throw new UnauthorizedError("Token reuse detected");
+    // 2. Check if session exists and is valid
+    const session = await this.sessionRepo.findByToken(refreshToken);
+    // If no session found, it means token reuse or invalid token
+    if (!session) {
+      await this.sessionRepo.deleteAllByUserId(userId);
+      throw new ForbiddenError("Token reuse detected! Please login again.");
     }
 
-    if (record.isRevoked) {
-      await revokeAllForUser(userId);
-      throw new UnauthorizedError("Token reuse detected");
-    }
+    // 3. Delete old session and create new one
+    await this.sessionRepo.deleteByToken(refreshToken);
 
-    await revokeToken(token);
+    // 4. Find user to get latest role and other info
+    const user = await this.userRepo.findById(userId);
+    if (!user) throw new UnauthorizedError("User not found");
 
-    const user = await this.repo.findById(userId);
-    const role = user?.role ?? "customer";
-
-    const accessToken = generateAccessToken({ id: userId, role });
-    const newRefreshToken = generateRefreshToken(userId);
-
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    await create(userId, newRefreshToken, expiresAt);
-
-    return { accessToken, refreshToken: newRefreshToken };
-  }
-
-  async logout(token: string | undefined): Promise<void> {
-    if (token) {
-      await revokeToken(token);
-    }
+    // 5. Generate new tokens and session
+    return this.generateAuthResponse(user);
   }
 }
