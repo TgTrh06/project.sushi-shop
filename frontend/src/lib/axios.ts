@@ -2,17 +2,17 @@ import axios, { type AxiosInstance } from "axios";
 import { useAuthStore } from "../stores/auth.store";
 
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api/v1",
+  baseURL: import.meta.env.MODE === "development" ? import.meta.env.VITE_API_URL : "/api/v1",
   withCredentials: true,
 });
 
-// REQUEST INTERCEPTOR
+// REQUEST INTERCEPTOR - Attach Access Token to Authorization Header
 api.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().accessToken;
+    const { accessToken } = useAuthStore.getState();
     
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
     return config;
@@ -23,31 +23,35 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (!error.response) {
-      const networkError = {
-        message: "Failed connecting to server. Please check the connection.",
-        status: 503
-      };
-      return Promise.reject(networkError);
+    const originalRequest = error.config;
+
+    // API that don't require token refresh - Prevent infinite loop of refresh attempts
+    if (
+      originalRequest.url.includes("/auth/login") ||
+      originalRequest.url.includes("/auth/register") ||
+      originalRequest.url.includes("/auth/refresh")
+    ) {
+      return Promise.reject(error);
     }
 
-    const status = error.response?.status;
-    const payload = error.response?.data || {};
-    const message = payload.message || "Something went wrong";
-    const errors = payload.errors;
+    originalRequest._retryCount = originalRequest._retryCount || 0;
 
-    const normalizedError = { message, errors, status };
+    // Check if error is due to unauthorized access and we haven't already tried refreshing
+    if (error.response?.status === 401 && originalRequest._retryCount < 4) {
+      originalRequest._retryCount += 1;
 
-    if (status === 401) {
-      useAuthStore.getState().clearAuth();
-      window.dispatchEvent(new CustomEvent("auth-unauthorized"));
-    } else if (status === 403) {
-      window.dispatchEvent(new CustomEvent("auth-forbiden"));
-    } else {
-      console.error("[Server Error]: ", error);
+      try {
+        // Attempt to refresh token
+        const response = await api.post("/auth/refresh", { withCredentials: true });
+        const newAccessToken = response.data.accessToken;
+
+        useAuthStore.getState().setAccessToken(newAccessToken); // Update access token in store
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
     }
+    return Promise.reject(error);
 
-    return Promise.reject(normalizedError);
   },
 );
 

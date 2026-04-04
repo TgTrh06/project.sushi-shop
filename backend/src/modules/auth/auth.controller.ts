@@ -2,11 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service";
 import { setRefreshCookie, clearRefreshCookie } from "../../utils/security/jwt.utils";
 import { REFRESH_TOKEN_NAME } from "../../config/cookie.config";
-import { RegisterInputSchema, LoginInputSchema } from "@shared/schemas/auth.schema";
-import { BadRequestError, UnauthorizedError } from "../../utils/common/error.utils";
+import { UnauthorizedError } from "../../utils/common/error.utils";
 import { ResponseHandler } from "../../utils/common/response.utils";
-
-
 
 export class AuthController {
   private static authService = new AuthService();
