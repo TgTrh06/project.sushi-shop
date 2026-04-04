@@ -1,15 +1,13 @@
 import UserRepository from "./user.repository";
-import { SafeUser } from "./user.types";
-import {
-  BadRequestError,
-  NotFoundError,
-} from "../../utils/common/error.utils";
-import { sanitizeUser } from "../../utils/security/sanitize.utils";
+import { SafeUser, UserEntity } from "./user.model";
 import { UpdateUserInput } from "@shared/schemas/auth.schema";
-import {
-  PaginationResult,
-  PaginationUtils,
-} from "../../utils/common/pagination.utils";
+import { BadRequestError, NotFoundError } from "@/utils/common/error.utils";
+import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.utils";
+
+function sanitizeUser(user: UserEntity): SafeUser {
+  const { hashedPassword, ...safeUser } = user;
+  return safeUser;
+}
 
 export default class UserService {
   private repo = new UserRepository();
@@ -37,7 +35,7 @@ export default class UserService {
   async getAllUsers(
     page: number,
     limit: number,
-    offset: number
+    offset: number,
   ): Promise<PaginationResult<SafeUser>> {
     const { docs, total } = await this.repo.findPaginated(limit, offset);
 
