@@ -1,6 +1,5 @@
 import BaseRepository from "../../repository";
-import { UserModel } from "./user.model";
-import { UserEntity } from "./user.types";
+import { UserModel, UserEntity } from "./user.model";
 import { RegisterInput, UpdateUserInput } from "@shared/schemas/auth.schema";
 
 export default class UserRepository extends BaseRepository<
@@ -17,14 +16,14 @@ export default class UserRepository extends BaseRepository<
       id: doc._id.toString(),
       username: doc.username,
       email: doc.email,
-      password: doc.password,
+      hashedPassword: doc.hashedPassword,
       role: doc.role,
       createdAt: doc.createdAt,
     };
   }
 
   async findByEmailForAuth(email: string): Promise<UserEntity | null> {
-    const doc = await this.model.findOne({ email }).select("+password").lean();
+    const doc = await this.model.findOne({ email }).select("+hashedPassword").lean();
     return doc ? this.mapToEntity(doc) : null;
   }
 }

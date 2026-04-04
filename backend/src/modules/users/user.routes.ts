@@ -1,6 +1,6 @@
 import { Router } from "express";
 import UserController from "./user.controller";
-import { verifyAccessToken, authorize } from "../../middleware/auth.middleware";
+import { verifyAccessToken, verifyAdmin } from "../../middleware/auth.middleware";
 
 const router = Router();
 
@@ -13,8 +13,8 @@ router.put("/me", verifyAccessToken, UserController.getProfile);
 // ==========================================
 // ADMIN ROUTES (verifyToken & verifyAdmin)
 // ==========================================
-router.get("/", verifyAccessToken, authorize("admin"), UserController.getAllUsers);
-router.get("/:id", verifyAccessToken, authorize("admin"), UserController.getUserById);
-router.delete("/:id", verifyAccessToken, authorize("admin"), UserController.deleteUser);
+router.get("/", verifyAccessToken, verifyAdmin, UserController.getAllUsers);
+router.get("/:id", verifyAccessToken, verifyAdmin, UserController.getUserById);
+router.delete("/:id", verifyAccessToken, verifyAdmin, UserController.deleteUser);
 
 export default router;
