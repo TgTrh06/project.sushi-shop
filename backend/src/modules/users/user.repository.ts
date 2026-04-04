@@ -1,17 +1,17 @@
-import BaseRepository from "../../repository";
+import { Model } from "mongoose";
 import { UserModel, UserEntity } from "./user.model";
 import { RegisterInput, UpdateUserInput } from "@shared/schemas/auth.schema";
 
-export default class UserRepository extends BaseRepository<
-  UserEntity,
-  RegisterInput,
-  UpdateUserInput
-> {
+export default class UserRepository {
+  private model: Model<any>;
+
   constructor() {
-    super(UserModel);
+    this.model = UserModel;
   }
 
-  protected mapToEntity(doc: any): UserEntity {
+  // Utility to convert Mongoose document to UserEntity
+  private mapToEntity(doc: any): UserEntity {
+    if (!doc) return null as any;
     return {
       id: doc._id.toString(),
       username: doc.username,
@@ -21,9 +21,69 @@ export default class UserRepository extends BaseRepository<
       createdAt: doc.createdAt,
     };
   }
+  
+  // ==========================================
+  // AUTH METHODS
+  // ==========================================
+  
+  async create(data: RegisterInput): Promise<UserEntity> {
+    const doc = await this.model.create(data);
+    return this.mapToEntity(doc);
+  }
 
-  async findByEmailForAuth(email: string): Promise<UserEntity | null> {
-    const doc = await this.model.findOne({ email }).select("+hashedPassword").lean();
+  async findByEmail(email: string, includePassword: boolean = false): Promise<UserEntity | null> {
+    let query = this.model.findOne({ email });
+    
+    if (includePassword) {
+      query.select("+hashedPassword");
+    }
+
+    const doc = await query.lean();
     return doc ? this.mapToEntity(doc) : null;
+  }
+
+  // ==========================================
+  // USER MANAGEMENT METHODS (ADMIN/PROFILE)
+  // ==========================================
+
+  async findById(id: string): Promise<UserEntity | null> {
+    const doc = await this.model.findById(id).lean();
+    return doc ? this.mapToEntity(doc) : null;
+  }
+
+  async findPaginated(limit: number, offset: number): Promise<{ docs: UserEntity[]; total: number }> {
+    const [docs, total] = await Promise.all([
+      this.model
+        .find()
+        .sort({ createdAt: -1 })
+        .skip(offset)
+        .limit(limit)
+        .lean(),
+      this.model.countDocuments(),
+    ]);
+    return { 
+      docs: docs.map((doc) => this.mapToEntity(doc)), 
+      total 
+    };
+  }
+
+  async update(id: string, data: UpdateUserInput): Promise<UserEntity | null> {
+    const doc = await this.model
+      .findByIdAndUpdate(
+        id, 
+        { $set: data },
+        { returnDocument: "after" }
+      )
+      .lean();
+    return doc ? this.mapToEntity(doc) : null;
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const result = await this.model.findByIdAndDelete(id);
+    return !!result;
+  }
+
+  async exists(email: string): Promise<boolean> {
+    return !!(await this.model.exists({ email }));
   }
 }
