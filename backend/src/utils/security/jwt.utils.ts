@@ -1,16 +1,24 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
-import { env } from "../../config/env.config";
-import { refreshCookieOptions, REFRESH_TOKEN_COOKIE_NAME } from "../../config/cookie.config";
-import { UnauthorizedError } from "../common/error.utils";
-import { AccessTokenPayload, RefreshTokenPayload } from "../../types/jwt.type";
+import { env } from "@/config/env.config";
+import { refreshCookieOptions, REFRESH_TOKEN_COOKIE_NAME } from "@/config/cookie.config";
+import { UnauthorizedError } from "@/utils/common/error.utils";
 
-export function generateAccessToken(user: { id: string; role: string }): string {
-  return jwt.sign({ id: user.id, role: user.role }, env.JWT_ACCESS_SECRET, { expiresIn: "15m" });
+interface AccessTokenPayload {
+  id: string;
+  role: string;
 }
 
-export function generateRefreshToken(userId: string): string {
-  return jwt.sign({ id: userId }, env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
+interface RefreshTokenPayload {
+  id: string;
+}
+
+export function generateAccessToken(payload: AccessTokenPayload): string {
+  return jwt.sign({ id: payload.id, role: payload.role }, env.JWT_ACCESS_SECRET, { expiresIn: "15m" });
+}
+
+export function generateRefreshToken(payload: RefreshTokenPayload): string {
+  return jwt.sign({ id: payload.id }, env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
 }
 
 export function verifyAccessToken(token: string): AccessTokenPayload {
