@@ -1,4 +1,4 @@
-import { Role } from "../../constants/role";
+import { Role } from "@shared/schemas/auth.schema";
 
 export type User = {
   id: string;

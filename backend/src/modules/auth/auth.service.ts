@@ -5,7 +5,7 @@ import {
   verifyRefreshToken,
 } from "@/utils/security/jwt.utils";
 import { hashPassword, comparePassword } from "@/utils/security/bcrypt.utils";
-import { LoginInput, RegisterInput, Role } from "@shared/schemas/auth.schema";
+import { LoginFormValues, RegisterFormValues, Role } from "@shared/schemas/auth.schema";
 import { UserEntity } from "@/modules/users/user.model";
 import UserRepository from "@/modules/users/user.repository";
 import SessionRepository from "./session.repository";
@@ -34,7 +34,7 @@ export class AuthService {
     };
   }
 
-  async register(dto: RegisterInput) {
+  async register(dto: RegisterFormValues) {
     const existing = await this.userRepo.exists(dto.email);
     if (existing) throw new ConflictError("Email already exists");
 
@@ -50,7 +50,7 @@ export class AuthService {
     return this.generateAuthResponse(newUser);
   }
 
-  async login(dto: LoginInput) {
+  async login(dto: LoginFormValues) {
     const existingUser = await this.userRepo.findByEmail(dto.email, true);
     if (!existingUser) throw new UnauthorizedError("Invalid email or password");
 

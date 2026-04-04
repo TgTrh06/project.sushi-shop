@@ -1,9 +1,11 @@
 import { z } from "zod";
 
-export enum Role {
-  CUSTOMER = "customer",
-  ADMIN = "admin"
-}
+export const Role = {
+  CUSTOMER: "customer",
+  ADMIN: "admin"
+} as const;
+
+export type Role = typeof Role[keyof typeof Role];
 
 export const RegisterInputSchema = z
   .object({
@@ -23,10 +25,6 @@ export const LoginInputSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export const RefreshTokenInputSchema = z.object({
-  refreshToken: z.string().min(1),
-});
-
 export const UpdateUserInputSchema = z.object({
   username: z.string().min(3).max(30).optional(),
   email: z.email().optional(),
@@ -44,8 +42,7 @@ export const ResetPasswordInputSchema = z
     path: ["confirmPassword"],
   });
 
-export type RegisterInput = z.infer<typeof RegisterInputSchema>;
-export type LoginInput = z.infer<typeof LoginInputSchema>;
-export type RefreshTokenInput = z.infer<typeof RefreshTokenInputSchema>;
-export type UpdateUserInput = z.infer<typeof UpdateUserInputSchema>;
-export type ResetPasswordInput = z.infer<typeof ResetPasswordInputSchema>;
+export type RegisterFormValues = z.infer<typeof RegisterInputSchema>;
+export type LoginFormValues = z.infer<typeof LoginInputSchema>;
+export type UpdateUserFormValues = z.infer<typeof UpdateUserInputSchema>;
+export type ResetPasswordFormValues = z.infer<typeof ResetPasswordInputSchema>;
