@@ -1,60 +1,57 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service";
 import { setRefreshCookie, clearRefreshCookie } from "../../utils/security/jwt.utils";
-import { REFRESH_TOKEN_COOKIE_NAME } from "../../config/cookie.config";
+import { REFRESH_TOKEN_NAME } from "../../config/cookie.config";
 import { RegisterInputSchema, LoginInputSchema } from "@shared/schemas/auth.schema";
 import { BadRequestError, UnauthorizedError } from "../../utils/common/error.utils";
 import { ResponseHandler } from "../../utils/common/response.utils";
 
-const authService = new AuthService();
+
 
 export class AuthController {
+  private static authService = new AuthService();
 
   // POST /auth/register
-  static async register(req: Request, res: Response, next: NextFunction) {
+  static register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const parsed = RegisterInputSchema.safeParse(req.body);
-      if (!parsed.success) {
-        return next(new BadRequestError(parsed.error.issues.map((e: { message: string }) => e.message).join(", ")));
-      }
+      const result = await this.authService.register(req.body);
 
-      const { accessToken, refreshToken, user } = await authService.register(parsed.data);
+      setRefreshCookie(res, result.refreshToken);
 
-      setRefreshCookie(res, refreshToken);
-
-      return ResponseHandler.created(res, { accessToken, user }, "User registered successfully.");
+      return ResponseHandler.created(res, { 
+        accessToken: result.accessToken, 
+        user: result.user 
+      }, "User registered successfully.");
     } catch (error) {
       next(error);
     }
   }
 
   // POST /auth/login
-  static async login(req: Request, res: Response, next: NextFunction) {
+  static login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const parsed = LoginInputSchema.safeParse(req.body);
-      if (!parsed.success) {
-        return next(new BadRequestError(parsed.error.issues.map((e: { message: string }) => e.message).join(", ")));
-      }
+      const result = await this.authService.login(req.body);
 
-      const { accessToken, refreshToken, user } = await authService.login(parsed.data);
+      setRefreshCookie(res, result.refreshToken);
 
-      setRefreshCookie(res, refreshToken);
-
-      return ResponseHandler.success(res, { accessToken, user }, "Login successful");
+      return ResponseHandler.success(res, { 
+        accessToken: result.accessToken, 
+        user: result.user 
+      }, "Login successful");
     } catch (error) {
       next(error);
     }
   }
 
   // POST /auth/refresh
-  static async refresh(req: Request, res: Response, next: NextFunction) {
+  static refresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token: string | undefined = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
+      const token: string | undefined = req.cookies[REFRESH_TOKEN_NAME];
       if (!token) {
         return next(new UnauthorizedError("No refresh token"));
       }
 
-      const { accessToken, refreshToken: newRefreshToken } = await authService.refresh(token);
+      const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh(token);
 
       setRefreshCookie(res, newRefreshToken);
 
@@ -65,11 +62,11 @@ export class AuthController {
   }
 
   // POST /auth/logout
-  static async logout(req: Request, res: Response, next: NextFunction) {
+  static logout = async (req: Request, res: Response, next: NextFunction) =>  {
     try {
-      const token: string = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
+      const token: string = req.cookies[REFRESH_TOKEN_NAME];
 
-      await authService.logout(token);
+      await this.authService.logout(token);
 
       clearRefreshCookie(res);
 

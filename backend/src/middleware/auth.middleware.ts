@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken as verifyJwt } from "@/utils/security/jwt.utils";
+import { verifyAccessToken } from "@/utils/security/jwt.utils";
 import { ForbiddenError, UnauthorizedError } from "@/utils/common/error.utils";
 import { Role } from "@shared/schemas/auth.schema";
 
-export const verifyAccessToken = (
+export const verifyAuth = (
   req: Request,
   _res: Response,
   next: NextFunction,
@@ -17,7 +17,7 @@ export const verifyAccessToken = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = verifyJwt(token);
+    const decoded = verifyAccessToken(token);
     req.user = { id: decoded.id, role: decoded.role as Role };
     next();
   } catch {
