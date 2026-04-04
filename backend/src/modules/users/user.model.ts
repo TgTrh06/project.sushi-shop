@@ -1,15 +1,34 @@
 import { Schema, model } from "mongoose";
-import { UserDocument } from "./user.types";
+import { Role } from "@shared/schemas/auth.schema";
+
+// Business Entity
+export interface UserEntity {
+  id: string;
+  username: string;
+  email: string;
+  hashedPassword: string;
+  role: Role;
+  createdAt: Date;
+}
+
+export type SafeUser = Omit<UserEntity, "hashedPassword">;
+
+// Database shape (Mongoose Document)
+export interface UserDocument extends Omit<UserEntity, "id"> {}
 
 const UserSchema = new Schema<UserDocument>({
-  username: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
-  password: { 
-    type: String, 
+  hashedPassword: {
+    type: String,
     required: true,
-    select: false  
+    select: false,
   },
-  role: { type: String, enum: ["user", "admin"], default: "user" },
+  role: { 
+    type: String, 
+    enum: Object.values(Role), 
+    default: Role.CUSTOMER 
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
