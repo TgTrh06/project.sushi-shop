@@ -17,7 +17,7 @@ export type SafeUser = Omit<UserEntity, "hashedPassword">;
 export interface UserDocument extends Omit<UserEntity, "id"> {}
 
 const UserSchema = new Schema<UserDocument>({
-  username: { type: String, required: true, unique: true },
+  username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   hashedPassword: {
     type: String,

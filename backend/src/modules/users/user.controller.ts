@@ -26,9 +26,9 @@ export default class UserController {
   // PUT /users/me
   static async updateProfile(req: Request, res: Response, next: NextFunction) {
     try {
-      const safeUser = await userService.updateProfile(req.user!.id, req.body);
+      const newProfile = await userService.updateProfile(req.user!.id, req.body);
 
-      return ResponseHandler.success(res, safeUser, "User updated successfully.")
+      return ResponseHandler.success(res, newProfile, "User updated successfully.")
     } catch (error) {
       next(error);
     }

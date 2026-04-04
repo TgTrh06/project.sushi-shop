@@ -1,20 +1,26 @@
 import { Router } from "express";
 import UserController from "./user.controller";
-import { verifyAccessToken, verifyAdmin } from "../../middleware/auth.middleware";
+import { verifyAuth, verifyAdmin } from "../../middleware/auth.middleware";
+import { UpdateUserInputSchema } from "@shared/schemas/auth.schema";
+import { zodValidator } from "@/middleware/validate.middleware";
 
 const router = Router();
 
 // ==========================================
 // CUSTOMER ROUTES (verifyToken)
 // ==========================================
-router.get("/me", verifyAccessToken, UserController.getProfile);
-router.put("/me", verifyAccessToken, UserController.getProfile);
+router.get("/me", verifyAuth, UserController.getProfile);
+router.put("/me", 
+  verifyAuth, 
+  zodValidator(UpdateUserInputSchema),
+  UserController.updateProfile
+);
 
 // ==========================================
 // ADMIN ROUTES (verifyToken & verifyAdmin)
 // ==========================================
-router.get("/", verifyAccessToken, verifyAdmin, UserController.getAllUsers);
-router.get("/:id", verifyAccessToken, verifyAdmin, UserController.getUserById);
-router.delete("/:id", verifyAccessToken, verifyAdmin, UserController.deleteUser);
+router.get("/", verifyAuth, verifyAdmin, UserController.getAllUsers);
+router.get("/:id", verifyAuth, verifyAdmin, UserController.getUserById);
+router.delete("/:id", verifyAuth, verifyAdmin, UserController.deleteUser);
 
 export default router;
