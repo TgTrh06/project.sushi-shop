@@ -1,11 +1,17 @@
 import { z } from "zod";
 
+export enum Role {
+  CUSTOMER = "customer",
+  ADMIN = "admin"
+}
+
 export const RegisterInputSchema = z
   .object({
     username: z.string().min(2, "Name must be at least 2 characters"),
     email: z.email("Invalid email"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
+    role: z.enum(Object.values(Role)).default(Role.CUSTOMER),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

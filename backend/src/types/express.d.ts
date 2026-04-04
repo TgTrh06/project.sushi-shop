@@ -1,4 +1,4 @@
-import { Role } from "../modules/users/user.types";
+import { Role } from "@shared/schemas/auth.schema";
 
 declare global {
   namespace Express {
