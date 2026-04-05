@@ -27,7 +27,6 @@ export const LoginInputSchema = z.object({
 
 export const UpdateUserInputSchema = z.object({
   username: z.string().min(3).max(30).optional(),
-  email: z.email().optional(),
   password: z.string().min(6).regex(/[A-Z]/).regex(/[0-9]/).optional(),
 });
 
@@ -42,7 +41,8 @@ export const ResetPasswordInputSchema = z
     path: ["confirmPassword"],
   });
 
-export type RegisterFormValues = z.infer<typeof RegisterInputSchema>;
+export type RegisterFormInput = z.input<typeof RegisterInputSchema>;   // role?: optional (for useForm)
+export type RegisterFormValues = z.infer<typeof RegisterInputSchema>;  // role: required (output after parse)
 export type LoginFormValues = z.infer<typeof LoginInputSchema>;
 export type UpdateUserFormValues = z.infer<typeof UpdateUserInputSchema>;
 export type ResetPasswordFormValues = z.infer<typeof ResetPasswordInputSchema>;

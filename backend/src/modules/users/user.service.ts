@@ -1,8 +1,9 @@
 import UserRepository from "./user.repository";
 import { type SafeUser, UserEntity } from "./user.model";
-import { UpdateUserInput } from "@shared/schemas/auth.schema";
+import { UpdateUserFormValues } from "@shared/schemas/auth.schema";
 import { BadRequestError, NotFoundError } from "@/utils/common/error.utils";
 import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.utils";
+import { hashPassword } from "@/utils/security/bcrypt.utils";
 
 function sanitizeUser(user: UserEntity): SafeUser {
   const { hashedPassword, ...safeUser } = user;
@@ -22,11 +23,19 @@ export default class UserService {
     return sanitizeUser(user);
   }
 
-  async updateProfile(id: string, dto: UpdateUserInput): Promise<SafeUser> {
+  async updateProfile(id: string, dto: UpdateUserFormValues): Promise<SafeUser> {
     const existingUser = await this.userRepo.findById(id);
     if (!existingUser) throw new NotFoundError("User not found");
 
-    const updatedUser = await this.userRepo.update(id, dto);
+    const updateData: any = { ...dto };
+
+    if (dto.password) {
+      // Hash the new password before saving
+      updateData.hashedPassword = await hashPassword(dto.password);
+      delete updateData.password; // Remove plain password from update data
+    }
+    
+    const updatedUser = await this.userRepo.update(id, updateData);
     if (!updatedUser) throw new BadRequestError("Failed to update user");
 
     return sanitizeUser(updatedUser);

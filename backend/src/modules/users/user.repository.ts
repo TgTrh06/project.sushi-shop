@@ -1,6 +1,6 @@
 import { Model } from "mongoose";
 import { UserModel, UserEntity } from "./user.model";
-import { RegisterInput, UpdateUserInput } from "@shared/schemas/auth.schema";
+import { RegisterFormValues, UpdateUserFormValues } from "@shared/schemas/auth.schema";
 
 export default class UserRepository {
   private model: Model<any>;
@@ -26,7 +26,7 @@ export default class UserRepository {
   // AUTH METHODS
   // ==========================================
   
-  async create(data: RegisterInput): Promise<UserEntity> {
+  async create(data: RegisterFormValues): Promise<UserEntity> {
     const doc = await this.model.create(data);
     return this.mapToEntity(doc);
   }
@@ -67,7 +67,7 @@ export default class UserRepository {
     };
   }
 
-  async update(id: string, data: UpdateUserInput): Promise<UserEntity | null> {
+  async update(id: string, data: UpdateUserFormValues): Promise<UserEntity | null> {
     const doc = await this.model
       .findByIdAndUpdate(
         id, 
