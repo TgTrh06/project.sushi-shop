@@ -7,16 +7,16 @@ import { zodValidator } from "@/middleware/validate.middleware";
 const router = Router();
 
 router.post(
-  "/register", 
+  "/sign-up", 
   zodValidator(RegisterInputSchema),
   AuthController.register
 );
-router.post("/login", 
+router.post("/sign-in", 
   loginRateLimiter, 
   zodValidator(LoginInputSchema),
   AuthController.login
 );
+router.post("/sign-out", AuthController.logout);
 router.post("/refresh", AuthController.refresh);
-router.post("/logout", AuthController.logout);
 
 export default router;

@@ -1,18 +1,18 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuthStore } from "../stores/auth.store";
-import type { Role } from "../constants/role";
+import type { UserRole } from "@/constants/role";
 
 interface ProtectedRouteProps {
-  allowedRoles?: Role[];
+  allowedRoles?: UserRole[];
 }
 
 export const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
-  const { isAuthenticated, user, isInitializing } = useAuthStore();
+  const { user, isInitialized } = useAuthStore();
   const location = useLocation();
 
-  if (isInitializing) return <div>Loading...</div>
+  if (!isInitialized) return <div>Loading...</div>
 
-  if (!isAuthenticated || !user) {
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
