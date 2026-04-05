@@ -4,18 +4,18 @@ import type { ApiResponse } from "../../types/response.type";
 import type { LoginFormValues, RegisterFormValues, ResetPasswordFormValues } from "@shared/schemas/auth.schema";
 
 export const authService = {
-  async register (input: RegisterFormValues): Promise<AuthResponse> {
-    const result = await api.post<ApiResponse<AuthResponse>>("/auth/register", input);
+  async signUp(input: RegisterFormValues): Promise<AuthResponse> {
+    const result = await api.post<ApiResponse<AuthResponse>>("/auth/sign-up", input);
     return result.data.data; // accessToken and user info are in the data property of the API response
   },
 
-  async login(input: LoginFormValues): Promise<AuthResponse> {
-    const result = await api.post<ApiResponse<AuthResponse>>("/auth/login", input);
+  async signIn(input: LoginFormValues): Promise<AuthResponse> {
+    const result = await api.post<ApiResponse<AuthResponse>>("/auth/sign-in", input);
     return result.data.data; // accessToken and user info are in the data property of the API response
   },
 
-  async logout(): Promise<void> {
-    await api.post("/auth/logout");
+  async signOut(): Promise<void> {
+    await api.post("/auth/sign-out");
   },
 
   async refreshToken(): Promise<AuthResponse> {

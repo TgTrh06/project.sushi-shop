@@ -3,32 +3,19 @@ import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AppRoutes } from "./routes/AppRoutes";
 import { useAuthStore } from "./stores/auth.store";
-import { userService } from "./features/users/user.service";
 import { Navbar } from "./components/layout/Navbar";
 
 function App() {
-  const { setAuth, clearAuth, isInitializing, setInitializing } = useAuthStore();
+  const initialize = useAuthStore((state) => state.initialize);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
 
   useEffect(() => {
-    const verifyAuth = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      if (accessToken) {
-        try {
-          const user = await userService.getMe();
-          setAuth(accessToken, user);
-        } catch {
-          clearAuth();
-        }
-      }
-      setInitializing(false);
-    };
-
-    verifyAuth();
-  }, [setAuth, clearAuth, setInitializing]);
+    // Check session (cookie) on app load
+    initialize();
+  }, [initialize]);
 
   // Loading screen while checking auth status
-  if (isInitializing) {
+  if (!isInitialized) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
         <div className="text-lg font-medium text-gray-600">Loading ứng dụng...</div>
@@ -38,12 +25,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar />
-      {/* Nơi chứa toàn bộ các Route bảo mật của bạn */}
-      <AppRoutes />
-      
-      {/* Bắt buộc phải có Toaster để lib/toast.ts của bạn hoạt động */}
       <Toaster position="top-right" reverseOrder={false} />
+
+      <Navbar />
+
+      <main className="max-w-7xl mx-auto px-4 py-6">
+        <AppRoutes />
+      </main>
     </BrowserRouter>
   );
 }
