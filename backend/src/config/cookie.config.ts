@@ -10,5 +10,5 @@ export const REFRESH_COOKIE_OPTIONS: CookieOptions = {
   secure: env.NODE_ENV === "production",
   sameSite: "lax",
   maxAge: REFRESH_TOKEN_EXPIRY,
-  path: "/api/v1/auth/refresh", // Restrict cookie to refresh token endpoint
+  path: "/",
 };
