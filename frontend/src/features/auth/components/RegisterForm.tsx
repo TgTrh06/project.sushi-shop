@@ -1,26 +1,34 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
-import { RegisterInputSchema, type RegisterInput } from "@shared/schemas/auth.schema";
-import { useAuthActions } from "../useAuth";
-import { handleFormError } from "../../../utils/errorHandler";
+import { RegisterInputSchema, type RegisterFormInput, type RegisterFormValues } from "@shared/schemas/auth.schema";
+import { handleFormError } from "@/utils/errorHandler";
+import { useAuthStore } from "@/stores/auth.store";
 
 export const RegisterForm = () => {
-  const { handleRegister, loading } = useAuthActions();
+  const signUp = useAuthStore((state) => state.signUp);
+  const loading = useAuthStore((state) => state.loading);
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<RegisterInput>({
+  } = useForm<RegisterFormInput, unknown, RegisterFormValues>({
     resolver: zodResolver(RegisterInputSchema),
-    mode: "onTouched",
+    mode: "onSubmit",
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: "customer", // default role is customer, users cannot choose role during registration
+    },
   });
 
-  const onSubmit = async (data: RegisterInput) => {
+  const onSubmit = async (data: RegisterFormValues) => {
     try {
-      await handleRegister(data);
+      await signUp(data);
     } catch (error) {
       handleFormError(error, setError);
     }
@@ -138,7 +146,7 @@ export const RegisterForm = () => {
           {/* Footer */}
           <p className="text-center text-slate-400 text-sm mt-6">
             Already have an account?{" "}
-            <Link to="/login" className="text-orange-400 hover:text-orange-300 font-medium transition">
+            <Link to="/sign-in" className="text-orange-400 hover:text-orange-300 font-medium transition">
               Sign in
             </Link>
           </p>

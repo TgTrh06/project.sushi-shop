@@ -1,26 +1,30 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
-import { LoginInputSchema, type LoginInput } from "@shared/schemas/auth.schema";
-import { useAuthActions } from "../useAuth";
-import { handleFormError } from "../../../utils/errorHandler";
+import { Link, useNavigate } from "react-router-dom";
+import { LoginInputSchema, type LoginFormValues } from "@shared/schemas/auth.schema";
+import { handleFormError } from "@/utils/errorHandler";
+import { useAuthStore } from "@/stores/auth.store";
+
 
 export const LoginForm = () => {
-  const { handleLogin, loading } = useAuthActions();
+  const signIn = useAuthStore((state) => state.signIn);
+  const loading = useAuthStore((state) => state.loading);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginInput>({
+  } = useForm<LoginFormValues>({
     resolver: zodResolver(LoginInputSchema),
     mode: "onSubmit",
   });
 
-  const onSubmit = async (data: LoginInput) => {
+  const onSubmit = async (data: LoginFormValues) => {
     try {
-      await handleLogin(data);
+      await signIn(data);
+      navigate("/");
     } catch (error) {
       handleFormError(error, setError);
     }
