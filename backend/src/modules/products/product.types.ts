@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IsString, IsNumber, Min, IsMongoId, IsOptional, IsBoolean, MaxLength } from 'class-validator';
+import { z } from "zod";
 
 // Business Entity
 export interface ProductEntity {
@@ -18,52 +18,23 @@ export interface ProductEntity {
 export interface ProductDocument extends Omit<ProductEntity, "id"> {}
 
 // DTOs
-export class CreateProductDTO {
-  @IsString()
-  @MaxLength(100, { message: "Tên món quá dài" })
-  name!: string;
+export const CreateProductDTO = z.object({
+  name: z.string().min(2).max(100),
+  price: z.number().min(0),
+  description: z.string().max(250).optional(),
+  categoryId: z.string().uuid(),
+  isAvailable: z.boolean().optional(),
+  stockQuantity: z.number().min(0)
+});
 
-  @IsNumber()
-  @Min(0, { message: "Giá không được nhỏ hơn 0" })
-  price!: number;
+export const UpdateProductDTO = z.object({
+  name: z.string().min(2).max(100).optional(),
+  price: z.number().min(0).optional(),
+  description: z.string().max(250).optional(),
+  categoryId: z.string().uuid().optional(),
+  isAvailable: z.boolean().optional(),
+  stockQuantity: z.number().min(0).optional()
+});
 
-  @IsMongoId({ message: "Danh mục (Category) không hợp lệ" })
-  category!: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  isAvailable?: boolean;
-
-  @IsNumber()
-  @Min(0)
-  stockQuantity!: number;
-}
-
-export class UpdateProductDTO {
-  @IsString()
-  @MaxLength(100, { message: "Tên món quá dài" })
-  name?: string;
-
-  @IsNumber()
-  @Min(0, { message: "Giá không được nhỏ hơn 0" })
-  price?: number;
-
-  @IsMongoId({ message: "Danh mục (Category) không hợp lệ" })
-  category?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  isAvailable?: boolean;
-
-  @IsNumber()
-  @Min(0)
-  stockQuantity?: number;
-}
+export type CreateProductInput = z.infer<typeof CreateProductDTO>;
+export type UpdateProductInput = z.infer<typeof UpdateProductDTO>;
