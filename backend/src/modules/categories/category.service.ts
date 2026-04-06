@@ -1,6 +1,6 @@
 import { ConflictError } from "../../utils/common/error.utils";
 import CategoryRepository from "./category.repository";
-import { CategoryEntity, CreateCategoryDTO } from "./category.types";
+import { CategoryEntity, CreateCategoryInput } from "./category.types";
 
 export default class CategoryService {
   private repo = new CategoryRepository();
@@ -9,7 +9,7 @@ export default class CategoryService {
     return await this.repo.findAll();
   }
 
-  async createCategory(dto: CreateCategoryDTO): Promise<CategoryEntity> {
+  async createCategory(dto: CreateCategoryInput): Promise<CategoryEntity> {
     const existingCategory = await this.repo.findByName(dto.name)
     if (existingCategory) {
       throw new ConflictError("Category already exists.");
