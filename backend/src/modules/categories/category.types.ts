@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional } from "class-validator";
+import { z } from "zod";
 
 // Business Entity
 export interface CategoryEntity {
@@ -12,22 +12,15 @@ export interface CategoryEntity {
 export interface CategoryDocument extends Omit<CategoryEntity, "id"> {}
 
 // DTOs
-export class CreateCategoryDTO {
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
+export const CreateCategoryDTO = z.object({
+  name: z.string().min(2).max(100),
+  description: z.string().max(250).optional()
+});
 
-  @IsString()
-  @IsOptional()
-  description?: string;
-}
+export const UpdateCategoryDTO = z.object({
+  name: z.string().min(2).max(100).optional(),
+  description: z.string().max(250).optional()
+});
 
-export class UpdateCategoryDTO {
-  @IsString()
-  @IsNotEmpty()
-  name?: string;
-
-  @IsString()
-  @IsOptional()
-  description?: string;
-}
+export type CreateCategoryInput = z.infer<typeof CreateCategoryDTO>;
+export type UpdateCategoryInput = z.infer<typeof UpdateCategoryDTO>;
