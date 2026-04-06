@@ -22,5 +22,5 @@ export const UpdateCategoryDTO = z.object({
   description: z.string().max(250).optional()
 });
 
-export type CreateCategoryInput = z.infer<typeof CreateCategoryDTO>;
-export type UpdateCategoryInput = z.infer<typeof UpdateCategoryDTO>;
+export type CreateCategoryFormValues = z.infer<typeof CreateCategoryDTO>;
+export type UpdateCategoryFormValues = z.infer<typeof UpdateCategoryDTO>;
