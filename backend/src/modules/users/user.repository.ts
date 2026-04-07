@@ -1,9 +1,9 @@
 import { Model } from "mongoose";
-import { UserModel, UserEntity } from "./user.model";
+import { UserModel, UserEntity, UserDocument } from "./user.model";
 import { RegisterFormValues, UpdateUserFormValues } from "@shared/schemas/auth.schema";
 
 export default class UserRepository {
-  private model: Model<any>;
+  private model: Model<UserDocument>;
 
   constructor() {
     this.model = UserModel;

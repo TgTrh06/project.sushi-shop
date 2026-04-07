@@ -9,18 +9,18 @@ const router = Router();
 // ==========================================
 // CUSTOMER ROUTES (verifyToken)
 // ==========================================
-router.get("/me", verifyAuth, UserController.getProfile);
+router.get("/me", verifyAuth, UserController.getMe);
 router.put("/me", 
   verifyAuth, 
   zodValidator(UpdateUserInputSchema),
-  UserController.updateProfile
+  UserController.update
 );
 
 // ==========================================
 // ADMIN ROUTES (verifyToken & verifyAdmin)
 // ==========================================
-router.get("/", verifyAuth, verifyAdmin, UserController.getAllUsers);
-router.get("/:id", verifyAuth, verifyAdmin, UserController.getUserById);
-router.delete("/:id", verifyAuth, verifyAdmin, UserController.deleteUser);
+router.get("/", verifyAuth, verifyAdmin, UserController.getAll);
+router.get("/:id", verifyAuth, verifyAdmin, UserController.getOneById);
+router.delete("/:id", verifyAuth, verifyAdmin, UserController.delete);
 
 export default router;
