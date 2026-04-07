@@ -1,4 +1,4 @@
-import { ProductEntity, CreateProductInput, UpdateProductInput } from "./product.types";
+import { ProductEntity, CreateProductDTO, UpdateProductDTO } from "./product.types";
 import ProductRepository from "./product.repository";
 import { BadRequestError, ConflictError, NotFoundError } from "../../utils/common/error.utils";
 
@@ -23,7 +23,7 @@ export default class ProductService {
   }
   
   /* ADMIN SERVICE */
-  async createProduct(dto: CreateProductInput): Promise<ProductEntity> {
+  async createProduct(dto: CreateProductDTO): Promise<ProductEntity> {
     const existingProduct = await this.repo.findByName(dto.name);
     if (existingProduct) {
       throw new ConflictError("Product already exists.");
@@ -32,7 +32,7 @@ export default class ProductService {
     return await this.repo.create(dto);
   } 
 
-  async updateProduct(id: string, dto: UpdateProductInput): Promise<ProductEntity> {
+  async updateProduct(id: string, dto: UpdateProductDTO): Promise<ProductEntity> {
     const existingProduct = await this.repo.findById(id);
     if (!existingProduct) {
       throw new NotFoundError("Product not found.");
