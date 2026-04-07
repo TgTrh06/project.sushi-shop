@@ -3,15 +3,20 @@ import { CategoryModel } from "./category.model";
 import {
   CategoryDocument,
   CategoryEntity,
-  CreateCategoryFormValues,
-  UpdateCategoryFormValues,
+  CreateCategoryDTO,
+  UpdateCategoryDTO,
 } from "./category.types";
+import { ProductDocument } from "../products/product.types";
+import { ProductModel } from "../products/product.model";
+import { ConflictError, NotFoundError } from "@/utils/common/error.utils";
 
 export default class CategoryRepository {
-  private model: Model<CategoryDocument>;
+  private categoryModel: Model<CategoryDocument>;
+  private productModel: Model<ProductDocument>;
 
   constructor() {
-    this.model = CategoryModel;
+    this.categoryModel = CategoryModel;
+    this.productModel = ProductModel;
   }
 
   protected mapToEntity(doc: any): CategoryEntity {
@@ -19,13 +24,15 @@ export default class CategoryRepository {
     return {
       id: doc._id.toString(),
       name: doc.name,
+      slug: doc.slug,
       description: doc.description,
       createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
-  async create(dto: CreateCategoryFormValues): Promise<CategoryEntity> {
-    const doc = await this.model.create(dto);
+  async create(dto: CreateCategoryDTO): Promise<CategoryEntity> {
+    const doc = await this.categoryModel.create(dto);
     return this.mapToEntity(doc);
   }
 
@@ -34,13 +41,13 @@ export default class CategoryRepository {
     offset: number,
   ): Promise<{ docs: CategoryEntity[]; total: number }> {
     const [docs, total] = await Promise.all([
-      this.model
+      this.categoryModel
         .find()
         .sort({ createdAt: -1 })
         .skip(offset)
         .limit(limit)
         .lean(),
-      this.model.countDocuments(),
+      this.categoryModel.countDocuments(),
     ]);
     return {
       docs: docs.map((doc) => this.mapToEntity(doc)),
@@ -48,22 +55,45 @@ export default class CategoryRepository {
     };
   }
 
+  async findBySlug(slug: string): Promise<CategoryEntity | null> {
+    const doc = await this.categoryModel.findOne({ slug }).lean();
+    return doc ? this.mapToEntity(doc) : null;
+  }
+
   async findById(id: string): Promise<CategoryEntity | null> {
-    const doc = await this.model.findById(id).lean();
+    const doc = await this.categoryModel.findById(id).lean();
     return doc ? this.mapToEntity(doc) : null;
   }
 
   async update(
     id: string,
-    dto: UpdateCategoryFormValues,
+    dto: UpdateCategoryDTO,
   ): Promise<CategoryEntity | null> {
-    const doc = await this.model
-      .findByIdAndUpdate(id, { $set: dto }, { returnDocument: "after" })
+    const doc = await this.categoryModel
+      .findByIdAndUpdate(
+        id, 
+        { $set: dto }, 
+        { returnDocument: "after" }
+      )
       .lean();
     return doc ? this.mapToEntity(doc) : null;
   }
 
-  async exists(name: string): Promise<boolean> {
-    return !!(await this.model.exists({ name }));
+  async delete(id: string): Promise<CategoryEntity> {
+    const hasProduct = await this.productModel.exists({ categoryId: id });
+    if (hasProduct) {
+      throw new ConflictError("Cannot delete category with associated products.");
+    }
+
+    const doc = await this.categoryModel.findByIdAndDelete(id).lean();
+    if (!doc) {
+      throw new NotFoundError("Category not found.");
+    }
+
+    return this.mapToEntity(doc);
+  }
+
+  async existsByName(name: string): Promise<boolean> {
+    return !!(await this.categoryModel.exists({ name }));
   }
 }
