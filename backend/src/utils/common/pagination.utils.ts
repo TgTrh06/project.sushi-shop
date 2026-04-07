@@ -35,7 +35,7 @@ export const PaginationUtils = {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages: limit > 0 ? Math.ceil(total / limit) : 0,
       },
     };
   },
