@@ -1,0 +1,9 @@
+{
+  "name": "@itsu-sushi/shared",
+  "version": "1.0.0",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "zod": "^4.3.6"
+  }
+}
