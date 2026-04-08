@@ -4,7 +4,7 @@ import UserService from "./user.service";
 import { PaginationUtils } from "../../utils/common/pagination.utils";
 
 export default class UserController {
-  private static readonly userService = new UserService();
+  constructor(private readonly userService: UserService) {};
 
   // =========================================================
   // API CUSTOMER (For USER to manage)
@@ -12,7 +12,7 @@ export default class UserController {
   // =========================================================
 
   // GET /users/me
-  static async getMe(req: Request, res: Response, next: NextFunction) {
+  getMe = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const safeUser = await this.userService.getUserById(req.user!.id);
 
@@ -27,7 +27,7 @@ export default class UserController {
   }
 
   // PUT /users/me
-  static async update(req: Request, res: Response, next: NextFunction) {
+  update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const newProfile = await this.userService.updateProfile(
         req.user!.id,
@@ -50,7 +50,7 @@ export default class UserController {
   // =========================================================
 
   // GET /admin/users
-  static async getAll(req: Request, res: Response, next: NextFunction) {
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { page, limit, offset } = PaginationUtils.extract(req.query);
 
@@ -67,7 +67,7 @@ export default class UserController {
   }
 
   // GET /admin/users/:id
-  static async getOneById(req: Request, res: Response, next: NextFunction) {
+  getOneById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const safeUser = await this.userService.getUserById(String(req.params.id));
 
@@ -82,7 +82,7 @@ export default class UserController {
   }
 
   // DELETE /admin/users/:id
-  static async delete(req: Request, res: Response, next: NextFunction) {
+  delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const targetId = String(req.params.id);
       const currentAdminId = req.user!.id;
