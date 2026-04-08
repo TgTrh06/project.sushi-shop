@@ -5,7 +5,7 @@ import { PaginationUtils } from "@/utils/common/pagination.utils";
 import { GetByIdSchema, GetBySlugSchema } from "./category.types";
 
 export default class CategoryController {
-  private categoryService = new CategoryService();
+  constructor(private readonly categoryService: CategoryService) {};
   
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
