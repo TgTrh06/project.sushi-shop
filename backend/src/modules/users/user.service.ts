@@ -11,8 +11,7 @@ function sanitizeUser(user: UserEntity): SafeUser {
 }
 
 export default class UserService {
-  private userRepo = new UserRepository();
-
+  constructor(private readonly userRepo: UserRepository) {};
 
   /* CUSTOMER SERVICE */
   async getUserById(id: string): Promise<SafeUser> {
