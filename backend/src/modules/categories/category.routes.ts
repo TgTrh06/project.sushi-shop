@@ -1,15 +1,16 @@
 import { Router } from "express";
-import CategoryController from "./category.controller";
 import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
 import { zodValidator } from "@/middleware/validate.middleware";
 import { CreateCategorySchema, UpdateCategorySchema } from "./category.types";
+import { categoryController } from "@/container/category.container";
 
 const router = Router();
-const categoryController = new CategoryController();
 
+// GENERAL ROUTES
 router.get("/", categoryController.getAll);
 router.get("/:slug", categoryController.getOneBySlug);
 
+// ADMIN ROUTES
 router.post(
   "/",
   verifyAuth,
