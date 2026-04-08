@@ -10,14 +10,11 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
     "dev:backend": "npm run dev --workspace=backend",
-    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
-    "start": "npm run start --workspace=backend",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build -w shared && npm run build -w backend && npm run build -w frontend",
+    "build:backend": "npm run build -w shared && npm run build -w backend",
+    "build:frontend": "npm run build -w shared && npm run build -w frontend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
-  },
-  "dependencies": {
-    "zod": "^4.3.6"
   }
 }
