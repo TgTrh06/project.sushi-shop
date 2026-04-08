@@ -14,19 +14,4 @@ export class ResponseHandler {
   static created(res: Response, data: any, message = "Created successfully") {
     return this.success(res, data, message, 201);
   }
-
-  // Trả về dữ liệu có phân trang (Pagination)
-  static paginate(res: Response, data: any[], total: number, page: number, limit: number) {
-    return res.status(200).json({
-      success: true,
-      message: "Lấy danh sách thành công",
-      data,
-      metadata: {
-        totalDocs: total,
-        totalPages: Math.ceil(total / limit),
-        currentPage: page,
-        limit: limit,
-      },
-    });
-  }
 }

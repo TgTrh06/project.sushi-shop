@@ -1,4 +1,4 @@
-export interface PaginationParams {
+export type PaginationParams = {
   page: number;
   limit: number;
   offset: number;
@@ -15,6 +15,7 @@ export interface PaginationResult<T> {
 }
 
 export const PaginationUtils = {
+  // Input - For controller usage
   extract(query: any): PaginationParams {
     const page = parseInt(query.page as string) || 1;
     const limit = parseInt(query.limit as string) || 10;
@@ -23,6 +24,7 @@ export const PaginationUtils = {
     return { page, limit, offset };
   },
 
+  // Output - For Service usage 
   format<T>(
     data: T[],
     total: number,
