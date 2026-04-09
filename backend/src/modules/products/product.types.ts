@@ -5,6 +5,7 @@ import { z } from "zod";
 export const CreateProductSchema = ProductSchema.pick({
   name: true,
   price: true,
+  imageUrl: true,
   description: true,
   categoryId: true,
   isAvailable: true,
