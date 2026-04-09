@@ -1,20 +1,5 @@
 import { z } from "zod";
-
-// Base Schema
-export const CategorySchema = z.object({
-  id: z.string(),
-  name: z.string().min(2).max(100),
-  slug: z.string().min(2).max(100).regex(/^[a-z0-0-]+$/),
-  description: z.string().max(250).optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-});
-
-// Entity shape - Use this for service layer and business logic
-export type CategoryEntity = z.infer<typeof CategorySchema>;
-
-// Database shape - Only use for Mongoose schema definition and database operations
-export type CategoryDocument = Omit<CategoryEntity, "id">;
+import { CategorySchema } from "@shared/schemas/category.schema";
 
 // DTO's Schemas
 export const CreateCategorySchema = CategorySchema.pick({
@@ -24,14 +9,20 @@ export const CreateCategorySchema = CategorySchema.pick({
 
 export const UpdateCategorySchema = CreateCategorySchema.partial();
 
-export const GetBySlugSchema = z.object({
-  slug: z.string().min(1, "Slug cannot be empty.")
-});
+// Entity shape - Use this for service layer and business logic
+export type CategoryEntity = z.infer<typeof CategorySchema>;
 
-export const GetByIdSchema = z.object({
-  id: z.string()
-});
+// Database shape - Only use for Mongoose schema definition and database operations
+export type CategoryDocument = Omit<CategoryEntity, "id">;
 
-// DTOs
-export type CreateCategoryDTO = z.infer<typeof CreateCategorySchema>;
+// Input for controller usages
+export type CreateCategoryInput = z.input<typeof CreateCategorySchema>;
+export type UpdateCategoryInput = z.input<typeof UpdateCategorySchema>;
+
+// Infer/output for service usages
 export type UpdateCategoryDTO = z.infer<typeof UpdateCategorySchema>;
+export type CreateCategoryDTO = z.infer<typeof CreateCategorySchema>;
+
+// Request types
+export type GetByIdParams = { id: string };
+export type GetBySlugParams = { slug: string };

@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import CategoryService from "./category.service";
 import { ResponseHandler } from "@/utils/common/response.utils";
-import { PaginationUtils } from "@/utils/common/pagination.utils";
-import { GetByIdSchema, GetBySlugSchema } from "./category.types";
+import { PaginationParams, PaginationUtils } from "@/utils/common/pagination.utils";
+import { CreateCategoryInput, GetByIdParams, GetBySlugParams, UpdateCategoryInput} from "./category.types";
 
 export default class CategoryController {
   constructor(private readonly categoryService: CategoryService) {};
   
-  create = async (req: Request, res: Response, next: NextFunction) => {
+  create = async (req: Request<{}, any, CreateCategoryInput>, res: Response, next: NextFunction) => {
     try {
       const newCategory = await this.categoryService.createCategory(req.body);
       
@@ -21,7 +21,7 @@ export default class CategoryController {
     }
   };
 
-  getAll = async (req: Request, res: Response, next: NextFunction) => {
+  getAll = async (req: Request<{}, any, {}, PaginationParams>, res: Response, next: NextFunction) => {
     try {
       const { page, limit, offset } = PaginationUtils.extract(req.query);
       
@@ -37,10 +37,9 @@ export default class CategoryController {
     }
   };
 
-  getOneBySlug = async (req: Request, res: Response, next: NextFunction) => {
+  getOneBySlug = async (req: Request<GetBySlugParams, any, {}>, res: Response, next: NextFunction) => {
     try {
-      // Parse schema & validate through Zod
-      const { slug } = GetBySlugSchema.parse(req.params);
+      const { slug } = req.params;
 
       const result = await this.categoryService.getOneBySlug(slug);
 
@@ -54,10 +53,9 @@ export default class CategoryController {
     }
   };
 
-  update = async (req: Request, res: Response, next: NextFunction) => {
+  update = async (req: Request<GetByIdParams, {}, UpdateCategoryInput>, res: Response, next: NextFunction) => {
     try {
-      // Parse schema & validate through Zod
-      const { id } = GetByIdSchema.parse(req.params);
+      const { id } = req.params;
       
       const updatedCategory = await this.categoryService.updateCategory(id, req.body);
       
@@ -67,14 +65,13 @@ export default class CategoryController {
     }
   };
 
-  delete = async (req: Request, res: Response, next: NextFunction) => {
+  delete = async (req: Request<GetByIdParams, any, {}>, res: Response, next: NextFunction) => {
     try {
-      // Parse schema & validate through Zod
-      const { id } = GetByIdSchema.parse(req.params);
+      const { id } = req.params;
 
       const deletedCategory = await this.categoryService.deleteCategory(id);
 
-      return ResponseHandler.success(res, deletedCategory, "Category updated successfully.");
+      return ResponseHandler.success(res, deletedCategory, "Category deleted successfully.");
     } catch (error) {
       next(error);
     }
