@@ -5,7 +5,7 @@ import { RegisterInputSchema, type RegisterFormInput, type RegisterFormValues } 
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/auth.store";
 
-export const RegisterForm = () => {
+export const RegisterPage = () => {
   const signUp = useAuthStore((state) => state.signUp);
   const loading = useAuthStore((state) => state.loading);
 
