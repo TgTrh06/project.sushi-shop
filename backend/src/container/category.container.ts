@@ -1,6 +1,6 @@
-import CategoryController from "../modules/categories/category.controller";
-import CategoryRepository from "../modules/categories/category.repository";
-import CategoryService from "../modules/categories/category.service";
+import CategoryController from "@/modules/categories/category.controller";
+import CategoryRepository from "@/modules/categories/category.repository";
+import CategoryService from "@/modules/categories/category.service";
 
 const categoryRepo = new CategoryRepository();
 
