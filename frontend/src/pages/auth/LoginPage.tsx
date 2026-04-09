@@ -6,7 +6,7 @@ import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/auth.store";
 
 
-export const LoginForm = () => {
+export const LoginPage = () => {
   const signIn = useAuthStore((state) => state.signIn);
   const loading = useAuthStore((state) => state.loading);
   const navigate = useNavigate();
