@@ -8,7 +8,7 @@ import { RegisterPage } from "../pages/auth/RegisterPage";
 import { HomePage } from "../pages/HomePage";
 import { AboutPage } from "../pages/AboutPage";
 import MenuPage from "../pages/MenuPage";
-import BookingPage from "../pages/BookingPage";
+import BookingPage from "../pages/customer/BookingPage";
 
 export const AppRoutes = () => {
   return (

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const Role = {
   CUSTOMER: "customer",
+  STAFF: "staff",
   ADMIN: "admin"
 } as const;
 
@@ -43,6 +44,10 @@ export const ResetPasswordInputSchema = z
 
 export type RegisterFormInput = z.input<typeof RegisterInputSchema>;   // role?: optional (for useForm)
 export type RegisterFormValues = z.infer<typeof RegisterInputSchema>;  // role: required (output after parse)
+
 export type LoginFormValues = z.infer<typeof LoginInputSchema>;
+
+export type UpdateUserFormInput = z.input<typeof UpdateUserInputSchema>;
 export type UpdateUserFormValues = z.infer<typeof UpdateUserInputSchema>;
+
 export type ResetPasswordFormValues = z.infer<typeof ResetPasswordInputSchema>;
