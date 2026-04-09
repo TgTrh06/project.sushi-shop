@@ -26,8 +26,8 @@ export default class CategoryRepository {
       name: doc.name,
       slug: doc.slug,
       description: doc.description,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
+      createdAt: new Date(doc.createdAt),
+      updatedAt: new Date(doc.updatedAt),
     };
   }
 

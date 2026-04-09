@@ -8,7 +8,7 @@ import {
   NotFoundError,
 } from "@/utils/common/error.utils";
 import CategoryRepository from "./category.repository";
-import { CategoryEntity, CreateCategoryDTO } from "./category.types";
+import { CategoryEntity, CreateCategoryDTO, UpdateCategoryDTO } from "./category.types";
 import { generateSlug } from "@/utils/common/slugify.utils";
 
 export default class CategoryService {
@@ -58,7 +58,7 @@ export default class CategoryService {
 
   async updateCategory(
     id: string,
-    dto: Partial<CreateCategoryDTO>,
+    dto: Partial<UpdateCategoryDTO>,
   ): Promise<CategoryEntity> {
     const existingCategory = await this.repo.findById(id);
     if (!existingCategory) {
