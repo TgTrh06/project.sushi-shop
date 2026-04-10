@@ -20,10 +20,11 @@ export default class ProductRepository {
     return {
       id: doc._id.toString(),
       name: doc.name,
-      description: doc.description,
+      slug: doc.slug,
       price: doc.price,
       imageUrl: doc.imageUrl,
-      categoryId: doc.categoryId,
+      description: doc.description,
+      categoryId: doc.categoryId.toString(),
       isAvailable: doc.isAvailable,
       stockQuantity: doc.stockQuantity,
       createdAt: doc.createdAt ? new Date(doc.createdAt) : new Date(),
