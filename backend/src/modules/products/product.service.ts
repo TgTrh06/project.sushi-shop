@@ -1,12 +1,19 @@
 import { ProductEntity, CreateProductDTO, UpdateProductDTO } from "./product.types";
 import ProductRepository from "./product.repository";
 import { BadRequestError, ConflictError, NotFoundError } from "../../utils/common/error.utils";
+import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.utils";
 
 export default class ProductService {
   private repo = new ProductRepository();
   
-  async getAllProducts(): Promise<ProductEntity[]> {
-    return await this.repo.findAll();
+  async getAllProducts(
+    page: number,
+    limit: number,
+    offset: number,
+  ): Promise<PaginationResult<ProductEntity>> {
+    const { docs, total } = await this.repo.findPaginated(limit, offset);
+
+    return PaginationUtils.format(docs, total, page, limit);
   }
 
   async getProductsByCategory(categoryId: string): Promise<ProductEntity[]> {
