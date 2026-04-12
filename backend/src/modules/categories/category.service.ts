@@ -73,16 +73,21 @@ export default class CategoryService {
 
     const updatedCategory = await this.repo.update(id, updateData);
     if (!updatedCategory) {
-      throw new NotFoundError("Update failed.");
+      throw new NotFoundError("Failed to update category.");
     }
 
     return updatedCategory;
   }
 
   async deleteCategory(id: string): Promise<CategoryEntity> {
+    const existingCategory = await this.repo.findById(id);
+    if (!existingCategory) {
+      throw new NotFoundError("Category not found.");
+    }
+
     const deletedCategory = await this.repo.delete(id);
     if (!deletedCategory) {
-      throw new NotFoundError("Category not found.");
+      throw new BadRequestError("Failed to delete category.");
     }
 
     return deletedCategory;
