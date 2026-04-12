@@ -8,7 +8,7 @@ import {
 } from "./category.types";
 import { ProductDocument } from "../products/product.types";
 import { ProductModel } from "../products/product.model";
-import { ConflictError, NotFoundError } from "@/utils/common/error.utils";
+import { generateSlug } from "@/utils/common/slugify.utils";
 
 export default class CategoryRepository {
   private categoryModel: Model<CategoryDocument>;
@@ -79,21 +79,13 @@ export default class CategoryRepository {
     return doc ? this.mapToEntity(doc) : null;
   }
 
-  async delete(id: string): Promise<CategoryEntity> {
-    const hasProduct = await this.productModel.exists({ categoryId: id });
-    if (hasProduct) {
-      throw new ConflictError("Cannot delete category with associated products.");
-    }
-
+  async delete(id: string): Promise<CategoryEntity | null> {
     const doc = await this.categoryModel.findByIdAndDelete(id).lean();
-    if (!doc) {
-      throw new NotFoundError("Category not found.");
-    }
-
-    return this.mapToEntity(doc);
+    return doc ? this.mapToEntity(doc) : null;
   }
 
   async existsByName(name: string): Promise<boolean> {
-    return !!(await this.categoryModel.exists({ name }));
+    const slug = generateSlug(name);
+    return !!(await this.categoryModel.exists({ slug }));
   }
 }
