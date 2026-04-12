@@ -12,7 +12,7 @@ export const ProductSchema = z.object({
   imageUrl: z.url(),
   description: z.string().max(250).optional(),
   categoryId: z.string(),
-  isAvailable: z.boolean().default(true),
+  isAvailable: z.boolean().default(true).optional(),
   stockQuantity: z.number().min(0),
   createdAt: z.date(),
   updatedAt: z.date(),
