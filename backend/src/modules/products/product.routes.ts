@@ -7,10 +7,10 @@ router.post("/", productController.create);
 
 router.get("/", productController.getAll);
 
-router.get("/category/:categoryId", productController.getListByCategory);
+router.get("/category/:slug", productController.getListByCategory);
 
-router.get("/:productId", productController.getOneById);
-router.put("/:productId", productController.update);
-router.delete("/:productId", productController.delete);
+router.get("/:id", productController.getOneById);
+router.put("/:id", productController.update);
+router.delete("/:id", productController.delete);
 
 export default router;
