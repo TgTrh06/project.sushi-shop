@@ -27,7 +27,3 @@ export type UpdateProductInput = z.input<typeof UpdateProductSchema>
 // Infer/Output for service usages
 export type CreateProductDTO = z.infer<typeof CreateProductSchema>;
 export type UpdateProductDTO = z.infer<typeof UpdateProductSchema>;
-
-// Request types
-export type GetByIdParams = { id: string };
-export type GetBySlugParams = { slug: string };
