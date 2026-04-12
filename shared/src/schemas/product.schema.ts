@@ -4,7 +4,7 @@ import z from "zod";
 // BASE SCHEMAS FOR BOTH FRONTEND & BACKEND
 // =========================================================
 
-export const ProductSchema = z.object({
+export const BaseProductSchema = z.object({
   id: z.string(),
   name: z.string().min(2).max(100),
   slug: z.string().min(2).max(100),
