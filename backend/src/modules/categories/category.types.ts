@@ -22,7 +22,3 @@ export type UpdateCategoryInput = z.input<typeof UpdateCategorySchema>;
 // Infer/output for service usages
 export type UpdateCategoryDTO = z.infer<typeof UpdateCategorySchema>;
 export type CreateCategoryDTO = z.infer<typeof CreateCategorySchema>;
-
-// Request types
-export type GetByIdParams = { id: string };
-export type GetBySlugParams = { slug: string };
