@@ -5,7 +5,7 @@ import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.uti
 import { generateSlug } from "@/utils/common/slugify.utils";
 
 export default class ProductService {
-  private repo = new ProductRepository();
+  constructor(private readonly repo = new ProductRepository) {};
 
   private async checkExist(name: string): Promise<void> {
     const result = await this.repo.existsByName(name);
