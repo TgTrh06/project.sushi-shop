@@ -22,14 +22,9 @@ router.put(
   "/:id",
   verifyAuth,
   verifyAdmin,
-  zodValidator(UpdateCategorySchema), 
-  categoryController.update
+  zodValidator(UpdateCategorySchema),
+  categoryController.update,
 );
-router.delete(
-  "/:id",
-  verifyAuth,
-  verifyAdmin, 
-  categoryController.delete
-);
+router.delete("/:id", verifyAuth, verifyAdmin, categoryController.delete);
 
 export default router;
