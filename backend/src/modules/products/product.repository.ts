@@ -56,9 +56,24 @@ export default class ProductRepository {
     };
   }
 
-  async findByCategory(categoryId: string): Promise<ProductEntity[]> {
-    const doc = await this.productModel.find({ categoryId }).lean();
-    return doc.map(this.mapToEntity);
+  async findByCategory(
+    limit: number,
+    offset: number,
+    categoryId: string
+  ): Promise<{ docs: ProductEntity[], total: number }> {
+    const [ docs, total ] = await Promise.all([
+      this.productModel
+        .find({ categoryId })
+        .sort({ createAt: -1 })
+        .skip(offset)
+        .limit(limit)
+        .lean(),
+      this.productModel.countDocuments(),
+    ]);
+    return {
+      docs: docs.map((doc) => this.mapToEntity(doc)),
+      total
+    };
   }
 
   async findBySlug(slug: string): Promise<ProductEntity | null> {
