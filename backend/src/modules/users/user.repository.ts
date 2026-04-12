@@ -1,6 +1,6 @@
 import { Model } from "mongoose";
 import { UserModel, UserEntity, UserDocument } from "./user.model";
-import { RegisterFormValues, UpdateUserFormValues } from "@shared/schemas/auth.schema";
+import { RegisterFormValues, Role, UpdateUserFormValues } from "@shared/schemas/auth.schema";
 
 export default class UserRepository {
   private model: Model<UserDocument>;
@@ -16,9 +16,10 @@ export default class UserRepository {
       id: doc._id.toString(),
       username: doc.username,
       email: doc.email,
-      hashedPassword: doc.hashedPassword,
+      // Only map password if exist in doc (use +hashedPassword)
+      ...(doc.hashedPassword && { hashedPassword: doc.hashedPassword }),
       role: doc.role,
-      createdAt: doc.createdAt,
+      createdAt: doc.createdAt ? new Date(doc.createdAt) : new Date(),
     };
   }
   
@@ -51,15 +52,34 @@ export default class UserRepository {
     return doc ? this.mapToEntity(doc) : null;
   }
 
-  async findPaginated(limit: number, offset: number): Promise<{ docs: UserEntity[]; total: number }> {
+  async findUsers(limit: number, offset: number): Promise<{ docs: UserEntity[]; total: number }> {
+    const filter = { role: { $in: [Role.CUSTOMER] } };
     const [docs, total] = await Promise.all([
       this.model
-        .find()
+        .find(filter)
         .sort({ createdAt: -1 })
         .skip(offset)
         .limit(limit)
         .lean(),
-      this.model.countDocuments(),
+      this.model.countDocuments(filter),
+    ]);
+    return { 
+      docs: docs.map((doc) => this.mapToEntity(doc)), 
+      total 
+    };
+  }
+
+  async findStaffs(limit: number, offset: number): Promise<{ docs: UserEntity[]; total: number }> {
+    const filter = { role: { $in: [Role.STAFF, Role.ADMIN] } };
+    
+    const [docs, total] = await Promise.all([
+      this.model
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip(offset)
+        .limit(limit)
+        .lean(),
+      this.model.countDocuments(filter),
     ]);
     return { 
       docs: docs.map((doc) => this.mapToEntity(doc)), 
@@ -72,7 +92,10 @@ export default class UserRepository {
       .findByIdAndUpdate(
         id, 
         { $set: data },
-        { returnDocument: "after" }
+        { 
+          new: true,
+          runValidators: true
+        }
       )
       .lean();
     return doc ? this.mapToEntity(doc) : null;
@@ -84,6 +107,7 @@ export default class UserRepository {
   }
 
   async exists(email: string): Promise<boolean> {
-    return !!(await this.model.exists({ email }));
+    const result = await this.model.exists({ email });
+    return !!result;
   }
 }
