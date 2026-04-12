@@ -5,7 +5,7 @@ import {
   PaginationParams,
   PaginationUtils,
 } from "@/utils/common/pagination.utils";
-import { CreateProductInput } from "./product.types";
+import { CreateProductInput, UpdateProductInput } from "./product.types";
 import { GetByIdParams, GetBySlugParams } from "@/types/params.type";
 export default class ProductController {
   constructor(private readonly productService: ProductService) {}
@@ -53,25 +53,45 @@ export default class ProductController {
   };
 
   getListByCategory = async (
-    req: Request<GetByIdParams, any, {}, PaginationParams>,
+    req: Request<GetBySlugParams, any, {}, PaginationParams>,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const { id: categoryId } = req.params;
+      const { slug: categorySlug } = req.params;
       const { page, limit, offset } = req.query;
 
       const products = await this.productService.getProductsByCategory(
         page,
         limit,
         offset,
-        categoryId,
+        categorySlug,
       );
 
       return ResponseHandler.success(
         res,
         products,
         "Products retrieved successfully.",
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getOneBySlug = async (
+    req: Request<GetBySlugParams, any, {}>,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { slug } = req.params;
+
+      const result = await this.productService.getProductById(slug);
+
+      return ResponseHandler.success(
+        res,
+        result,
+        "Product retrieved successfully.",
       );
     } catch (error) {
       next(error);
@@ -98,12 +118,16 @@ export default class ProductController {
     }
   };
 
-  update = async (req: Request, res: Response, next: NextFunction) => {
+  update = async (
+    req: Request<GetByIdParams, any, UpdateProductInput>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      const product = await this.productService.updateProduct(
-        String(req.params.productId),
-        req.body,
-      );
+      const { id } = req.params;
+
+      const product = await this.productService.updateProduct(id, req.body);
+
       return ResponseHandler.success(
         res,
         product,
@@ -114,11 +138,16 @@ export default class ProductController {
     }
   };
 
-  delete = async (req: Request, res: Response, next: NextFunction) => {
+  delete = async (
+    req: Request<GetByIdParams, any, {}>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      const result = await this.productService.deleteProduct(
-        String(req.params.productId),
-      );
+      const { id } = req.params;
+
+      const result = await this.productService.deleteProduct(id);
+      
       return ResponseHandler.success(
         res,
         result,
