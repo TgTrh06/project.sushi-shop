@@ -1,9 +1,10 @@
 import { Router } from "express";
+import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
 import authRoutes from "@/modules/auth/auth.routes";
-import userRoutes from "@/modules/users/user.routes";
+import adminRoutes from "@/modules/users/routes/admin.routes"
+import userRoutes from "@/modules/users/routes/user.routes";
 import categoryRoutes from "@/modules/categories/category.routes";
 import productRoutes from "@/modules/products/product.routes";
-import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.get("/", (req, res) => {
 
 // API routes
 router.use("/auth", authRoutes);
+router.use("/admin", adminRoutes);
 router.use("/users", userRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/products", productRoutes);
