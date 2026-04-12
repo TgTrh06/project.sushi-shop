@@ -1,8 +1,8 @@
 import { z } from "zod";    
-import { ProductSchema } from "@shared/schemas/product.schema";
+import { BaseProductSchema } from "@shared/schemas/product.schema";
 
 // DTO's Schemas
-export const CreateProductSchema = ProductSchema.pick({
+export const CreateProductSchema = BaseProductSchema.pick({
   name: true,
   price: true,
   imageUrl: true,
@@ -12,10 +12,10 @@ export const CreateProductSchema = ProductSchema.pick({
   stockQuantity: true,
 });
 
-export const UpdateProductSchema = ProductSchema.partial();
+export const UpdateProductSchema = BaseProductSchema.partial();
 
 // Entity shape - Use this for service layer and business logic
-export type ProductEntity = z.infer<typeof ProductSchema>
+export type ProductEntity = z.infer<typeof BaseProductSchema>
 
 // Database shape - Only use for Mongoose schema definition and database operations
 export type ProductDocument = Omit<ProductEntity, "id">;
