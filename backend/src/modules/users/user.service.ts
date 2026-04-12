@@ -41,19 +41,31 @@ export default class UserService {
   }
 
   /* ADMIN SERVICES */
-  async getAllUsers(
+  async getUsers(
     page: number,
     limit: number,
     offset: number,
   ): Promise<PaginationResult<SafeUser>> {
-    const { docs, total } = await this.userRepo.findPaginated(limit, offset);
+    const { docs, total } = await this.userRepo.findUsers(limit, offset);
 
     const safeData = docs.map(sanitizeUser);
 
     return PaginationUtils.format(safeData, total, page, limit);
   }
 
-  async deleteUser(targetId: string, currentUserId: string): Promise<void> {
+  async getStaffs(
+    page: number,
+    limit: number,
+    offset: number,
+  ): Promise<PaginationResult<SafeUser>> {
+    const { docs, total } = await this.userRepo.findStaffs(limit, offset);
+
+    const safeData = docs.map(sanitizeUser);
+
+    return PaginationUtils.format(safeData, total, page, limit);
+  }
+
+  async delete(targetId: string, currentUserId: string): Promise<void> {
     const existingUser = await this.userRepo.findById(targetId);
     if (!existingUser) throw new NotFoundError("User not found");
 
