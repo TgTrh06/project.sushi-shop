@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import CategoryService from "./category.service";
 import { ResponseHandler } from "@/utils/common/response.utils";
 import { PaginationParams, PaginationUtils } from "@/utils/common/pagination.utils";
-import { CreateCategoryInput, GetByIdParams, GetBySlugParams, UpdateCategoryInput} from "./category.types";
+import { CreateCategoryInput, UpdateCategoryInput} from "./category.types";
+import { GetByIdParams, GetBySlugParams } from "@/types/params.type";
 
 export default class CategoryController {
   constructor(private readonly categoryService: CategoryService) {};
