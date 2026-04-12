@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { CategorySchema } from "@shared/schemas/category.schema";
+import { BaseCategorySchema } from "@shared/schemas/category.schema";
 
 // DTO's Schemas
-export const CreateCategorySchema = CategorySchema.pick({
+export const CreateCategorySchema = BaseCategorySchema.pick({
   name: true,
   description: true,
 });
@@ -10,7 +10,7 @@ export const CreateCategorySchema = CategorySchema.pick({
 export const UpdateCategorySchema = CreateCategorySchema.partial();
 
 // Entity shape - Use this for service layer and business logic
-export type CategoryEntity = z.infer<typeof CategorySchema>;
+export type CategoryEntity = z.infer<typeof BaseCategorySchema>;
 
 // Database shape - Only use for Mongoose schema definition and database operations
 export type CategoryDocument = Omit<CategoryEntity, "id">;
