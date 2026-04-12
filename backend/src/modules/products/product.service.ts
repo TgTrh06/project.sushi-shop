@@ -24,8 +24,15 @@ export default class ProductService {
     return PaginationUtils.format(docs, total, page, limit);
   }
 
-  async getProductsByCategory(categoryId: string): Promise<ProductEntity[]> {
-    return await this.repo.findByCategory(categoryId);
+  async getProductsByCategory(
+    page: number,
+    limit: number,
+    offset: number,
+    categoryId: string
+  ): Promise<PaginationResult<ProductEntity>> {
+    const { docs, total } = await this.repo.findByCategory(limit, offset, categoryId);
+
+    return PaginationUtils.format(docs, total, page, limit);
   }
   
   async getProductById(id: string): Promise<ProductEntity | null> {
@@ -53,6 +60,12 @@ export default class ProductService {
     const existingProduct = await this.repo.findById(id);
     if (!existingProduct) {
       throw new NotFoundError("Product not found.");
+    }
+
+    const updateData: any = { ...dto };
+    if (dto.name && dto.name !== existingProduct.name) {
+      await this.checkExist(dto.name);
+      updateData.slug = generateSlug(dto.name);
     }
 
     const updatedProduct = await this.repo.update(id, dto);
