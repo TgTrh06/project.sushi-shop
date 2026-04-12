@@ -1,5 +1,5 @@
+import { z } from "zod";    
 import { ProductSchema } from "@shared/schemas/product.schema";
-import { z } from "zod";
 
 // DTO's Schemas
 export const CreateProductSchema = ProductSchema.pick({
