@@ -7,6 +7,7 @@ import {
 import { ProductModel } from "./product.model";
 import { Model } from "mongoose";
 import { ConflictError, NotFoundError } from "@/utils/common/error.utils";
+import { generateSlug } from "@/utils/common/slugify.utils";
 
 export default class ProductRepository {
   private productModel: Model<ProductDocument>;
@@ -61,14 +62,16 @@ export default class ProductRepository {
     offset: number,
     categoryId: string
   ): Promise<{ docs: ProductEntity[], total: number }> {
+    const filter = { categoryId };
+
     const [ docs, total ] = await Promise.all([
       this.productModel
-        .find({ categoryId })
-        .sort({ createAt: -1 })
+        .find(filter)
+        .sort({ createdAt: -1 })
         .skip(offset)
         .limit(limit)
         .lean(),
-      this.productModel.countDocuments(),
+      this.productModel.countDocuments(filter),
     ]);
     return {
       docs: docs.map((doc) => this.mapToEntity(doc)),
@@ -97,22 +100,23 @@ export default class ProductRepository {
   }
 
   async delete(id: string): Promise<ProductEntity> {
-    const hasProduct = await this.productModel.exists({ categoryId: id });
+    const hasProduct = await this.productModel.exists({ productId: id });
     if (hasProduct) {
       throw new ConflictError(
-        "Cannot delete category with associated products.",
+        "Cannot delete product with associated products.",
       );
     }
 
     const doc = await this.productModel.findByIdAndDelete(id).lean();
     if (!doc) {
-      throw new NotFoundError("Category not found.");
+      throw new NotFoundError("Product not found.");
     }
 
     return this.mapToEntity(doc);
   }
 
   async existsByName(name: string): Promise<boolean> {
-    return !!(await this.productModel.exists({ name }));
+    const slug = generateSlug(name);
+    return !!(await this.productModel.exists({ slug }));
   }
 }
