@@ -3,12 +3,16 @@ import ProductRepository from "./product.repository";
 import { BadRequestError, ConflictError, NotFoundError } from "../../utils/common/error.utils";
 import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.utils";
 import { generateSlug } from "@/utils/common/slugify.utils";
+import CategoryRepository from "../categories/category.repository";
 
 export default class ProductService {
-  constructor(private readonly repo = new ProductRepository) {};
+  constructor(
+    private readonly productRepo = new ProductRepository,
+    private readonly categoryRepo = new CategoryRepository
+  ) {};
 
   private async checkExist(name: string): Promise<void> {
-    const result = await this.repo.existsByName(name);
+    const result = await this.productRepo.existsByName(name);
     if (result) {
       throw new ConflictError("Product with this name already exists.");
     }
@@ -19,7 +23,7 @@ export default class ProductService {
     limit: number,
     offset: number,
   ): Promise<PaginationResult<ProductEntity>> {
-    const { docs, total } = await this.repo.findPaginated(limit, offset);
+    const { docs, total } = await this.productRepo.findPaginated(limit, offset);
 
     return PaginationUtils.format(docs, total, page, limit);
   }
@@ -28,15 +32,21 @@ export default class ProductService {
     page: number,
     limit: number,
     offset: number,
-    categoryId: string
+    categorySlug: string
   ): Promise<PaginationResult<ProductEntity>> {
-    const { docs, total } = await this.repo.findByCategory(limit, offset, categoryId);
+    const targetCategory = await this.categoryRepo.findBySlug(categorySlug);
+    if (!targetCategory) {
+      throw new NotFoundError("Category not found.");
+    }
+
+    const categoryId = targetCategory.id;
+    const { docs, total } = await this.productRepo.findByCategory(limit, offset, categoryId);
 
     return PaginationUtils.format(docs, total, page, limit);
   }
   
   async getProductById(id: string): Promise<ProductEntity | null> {
-    const product = await this.repo.findById(id);
+    const product = await this.productRepo.findById(id);
     if (!product) {
       throw new NotFoundError("Product not found.")
     }
@@ -51,13 +61,13 @@ export default class ProductService {
     const slug = generateSlug(dto.name);
     const newData = { ...dto, slug };
 
-    const newProduct = await this.repo.create(newData);
+    const newProduct = await this.productRepo.create(newData);
 
     return newProduct;
   } 
 
   async updateProduct(id: string, dto: UpdateProductDTO): Promise<ProductEntity> {
-    const existingProduct = await this.repo.findById(id);
+    const existingProduct = await this.productRepo.findById(id);
     if (!existingProduct) {
       throw new NotFoundError("Product not found.");
     }
@@ -68,7 +78,7 @@ export default class ProductService {
       updateData.slug = generateSlug(dto.name);
     }
 
-    const updatedProduct = await this.repo.update(id, dto);
+    const updatedProduct = await this.productRepo.update(id, dto);
     if (!updatedProduct) {
       throw new BadRequestError("Failed to update product.");
     }
@@ -77,9 +87,14 @@ export default class ProductService {
   }
 
   async deleteProduct(id: string): Promise<ProductEntity> {
-    const deletedProduct = await this.repo.findById(id);
-    if (!deletedProduct) {
+    const existingProduct = await this.productRepo.findById(id);
+    if (!existingProduct) {
       throw new NotFoundError("Product not found.");
+    }
+
+    const deletedProduct = await this.productRepo.delete(id);
+    if (!deletedProduct) {
+      throw new BadRequestError("Failed to delete product.");
     }
 
     return deletedProduct;
