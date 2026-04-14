@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
-import { RegisterInputSchema, type RegisterFormInput, type RegisterFormValues } from "@shared/schemas/auth.schema";
+import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/auth.store";
 
@@ -15,7 +15,7 @@ export const RegisterPage = () => {
     setError,
     formState: { errors },
   } = useForm<RegisterFormInput, unknown, RegisterFormValues>({
-    resolver: zodResolver(RegisterInputSchema),
+    resolver: zodResolver(RegisterSchema),
     mode: "onSubmit",
     defaultValues: {
       username: "",
