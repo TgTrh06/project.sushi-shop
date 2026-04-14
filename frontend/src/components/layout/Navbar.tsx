@@ -1,7 +1,8 @@
+import "@/assets/styles/sections/header.css";
+import { Icon } from "@/assets/svg";
 import { Link } from "react-router-dom";
-import "./header.css";
-import { useAuthStore } from "@/stores/auth.store";
 import { UserMenu } from "./UserMenu";
+import { useAuthStore } from "@/stores/auth.store";
 
 export const Navbar = () => {
   const user = useAuthStore((state) => state.user);
@@ -10,51 +11,56 @@ export const Navbar = () => {
     <header>
       <nav className="header__nav">
         <div className="header__logo">
-          <Link to="/" className="text-2xl font-bold text-orange-600">
-            <h4>ItsuSushi</h4>
-            <div className="header__logo-overlay"></div>
+          <Link to="/">
+            <h4 data-aos="fade-down">ItsuSushi</h4>
+            {/* <div className="header__logo-overlay"></div> */}
           </Link>
         </div>
 
-        <div className="header__menu">
-          <Link title="Home" to="/" className="hover:text-orange-600">Trang chủ</Link>
-          <Link title="Menu" to="/menu" className="hover:text-orange-600">Thực đơn</Link>
-          {user && (
-            <Link title="Booking" to="/booking" className="text-red-600 font-bold">Đặt bàn</Link>
-          )}
-          {user?.role === 'admin' && (
-            <Link title="Admin" to="/admin" className="text-red-600 font-bold">Quản trị</Link>
-          )}
-        </div>
-
-        <div className="flex items-center gap-4">
+        <ul className="header__menu" data-aos="fade-down">
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/menu">Menu</Link>
+          </li>
+          <li>
+            {user && (
+              <Link to="/booking" className="text-red-600 font-bold">
+                Booking
+              </Link>
+            )}
+          </li>
+          <li>
+            <Link to="/about">About Us</Link>
+          </li>
+          <li>
+            <img src={Icon.search} alt="search" />
+          </li>
           {user ? (
             <UserMenu />
           ) : (
-            <div className="flex gap-2">
-              <Link title="Login" to="/sign-in" className="px-4 py-2 text-orange-600">Đăng nhập</Link>
-              <Link title="Register" to="/sign-up" className="px-4 py-2 bg-orange-600 text-white rounded-lg">Đăng ký</Link>
-            </div>
+            <li>
+              <Link to="/sign-in">Sign In</Link>
+              <Link to="/sign-up">Sign Up</Link>
+            </li>
           )}
-        </div>
-        {/* <ul className="header__menu">
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/Menu">Menu</Link>
-        </li>
-        <li>
-          <Link to="/booking">Booking</Link>
-        </li>
-        <li>
-          <Link to="/about">About Us</Link>
-        </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-      </ul> */}
+          
+          {/* <li>
+            {user?.role === "admin" && (
+              <Link to="/admin" className="text-red-600 font-bold">
+                Dashboard
+              </Link>
+            )}
+          </li> */}
+        </ul>
+
+        <ul className="header__menu-mobile" data-aos="fade-down">
+          <li>
+            <img src={Icon.menu} alt="menu" />
+          </li>
+        </ul>
       </nav>
-    </header >
+    </header>
   );
 };
