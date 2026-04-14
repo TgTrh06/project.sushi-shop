@@ -1,16 +1,16 @@
-import searchIcon from "./search.svg";
-import menuIcon from "./menu.svg";
-import star from "./star.svg";
-import check from "./check.svg";
-import twitter from "./twitter.svg";
-import instagram from "./instagram.svg";
-import facebook from "./facebook.svg";
-import playCircle from "./play-circle.svg";
-import arrowUpRight from "./arrow-up-right.svg";
-import arrowLeft from "./arrow-left.svg";
-import arrowRight from "./arrow-right.svg";
-import arrowHorizontal from "./arrow-horizontal.svg";
-import arrowVertical from "./arrow-vertical.svg"; 
+import searchIcon from "./src/search.svg";
+import menuIcon from "./src/menu.svg";
+import star from "./src/star.svg";
+import check from "./src/check.svg";
+import twitter from "./src/twitter.svg";
+import instagram from "./src/instagram.svg";
+import facebook from "./src/facebook.svg";
+import playCircle from "./src/play-circle.svg";
+import arrowUpRight from "./src/arrow-up-right.svg";
+import arrowLeft from "./src/arrow-left.svg";
+import arrowRight from "./src/arrow-right.svg";
+import arrowHorizontal from "./src/arrow-horizontal.svg";
+import arrowVertical from "./src/arrow-vertical.svg"; 
 
 export const Icon = {
   search: searchIcon,
