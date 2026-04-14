@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginInputSchema, type LoginFormValues } from "@shared/schemas/auth.schema";
+import { LoginSchema, type LoginFormValues } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/auth.store";
 
@@ -17,7 +17,7 @@ export const LoginPage = () => {
     setError,
     formState: { errors },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(LoginInputSchema),
+    resolver: zodResolver(LoginSchema),
     mode: "onSubmit",
   });
 
