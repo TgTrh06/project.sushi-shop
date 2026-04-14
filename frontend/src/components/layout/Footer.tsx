@@ -6,7 +6,7 @@ export const Footer = () => {
     <div>
       <footer className="footer flex-between">
         <h3 className="footer__logo">
-          <span>Sushi</span>man
+          <span>Itsu</span>Sushi
         </h3>
 
         <ul className="footer__nav">
