@@ -19,40 +19,28 @@ export const Navbar = () => {
 
         <ul className="header__menu" data-aos="fade-down">
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/home">Home</Link>
           </li>
           <li>
             <Link to="/menu">Menu</Link>
           </li>
           <li>
-            {user && (
-              <Link to="/booking" className="text-red-600 font-bold">
-                Booking
-              </Link>
-            )}
+            <Link to="/booking">Reserve</Link>
           </li>
           <li>
-            <Link to="/about">About Us</Link>
+            <Link to="/about">About</Link>
           </li>
+        </ul>
+        <ul className="header__menu" data-aos="fade-down">
           <li>
             <img src={Icon.search} alt="search" />
           </li>
-          {user ? (
-            <UserMenu />
-          ) : (
-            <li>
-              <Link to="/sign-in">Sign In</Link>
-              <Link to="/sign-up">Sign Up</Link>
-            </li>
-          )}
-          
-          {/* <li>
-            {user?.role === "admin" && (
-              <Link to="/admin" className="text-red-600 font-bold">
-                Dashboard
-              </Link>
-            )}
-          </li> */}
+          <li>
+            {user ? <UserMenu /> : <Link to="/sign-in">Sign In</Link>}
+          </li>
+          <li>
+            {user?.role === "admin" && <Link to="/admin">Dashboard</Link>}
+          </li>
         </ul>
 
         <ul className="header__menu-mobile" data-aos="fade-down">
