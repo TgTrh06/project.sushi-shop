@@ -8,6 +8,7 @@ import subscribeBg from "./src/subscribe_bg.png";
 import japaneseDrinks from "./src/japanese_drinks.png";
 import japaneseSushi from "./src/japanese_sushi.png";
 import userAvatar from "./src/user.png";
+import userAvatarSmall from "./src/user-small.png";
 
 // Sushi List
 import sushiMain from "./src/sushi.png";
@@ -33,6 +34,7 @@ export const Images = {
     popularBg,
     subscribeBg,
     userAvatar,
+    userAvatarSmall,
   },
   categories: {
     drinks: japaneseDrinks,
