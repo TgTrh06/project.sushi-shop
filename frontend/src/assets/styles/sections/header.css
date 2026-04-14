@@ -1,6 +1,43 @@
+/* Style mặc định (Lúc ở trên cùng - Trong suốt) */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.4s ease-in-out;
+  background-color: transparent;
+}
+
+/* Khi cuộn xuống (Đổi màu nền nổi bật) */
+.header--sticky {
+  background-color: var(--primary-color); /* Hoặc màu bất kỳ bạn muốn */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0; /* Thu nhỏ navbar lại một chút cho đẹp */
+}
+
+/* Điều chỉnh màu chữ khi ở trạng thái trong suốt vs có màu nền */
+.header--transparent .header__menu li a {
+  color: var(--secondary-color); /* Màu tối để dễ nhìn trên nền sáng */
+}
+
+.header--sticky .header__menu li a {
+  color: #fff; /* Màu trắng để nổi bật trên nền primary */
+}
+
+/* Loại bỏ overlay của logo nếu bạn muốn nó đồng nhất với màu sticky */
+.header--sticky .header__logo-overlay {
+  opacity: 0; 
+  transition: opacity 0.3s;
+}
+
 .header__nav {
   display: flex;
-  overflow: hidden;
+  max-width: 1320px; /* container-lg */
+  margin: 0 auto;    /* Center container */
+  width: 100%;       /* Ensure it remains flexible on small screens */
+  padding: 0 20px;
+  align-items: center;
 }
 
 .header__logo {
@@ -9,15 +46,6 @@
 
   position: relative;
   padding: 20px;
-}
-
-.header__logo-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-
-  background-color: var(--primary-color);
-  z-index: -1;
 }
 
 .header__logo h4 {
@@ -32,14 +60,14 @@
 }
 
 .header__menu, .header__menu-mobile {
-  padding: 20px;
-  flex: 1.236;
+  padding: 20px 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 64px;
+  gap: 30px;
 
   list-style: none;
+  flex: 1;           /* Để menu chiếm phần không gian còn lại */
 }
 
 .header__menu li {
@@ -56,6 +84,29 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
+}
+
+.header__menu li.header__auth-btn {
+  background-color: var(--primary-color);
+  border-radius: 50px; /* Bo tròn mạnh kiểu viên thuốc */
+  padding: 8px 20px;   /* Tạo khoảng trống bên trong để thấy nền */
+  display: flex;       /* Căn giữa nội dung bên trong (text hoặc icon) */
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease; /* Hiệu ứng mượt khi hover */
+}
+
+/* Đảm bảo chữ bên trong (Link) có màu trắng để nổi bật trên nền primary */
+.header__menu li.header__auth-btn a {
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Hiệu ứng hover cho chuyên nghiệp */
+.header__menu li.header__auth-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .header__menu-mobile {
