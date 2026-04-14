@@ -7,6 +7,7 @@ import { AppRoutes } from "@/routes/AppRoutes";
 import { useAuthStore } from "@/stores/auth.store";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "./components/layout/Footer";
+import { Loader } from "./components/ui/Loader";
 
 function App() {
   const initialize = useAuthStore((state) => state.initialize);
@@ -16,8 +17,8 @@ function App() {
     // Aos init
     Aos.init({
       duration: 1000, // Duration length (ms)
-      once: true,     // Animation run only once
-      easing: 'ease-in-out',
+      once: true, // Animation run only once
+      easing: "ease-in-out",
     });
     // Check session (cookie) on app load
     initialize();
@@ -26,9 +27,7 @@ function App() {
   // Loading screen while checking auth status
   if (!isInitialized) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
-        <div className="text-lg font-medium text-gray-600">Loading ứng dụng...</div>
-      </div>
+      <Loader />
     );
   }
 
