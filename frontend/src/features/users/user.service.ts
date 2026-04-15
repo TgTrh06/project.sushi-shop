@@ -10,7 +10,7 @@ export const userService = {
   },
 
   async updateProfile(input: UpdateUserFormInput): Promise<User> {
-    const result = await api.put("/users/me", input);
+    const result = await api.put("/users/me", { input });
     return result.data.data;
   }
 }

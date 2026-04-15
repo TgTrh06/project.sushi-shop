@@ -2,8 +2,8 @@ import { create } from "zustand";
 import type { User } from "../features/users/user.types";
 import { authService } from "../features/auth/auth.service";
 import {
-  type LoginFormValues,
-  type RegisterFormValues,
+  type LoginFormInput,
+  type RegisterFormInput,
 } from "@shared/schemas/auth.schema";
 import { showSuccess, showError } from "@/lib/toast";
 
@@ -19,8 +19,8 @@ interface AuthState {
   clearState: () => void;
 
   // Async actions
-  signUp: (data: RegisterFormValues) => Promise<void>;
-  signIn: (data: LoginFormValues) => Promise<void>;
+  signUp: (data: RegisterFormInput) => Promise<void>;
+  signIn: (data: LoginFormInput) => Promise<void>;
   signOut: () => Promise<void>;
   refreshToken: () => Promise<void>;
 
@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ accessToken: null, user: null });
   },
 
-  signUp: async (data: RegisterFormValues) => {
+  signUp: async (data: RegisterFormInput) => {
     try {
       set({ loading: true });
 
@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signIn: async (data: LoginFormValues) => {
+  signIn: async (data: LoginFormInput) => {
     try {
       set({ loading: true });
 
