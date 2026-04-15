@@ -1,54 +1,58 @@
-import "@/assets/styles/sections/header.css";
+import "@/assets/styles/sections/navbar.css";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/auth.store";
 import { UserMenu } from "./UserMenu";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { Icon } from "@/assets/svg";
 
-export const Navbar = () => {
+export const Navbar = () => {const location = useLocation();
   const user = useAuthStore((state) => state.user);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const isHomePage = location.pathname === "/" || location.pathname === "/sign-in";
+  const [hasScrolledPast, setHasScrolledPast] = useState(false);
 
   useEffect(() => {
+    if (!isHomePage) return;
+
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setHasScrolledPast(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHomePage]);
+
+  // Logic cực kỳ rõ ràng: 
+  // Sticky khi (không phải trang Home) HOẶC (là trang Home nhưng đã cuộn)
+  const isSticky = !isHomePage || hasScrolledPast;
+  const headerClass = isSticky ? "header--sticky" : "header--transparent";
 
   return (
-    <header className={`header ${isScrolled ? "header--sticky" : "header--transparent"}`}>
+    <header className={`header ${headerClass}`}>
       <nav className="header__nav">
         <div className="header__logo">
-          <Link to="/">
+          <NavLink to="/">
             <h4 data-aos="fade-down">ItsuSushi</h4>
-          </Link>
+          </NavLink>
         </div>
 
         <ul className="header__menu" data-aos="fade-down">
           <li>
-            <Link to="/">Home</Link>
+            <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <Link to="/menu">Menu</Link>
+            <NavLink to="/menu">Menu</NavLink>
           </li>
           <li>
-            <Link to="/booking">Reserve</Link>
+            <NavLink to="/booking">Reserve</NavLink>
           </li>
           <li>
-            <Link to="/about">About</Link>
+            <NavLink to="/about">About</NavLink>
           </li>
           <li className="header__auth-btn">
             {user ? <UserMenu /> : <Link to="/sign-in">Login</Link>}
           </li>
           <li>
-            {user?.role === "admin" && <Link to="/admin">Dashboard</Link>}
+            {user?.role === "admin" && <NavLink to="/admin">Dashboard</NavLink>}
           </li>
         </ul>
 

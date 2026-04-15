@@ -9,26 +9,49 @@
   background-color: transparent;
 }
 
-/* Khi cuộn xuống (Đổi màu nền nổi bật) */
-.header--sticky {
-  background-color: var(--primary-color); /* Hoặc màu bất kỳ bạn muốn */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 0; /* Thu nhỏ navbar lại một chút cho đẹp */
+.header--transparent .header__menu li a {
+  color: var(--secondary-color);
 }
 
-/* Điều chỉnh màu chữ khi ở trạng thái trong suốt vs có màu nền */
-.header--transparent .header__menu li a {
-  color: var(--secondary-color); /* Màu tối để dễ nhìn trên nền sáng */
+.header--transparent .header__menu li a:hover {
+  color: var(--primary-color);
+  opacity: 0.9;
+}
+
+.header--sticky {
+  background-color: var(--primary-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0;
 }
 
 .header--sticky .header__menu li a {
-  color: #fff; /* Màu trắng để nổi bật trên nền primary */
+  color: #fff;
 }
 
-/* Loại bỏ overlay của logo nếu bạn muốn nó đồng nhất với màu sticky */
-.header--sticky .header__logo-overlay {
-  opacity: 0; 
-  transition: opacity 0.3s;
+.header--sticky .header__menu li a:hover {
+  color: #ffee99;
+  opacity: 0.9;
+}
+
+.header--sticky .header__menu li a.active {
+  color: #ffee99;
+  border-bottom-color: #ffee99;
+}
+
+.header--sticky .header__menu li.header__auth-btn a {
+  color: #fff;
+}
+
+.header--sticky .header__menu li.header__auth-btn {
+  background-color: #fff;
+}
+
+.header--sticky .header__menu li.header__auth-btn a {
+  color: var(--primary-color) !important;
+}
+
+.header--sticky .header__menu li.header__auth-btn a:hover {
+  color: var(--primary-color) !important;
 }
 
 .header__nav {
@@ -51,7 +74,7 @@
 .header__logo h4 {
   padding-left: 30px;
 
-  font-weight: 700;
+  font-weight: 800;
   font-size: 24px;
   text-transform: uppercase;
   font-family: var(--playfair-display);
@@ -64,7 +87,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 30px;
+  gap: 40px;
 
   list-style: none;
   flex: 1;           /* Để menu chiếm phần không gian còn lại */
@@ -80,6 +103,24 @@
   cursor: pointer;
 }
 
+.header__menu li:hover {
+  opacity: 0.9;
+  transform: scale(1.025);
+}
+
+/* Màu mặc định */
+.header__menu li a {
+  color: var(--secondary-color);
+  transition: all 0.3s ease;
+}
+
+.header__menu li a.active {
+  color: var(--primary-color);
+  font-weight: 800;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 6px;
+}
+
 .header__menu li img {
   width: 24px;
   height: 24px;
@@ -88,26 +129,29 @@
 
 .header__menu li.header__auth-btn {
   background-color: var(--primary-color);
-  border-radius: 50px; /* Bo tròn mạnh kiểu viên thuốc */
-  padding: 8px 20px;   /* Tạo khoảng trống bên trong để thấy nền */
-  display: flex;       /* Căn giữa nội dung bên trong (text hoặc icon) */
+  border-radius: 50px;
+  padding: 8px 24px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease; /* Hiệu ứng mượt khi hover */
+  transition: all 0.3s ease;
 }
 
-/* Đảm bảo chữ bên trong (Link) có màu trắng để nổi bật trên nền primary */
+.header__menu li.header__auth-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.025);
+}
+
 .header__menu li.header__auth-btn a {
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
 }
 
-/* Hiệu ứng hover cho chuyên nghiệp */
-.header__menu li.header__auth-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
+.header__menu li.header__auth-btn a:hover {
+  color: #fff !important;
 }
+
 
 .header__menu-mobile {
   display: none;
