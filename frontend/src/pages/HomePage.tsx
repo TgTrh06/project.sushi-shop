@@ -20,15 +20,16 @@ export const HomePage = () => {
           <div className="hero-content-info" data-aos="fade-left">
             <h1>Feel the taste of Japanese food</h1>
             <p>
-              Feel the taste of the most popular Japanese food from anywhere and
-              anytime.
+              Experience the flavors of Japan's most popular dishes in our cozy atmosphere.
             </p>
 
             <div className="hero-content__buttons">
-              <button className="hero-content__order-button">Order Now</button>
+              <button className="hero-content__order-button">
+                Reserve Now
+              </button>
               <button className="hero-content__play-button">
                 <img src={Icon.playCircle} alt="play" />
-                How to Order
+                How to Reserve
               </button>
             </div>
           </div>
@@ -38,14 +39,17 @@ export const HomePage = () => {
               <h4>
                 24<span>k+</span>
               </h4>
-              <p>Happy Customers</p>
+              <p>
+                Happy
+                <br />
+                Customers
+              </p>
             </div>
 
             <div className="hero-content__review">
               <img src={Images.common.userAvatar} alt="user" />
               <p>
-                "This is the best Japanese food delivery service that ever
-                existed."
+                "This is the best Japanese food service that ever existed."
               </p>
             </div>
           </div>
@@ -307,7 +311,7 @@ export const HomePage = () => {
           Get offers stright <br />
           to your inbox
         </h2>
-        <p data-aos="fade-up">Sign up for the Sushiman newsletter</p>
+        <p data-aos="fade-up">Sign up for the Itsusushi newsletter</p>
 
         <div className="subscription__form" data-aos="fade-up">
           <input type="text" placeholder="Enter your email address" />
