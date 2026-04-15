@@ -5,8 +5,11 @@ import { BadRequestError } from "@/utils/common/error.utils";
 export const zodValidator = (schema: ZodType<any>) => 
   async (req: Request, _res: Response, next: NextFunction) => {
     try {
+      // Unwrap the input property if it exists (for client requests that wrap data)
+      const dataToValidate = req.body.input || req.body;
+      
       // Using parseAsync to support async refine/transform in Zod schemas
-      req.body = await schema.parseAsync(req.body);
+      req.body = await schema.parseAsync(dataToValidate);
       next();
     } catch (error: unknown) {
       if (error instanceof ZodError) {
