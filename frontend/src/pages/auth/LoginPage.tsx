@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginSchema, type LoginFormValues } from "@shared/schemas/auth.schema";
+import { LoginSchema, type LoginFormInput } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/auth.store";
 
@@ -16,12 +16,12 @@ export const LoginPage = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginFormValues>({
+  } = useForm<LoginFormInput>({
     resolver: zodResolver(LoginSchema),
     mode: "onSubmit",
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginFormInput) => {
     try {
       await signIn(data);
       navigate("/");
@@ -109,7 +109,7 @@ export const LoginPage = () => {
           {/* Footer */}
           <p className="text-center text-slate-400 text-sm mt-6">
             Don&apos;t have an account?{" "}
-            <Link to="/register" className="text-orange-400 hover:text-orange-300 font-medium transition">
+            <Link to="/sign-up" className="text-orange-400 hover:text-orange-300 font-medium transition">
               Sign up
             </Link>
           </p>
