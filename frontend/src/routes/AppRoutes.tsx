@@ -16,24 +16,25 @@ export const AppRoutes = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/menu" element={<MenuPage />} />
+      <Route path="/reserve" element={<ReservePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       {/* <Route path="/reset-password" element={<ResetPasswordForm />} /> */}
       <Route path="/unauthorized" element={<h2>You don't have permission!</h2>} />
+      <Route path="/not-found" element={<h2>Not Found!</h2>} />
 
+      {/* Redirect 404 */}
+      <Route path="*" element={<Navigate to="/not-found" />} />
+      
       {/* Shop / Customer Routes */}
       <Route element={<ProtectedRoute allowedRoles={[Role.CUSTOMER, Role.ADMIN]} />}>
-        <Route path="/reserve" element={<ReservePage />} />
+      
       </Route>
 
       {/* Admin Routes */}
       <Route element={<ProtectedRoute allowedRoles={[Role.ADMIN]} />}>
-        {/* <Route path="/admin" element={<AdminDashboard />} /> */}
         <Route path="/admin/dashboard" element={<h2>Admin Dashboard</h2>} />
       </Route>
-
-      {/* Redirect 404 */}
-      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 };
