@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from "axios";
-import { useAuthStore } from "../stores/auth.store";
+import { useAuthStore } from "@/stores/auth.store";
 
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.MODE === "development" ? import.meta.env.VITE_API_URL : "/api/v1",
@@ -27,8 +27,8 @@ api.interceptors.response.use(
 
     // API that don't require token refresh - Prevent infinite loop of refresh attempts
     if (
-      originalRequest.url.includes("/auth/sign-in") ||
-      originalRequest.url.includes("/auth/sign-up") ||
+      originalRequest.url.includes("/auth/login") ||
+      originalRequest.url.includes("/auth/register") ||
       originalRequest.url.includes("/auth/refresh")
     ) {
       return Promise.reject(error);

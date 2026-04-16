@@ -1,7 +1,7 @@
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import { Link } from "react-router-dom";
-// import { handleFormError } from "../../../utils/errorHandler";
+// import { handleFormError } from "@/utils/errorHandler";
 // import { ResetPasswordInputSchema, type ResetPasswordFormValues } from "@shared/schemas/auth.schema";
 // import { useAuthStore } from "@/stores/auth.store";
 

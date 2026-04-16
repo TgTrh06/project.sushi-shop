@@ -19,8 +19,8 @@ interface AuthState {
   clearState: () => void;
 
   // Async actions
-  signUp: (data: RegisterFormInput) => Promise<void>;
-  signIn: (data: LoginFormInput) => Promise<void>;
+  signUp: (input: RegisterFormInput) => Promise<void>;
+  signIn: (input: LoginFormInput) => Promise<void>;
   signOut: () => Promise<void>;
   refreshToken: () => Promise<void>;
 
@@ -41,11 +41,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ accessToken: null, user: null });
   },
 
-  signUp: async (data: RegisterFormInput) => {
+  signUp: async (input: RegisterFormInput) => {
     try {
       set({ loading: true });
 
-      await authService.signUp(data);
+      await authService.signUp(input);
 
       // showSuccess("Registration successful! Please check your email to verify your account.");
       showSuccess("Registration successful! You can now log in.");
@@ -58,11 +58,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signIn: async (data: LoginFormInput) => {
+  signIn: async (input: LoginFormInput) => {
     try {
       set({ loading: true });
 
-      const { accessToken, user } = await authService.signIn(data);
+      const { accessToken, user } = await authService.signIn(input);
       set({ accessToken, user, isInitialized: true }); // Mark as initialized after successful login
 
       showSuccess(`Welcome back, ${user.username}!`);
