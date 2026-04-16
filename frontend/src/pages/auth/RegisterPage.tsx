@@ -26,7 +26,7 @@ export const RegisterPage = () => {
     },
   });
 
-  const onSubmit = async (data: RegisterFormValues) => {
+  const onSubmit = async (data: RegisterFormInput) => {
     try {
       await signUp(data);
     } catch (error) {
@@ -146,7 +146,7 @@ export const RegisterPage = () => {
           {/* Footer */}
           <p className="text-center text-slate-400 text-sm mt-6">
             Already have an account?{" "}
-            <Link to="/sign-in" className="text-orange-400 hover:text-orange-300 font-medium transition">
+            <Link to="/login" className="text-orange-400 hover:text-orange-300 font-medium transition">
               Sign in
             </Link>
           </p>
