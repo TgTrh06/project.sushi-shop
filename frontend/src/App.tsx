@@ -6,8 +6,8 @@ import { Toaster } from "react-hot-toast";
 import { AppRoutes } from "@/routes/AppRoutes";
 import { useAuthStore } from "@/stores/auth.store";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "./components/layout/Footer";
-import { Loader } from "./components/ui/Loader";
+import { Footer } from "@/components/layout/Footer";
+import { Loader } from "@/components/ui/Loader";
 
 function App() {
   const initialize = useAuthStore((state) => state.initialize);

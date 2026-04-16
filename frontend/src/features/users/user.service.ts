@@ -1,6 +1,6 @@
-import api from "../../lib/axios";
+import api from "@/lib/axios";
 import type { User } from "./user.types";
-import type { ApiResponse } from "../../types/response.type";
+import type { ApiResponse } from "@/types/response.type";
 import type { UpdateUserFormInput } from "@shared/schemas/auth.schema";
 
 export const userService = {
