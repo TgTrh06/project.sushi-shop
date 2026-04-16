@@ -5,7 +5,8 @@ import { UserMenu } from "../UserMenu";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Icon } from "@/assets/svg";
 
-export const Navbar = () => {const location = useLocation();
+export const Navbar = () => {
+  const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const isHomePage = location.pathname === "/";
   const [hasScrolledPast, setHasScrolledPast] = useState(false);
@@ -30,12 +31,12 @@ export const Navbar = () => {const location = useLocation();
     <header className={`header ${headerClass}`}>
       <nav className="header__nav">
         <div className="header__logo">
-          <NavLink to="/">
-            <h4 data-aos="fade-down">ItsuSushi</h4>
-          </NavLink>
+          <Link to="/">
+            <h4 data-aos="fade-right">ItsuSushi</h4>
+          </Link>
         </div>
 
-        <ul className="header__menu" data-aos="fade-down">
+        <ul className="header__menu" data-aos="fade-left">
           <li>
             <NavLink to="/">Home</NavLink>
           </li>
@@ -43,7 +44,7 @@ export const Navbar = () => {const location = useLocation();
             <NavLink to="/menu">Menu</NavLink>
           </li>
           <li>
-            <NavLink to="/booking">Reserve</NavLink>
+            <NavLink to="/reserve">Reserve</NavLink>
           </li>
           <li>
             <NavLink to="/about">About</NavLink>

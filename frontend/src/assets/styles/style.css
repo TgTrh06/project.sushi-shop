@@ -25,6 +25,8 @@
 
   --color-white: #fff;
   --color-creamson: #fff0de;
+  
+  --navbar-height: 80px;
 }
 
 * {
@@ -32,6 +34,11 @@
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
+}
+
+.page-container {
+  padding-top: var(--navbar-height);
+  min-height: 100vh;
 }
 
 body {
