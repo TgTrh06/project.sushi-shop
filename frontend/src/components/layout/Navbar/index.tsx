@@ -1,9 +1,10 @@
 import "./Navbar.css";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "@/stores/auth.store";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { UserMenu } from "../UserMenu";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Icon } from "@/assets/svg";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export const Navbar = () => {
   const location = useLocation();
@@ -48,6 +49,9 @@ export const Navbar = () => {
           </li>
           <li>
             <NavLink to="/about">About</NavLink>
+          </li>
+          <li>
+            <ThemeToggle />
           </li>
           <li className="header__auth-btn">
             {user ? <UserMenu /> : <Link to="/login">Login</Link>}
