@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/stores/auth.store";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Images } from "@/assets/image"; // Sử dụng đống ảnh bạn đã setup
 import "./UserMenu.css";
 
