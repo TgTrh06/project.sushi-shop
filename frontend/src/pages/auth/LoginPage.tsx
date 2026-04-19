@@ -94,7 +94,7 @@ export const LoginPage = () => {
         {/* Footer */}
         <div className="auth__footer">
           Don&apos;t have an account?{" "}
-          <Link to="/sign-up" className="auth__link" style={{ fontSize: "14px" }}>
+          <Link to="/register" className="auth__link" style={{ fontSize: "14px" }}>
             Sign up
           </Link>
         </div>
