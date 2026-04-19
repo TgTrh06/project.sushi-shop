@@ -25,8 +25,13 @@ export default function MenuPage() {
 
   return (
     <div className="page-container">
-      <section className="popular-foods">
-        <h2 className="popular-foods__title">Popular Food / 人気</h2>
+      <div className="menu-page__header">
+        <h1 className="menu-page__title">Our Menu</h1>
+        <p className="menu-page__subtitle">Discover authentic Japanese flavors</p>
+      </div>
+
+      <section className="popular-foods" style={{ paddingTop: 0 }}>
+        <h2 className="popular-foods__title" style={{ display: 'none' }}>Popular Food / 人気</h2>
 
         {/* FILTER (giữ nguyên style gốc) */}
         <div className="popular-foods__filters sushi__hide-scrollbar">
