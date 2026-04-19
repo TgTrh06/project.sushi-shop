@@ -1,13 +1,35 @@
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AppRoutes } from "@/routes/AppRoutes";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Loader } from "@/components/ui/Loader";
+
+// Wrapper to conditionally render Navbar/Footer for non-admin routes
+const AppShell = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!isAdminRoute && <Navbar />}
+
+      {isAdminRoute ? (
+        <AppRoutes />
+      ) : (
+        <main className="max-w-7xl mx-auto px-4 py-6">
+          <AppRoutes />
+        </main>
+      )}
+
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+};
 
 function App() {
   const initialize = useAuthStore((state) => state.initialize);
@@ -26,22 +48,13 @@ function App() {
 
   // Loading screen while checking auth status
   if (!isInitialized) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (
     <BrowserRouter>
       <Toaster position="top-right" reverseOrder={false} />
-
-      <Navbar />
-
-      <main className="max-w-7xl mx-auto px-4 py-6">
-        <AppRoutes />
-      </main>
-
-      <Footer />
+      <AppShell />
     </BrowserRouter>
   );
 }
