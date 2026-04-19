@@ -1,0 +1,100 @@
+/* =========================================================
+   RESERVE PAGE
+   ========================================================= */
+
+.reserve-section {
+  padding: 80px 32px;
+  background-color: var(--color-creamson);
+}
+
+.reserve-section h2 {
+  font-family: var(--playfair-display);
+  font-size: 56px;
+  line-height: 1.2;
+  color: var(--secondary-color);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.reserve-section p {
+  text-align: center;
+  color: var(--black-500);
+  font-size: 18px;
+  margin-bottom: 48px;
+}
+
+.reserve-form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--color-white);
+  padding: 48px;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.reserve-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reserve-form__label {
+  font-family: var(--plus-jakarta-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--secondary-color);
+}
+
+.reserve-form__input {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: var(--plus-jakarta-sans);
+  font-size: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+}
+
+.reserve-form__input:focus {
+  border-color: var(--primary-color);
+  background-color: var(--color-white);
+  box-shadow: 0 0 0 3px rgba(177, 69, 74, 0.1);
+}
+
+.reserve-form__button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: var(--secondary-color);
+  color: var(--color-white);
+  font-family: var(--plus-jakarta-sans);
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.reserve-form__button:hover {
+  opacity: 0.9;
+}
+
+.reserve-form__button:active {
+  transform: scale(0.98);
+}
+
+/* Media Queries */
+@media screen and (max-width: 550px) {
+  .reserve-section h2 {
+    font-size: 40px;
+  }
+  .reserve-form {
+    padding: 32px 24px;
+  }
+}

@@ -1,0 +1,36 @@
+/* =========================================================
+   MENU PAGE
+   ========================================================= */
+
+/* The menu page generally reuses .popular-foods from popular.css
+   This file is added for any specific menu grid formatting if required */
+
+.menu-page__header {
+  text-align: center;
+  padding: 64px 32px 32px;
+  background-color: var(--color-creamson);
+}
+
+.menu-page__title {
+  font-family: var(--playfair-display);
+  font-size: 56px;
+  color: var(--secondary-color);
+  margin-bottom: 16px;
+}
+
+.menu-page__subtitle {
+  font-family: var(--plus-jakarta-sans);
+  color: var(--primary-color);
+  font-size: 18px;
+}
+
+.menu-page__filters {
+  justify-content: center;
+  margin-bottom: 48px;
+}
+
+@media screen and (max-width: 550px) {
+  .menu-page__title {
+    font-size: 40px;
+  }
+}
