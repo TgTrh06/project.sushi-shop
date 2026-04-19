@@ -2,13 +2,18 @@ import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
   {
-    customerName: String,
-    email: String,
-    phone: String,
-    date: String,
-    time: String,
-    guests: Number,
-    note: String,
+    customerName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    date: { type: String, required: true },
+    time: { type: String, required: true },
+    guests: { type: Number, required: true },
+    note: { type: String },
+    status: {
+      type: String,
+      enum: ["pending", "confirmed", "cancelled"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
