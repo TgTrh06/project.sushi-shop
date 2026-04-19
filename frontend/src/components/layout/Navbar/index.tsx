@@ -33,11 +33,11 @@ export const Navbar = () => {
       <nav className="header__nav">
         <div className="header__logo">
           <Link to="/">
-            <h4 data-aos="fade-right">ItsuSushi</h4>
+            <h4 data-aos="fade-down">ItsuSushi</h4>
           </Link>
         </div>
 
-        <ul className="header__menu" data-aos="fade-left">
+        <ul className="header__menu" data-aos="fade-down">
           <li>
             <NavLink to="/">Home</NavLink>
           </li>
