@@ -1,10 +1,15 @@
-// import { Router } from "express";
-// import { bookingController } from "./booking.controller";
-// import { verifyAccessToken, authorize } from "../../middleware/auth.middleware";
+import { Router } from "express";
+import { bookingController } from "./booking.controller";
+import { verifyAuth, verifyAdmin } from "../../middleware/auth.middleware";
 
-// const router = Router();
+const router = Router();
 
-// router.post("/", verifyAccessToken, authorize("user", "admin"), bookingController.create);
-// router.get("/", verifyAccessToken, authorize("user", "admin"), bookingController.getAll);
+// PUBLIC ROUTES
+router.post("/", bookingController.create); // Customer creates booking
 
-// export default router;
+// ADMIN ROUTES
+router.get("/", verifyAuth, verifyAdmin, bookingController.getAll);
+router.patch("/:id/status", verifyAuth, verifyAdmin, bookingController.updateStatus);
+router.delete("/:id", verifyAuth, verifyAdmin, bookingController.delete);
+
+export default router;
