@@ -1,10 +1,10 @@
-import { ConflictError, ForbiddenError, UnauthorizedError } from "@/utils/common/error.utils";
+import { ConflictError, ForbiddenError, UnauthorizedError } from "@/utils/common/error.util";
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from "@/utils/security/jwt.utils";
-import { hashPassword, comparePassword } from "@/utils/security/bcrypt.utils";
+} from "@/utils/security/jwt.util";
+import { hashPassword, comparePassword } from "@/utils/security/bcrypt.util";
 import { LoginFormValues, RegisterFormValues, Role } from "@shared/schemas/auth.schema";
 import { UserEntity } from "@/modules/users/user.model";
 import UserRepository from "@/modules/users/user.repository";

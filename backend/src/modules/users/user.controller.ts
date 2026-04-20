@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ResponseHandler } from "../../utils/common/response.utils";
+import { ResponseHandler } from "../../utils/common/response.util";
 import UserService from "./user.service";
-import { PaginationParams, PaginationUtils } from "../../utils/common/pagination.utils";
+import { PaginationParams, PaginationUtils } from "../../utils/common/pagination.util";
 import { UpdateUserFormInput } from "@shared/schemas/auth.schema";
 import { GetByIdParams } from "@/types/params.type";
 

@@ -1,8 +1,8 @@
 import { ProductEntity, CreateProductDTO, UpdateProductDTO } from "./product.types";
 import ProductRepository from "./product.repository";
-import { BadRequestError, ConflictError, NotFoundError } from "../../utils/common/error.utils";
-import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.utils";
-import { generateSlug } from "@/utils/common/slugify.utils";
+import { BadRequestError, ConflictError, NotFoundError } from "../../utils/common/error.util";
+import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.util";
+import { generateSlug } from "@/utils/common/slugify.util";
 import CategoryRepository from "../categories/category.repository";
 
 export default class ProductService {

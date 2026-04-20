@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodType, ZodError } from "zod";
-import { BadRequestError } from "@/utils/common/error.utils";
+import { BadRequestError } from "@/utils/common/error.util";
 
 export const zodValidator = (schema: ZodType<any>) => 
   async (req: Request, _res: Response, next: NextFunction) => {

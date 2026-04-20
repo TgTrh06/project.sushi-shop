@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Response } from "express";
 import { env } from "@/config/env.config";
 import { REFRESH_COOKIE_OPTIONS, REFRESH_TOKEN_NAME } from "@/config/cookie.config";
-import { UnauthorizedError } from "@/utils/common/error.utils";
+import { UnauthorizedError } from "@/utils/common/error.util";
 
 interface AccessTokenPayload {
   id: string;

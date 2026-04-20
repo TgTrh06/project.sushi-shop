@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import ProductService from "./product.service";
-import { ResponseHandler } from "../../utils/common/response.utils";
+import { ResponseHandler } from "../../utils/common/response.util";
 import {
   PaginationParams,
   PaginationUtils,
-} from "@/utils/common/pagination.utils";
+} from "@/utils/common/pagination.util";
 import { CreateProductInput, UpdateProductInput } from "./product.types";
 import { GetByIdParams, GetBySlugParams } from "@/types/params.type";
 export default class ProductController {

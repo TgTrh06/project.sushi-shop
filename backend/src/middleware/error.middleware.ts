@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { logger } from "../utils/common/logger.utils";
+import { logger } from "../utils/common/logger.util";
 import { env } from "../config/env.config";
 
 export const globalErrorHandler = (

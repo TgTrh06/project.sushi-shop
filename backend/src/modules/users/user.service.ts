@@ -1,9 +1,9 @@
 import UserRepository from "./user.repository";
 import { type SafeUser, UserEntity } from "./user.model";
 import { UpdateUserFormValues } from "@shared/schemas/auth.schema";
-import { BadRequestError, NotFoundError } from "@/utils/common/error.utils";
-import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.utils";
-import { hashPassword } from "@/utils/security/bcrypt.utils";
+import { BadRequestError, NotFoundError } from "@/utils/common/error.util";
+import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.util";
+import { hashPassword } from "@/utils/security/bcrypt.util";
 
 function sanitizeUser(user: UserEntity): SafeUser {
   const { hashedPassword, ...safeUser } = user;
