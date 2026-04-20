@@ -1,15 +1,15 @@
 import {
   PaginationResult,
   PaginationUtils,
-} from "@/utils/common/pagination.utils";
+} from "@/utils/common/pagination.util";
 import {
   BadRequestError,
   ConflictError,
   NotFoundError,
-} from "@/utils/common/error.utils";
+} from "@/utils/common/error.util";
 import CategoryRepository from "./category.repository";
 import { CategoryEntity, CreateCategoryDTO, UpdateCategoryDTO } from "./category.types";
-import { generateSlug } from "@/utils/common/slugify.utils";
+import { generateSlug } from "@/utils/common/slugify.util";
 
 export default class CategoryService {
   constructor(private readonly repo: CategoryRepository) {}

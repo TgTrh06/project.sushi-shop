@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import CategoryService from "./category.service";
-import { ResponseHandler } from "@/utils/common/response.utils";
-import { PaginationParams, PaginationUtils } from "@/utils/common/pagination.utils";
+import { ResponseHandler } from "@/utils/common/response.util";
+import { PaginationParams, PaginationUtils } from "@/utils/common/pagination.util";
 import { CreateCategoryInput, UpdateCategoryInput} from "./category.types";
 import { GetByIdParams, GetBySlugParams } from "@/types/params.type";
 

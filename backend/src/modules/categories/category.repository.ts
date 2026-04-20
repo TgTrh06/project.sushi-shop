@@ -8,7 +8,7 @@ import {
 } from "./category.types";
 import { ProductDocument } from "../products/product.types";
 import { ProductModel } from "../products/product.model";
-import { generateSlug } from "@/utils/common/slugify.utils";
+import { generateSlug } from "@/utils/common/slugify.util";
 
 export default class CategoryRepository {
   private categoryModel: Model<CategoryDocument>;

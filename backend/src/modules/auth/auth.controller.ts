@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service";
-import { setRefreshCookie, clearRefreshCookie } from "../../utils/security/jwt.utils";
+import { setRefreshCookie, clearRefreshCookie } from "../../utils/security/jwt.util";
 import { REFRESH_TOKEN_NAME } from "../../config/cookie.config";
-import { UnauthorizedError } from "../../utils/common/error.utils";
-import { ResponseHandler } from "../../utils/common/response.utils";
+import { UnauthorizedError } from "../../utils/common/error.util";
+import { ResponseHandler } from "../../utils/common/response.util";
 
 export class AuthController {
   private static authService = new AuthService();

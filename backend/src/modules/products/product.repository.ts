@@ -6,7 +6,7 @@ import {
 } from "./product.types";
 import { ProductModel } from "./product.model";
 import { Model } from "mongoose";
-import { generateSlug } from "@/utils/common/slugify.utils";
+import { generateSlug } from "@/utils/common/slugify.util";
 
 export default class ProductRepository {
   private productModel: Model<ProductDocument>;
