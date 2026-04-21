@@ -5,11 +5,11 @@ import adminRoutes from "@/modules/users/routes/admin.routes"
 import userRoutes from "@/modules/users/routes/user.routes";
 import categoryRoutes from "@/modules/categories/category.routes";
 import productRoutes from "@/modules/products/product.routes";
-import bookingRoutes from "@/modules/bookings/booking.routes";
+import bookingRoutes from "@/modules/resevations/reservation.routes";
 import { UserModel } from "@/modules/users/user.model";
 import { ProductModel } from "@/modules/products/product.model";
 import { CategoryModel } from "@/modules/categories/category.model";
-import { BookingModel } from "@/modules/bookings/booking.model";
+import { ReservationModel } from "@/modules/resevations/reservation.model";
 
 const router = Router();
 
@@ -24,7 +24,7 @@ router.use("/admin", adminRoutes);
 router.use("/users", userRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/products", productRoutes);
-router.use("/bookings", bookingRoutes);
+router.use("/reservation", bookingRoutes);
 
 // Admin Stats endpoint
 router.get("/admin/stats", verifyAuth, verifyAdmin, async (_req, res, next) => {
@@ -34,8 +34,8 @@ router.get("/admin/stats", verifyAuth, verifyAdmin, async (_req, res, next) => {
         UserModel.countDocuments({ role: "customer" }),
         ProductModel.countDocuments(),
         CategoryModel.countDocuments(),
-        BookingModel.countDocuments(),
-        BookingModel.countDocuments({ status: "pending" }),
+        ReservationModel.countDocuments(),
+        ReservationModel.countDocuments({ status: "pending" }),
       ]);
 
     res.json({
