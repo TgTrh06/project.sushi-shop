@@ -6,11 +6,10 @@
 @import url("sections/about.css");
 @import url("sections/popular.css");
 @import url("sections/trending.css");
-@import url("sections/subscribe.css");
-@import url("sections/footer.css");
 @import url("sections/auth.css");
 @import url("sections/reserve.css");
 @import url("sections/menu.css");
+@import url("sections/product-detail.css");
 
 /* CSS variables for reusablity across all files (including above imported) */
 :root {
@@ -28,8 +27,30 @@
 
   --color-white: #fff;
   --color-creamson: #fff0de;
-  
+  --color-gold: #ffee99;
+
+  --transparent-button-text-color: #fff0de;
+  --sticky-button-text-color: #b1454a;
+
   --navbar-height: 80px;
+  --navbar-sticky-height: 60px;
+  --footer-bg: #f9fafb;
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --color-creamson: #282a30;
+  --color-white: #25262b;
+  --secondary-color: #f1f3f5;
+  --black-500: #c1c2c5;
+  --black-400: #2c2e33;
+  --black-300: #e9ecef;
+  --black-200: #ffffff;
+
+  --transparent-button-text-color: #f1f3f5;
+  --sticky-button-text-color: #f1f3f5;
+  --footer-bg: #020617;
+  /* High-end Slate-950 equivalent */
 }
 
 * {
@@ -40,14 +61,22 @@
 }
 
 .page-container {
-  padding-top: var(--navbar-height);
+  padding-top: var(--navbar-sticky-height);
   min-height: 100vh;
 }
 
 body {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   background-color: var(--color-creamson);
+  overflow-x: hidden;
+}
+
+.container-content {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 a {
@@ -55,6 +84,9 @@ a {
   color: inherit;
 }
 
+h4 {
+  color: var(--secondary-color);
+}
 
 .flex-center {
   display: flex;
@@ -110,8 +142,10 @@ a {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .sushi__hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* START: about us media queries */
@@ -151,6 +185,7 @@ a {
 }
 
 @media screen and (max-width: 550px) {
+
   .about-us__image-sushi2 img,
   .about-us__image-sushi3 img {
     width: 50%;
@@ -171,6 +206,7 @@ a {
     padding: 32px;
   }
 }
+
 /* END: about us media queries */
 
 
@@ -194,6 +230,7 @@ a {
     padding-left: 0;
   }
 }
+
 /* END: header media queries */
 
 /* START: hero media queries */
@@ -242,6 +279,7 @@ a {
     padding: 32px;
   }
 }
+
 /* END: hero media queries */
 
 /* START: popular media queries */
@@ -255,6 +293,7 @@ a {
     min-width: 100%;
   }
 }
+
 /* END: popular media queries */
 
 /* START: subscribe media queries */
@@ -291,6 +330,7 @@ a {
     min-width: 100%;
   }
 }
+
 /* END: subscribe media queries */
 
 /* START: trending media queries */
@@ -327,4 +367,5 @@ a {
     padding: 32px;
   }
 }
+
 /* END: trending media queries */
