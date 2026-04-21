@@ -1,100 +1,437 @@
 /* =========================================================
-   RESERVE PAGE
+   RESERVE PAGE (HIGH FIDELITY)
    ========================================================= */
 
-.reserve-section {
-  padding: 80px 32px;
-  background-color: var(--color-creamson);
+/* Use variables defined in style.css */
+.reserve-page-container {
+  min-height: calc(100vh - var(--navbar-height));
+  padding: 80px 16px;
+  background-color: var(--color-creamson); /* adapts to light/dark automatically! */
+  transition: background-color 0.3s ease;
 }
 
-.reserve-section h2 {
-  font-family: var(--playfair-display);
-  font-size: 56px;
-  line-height: 1.2;
-  color: var(--secondary-color);
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.reserve-section p {
-  text-align: center;
-  color: var(--black-500);
-  font-size: 18px;
-  margin-bottom: 48px;
-}
-
-.reserve-form {
-  max-width: 600px;
+.reserve-page-content {
+  max-width: 1200px;
   margin: 0 auto;
-  background: var(--color-white);
-  padding: 48px;
-  border-radius: 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+/* Left Section: Map */
+.reserve-map-section {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.reserve-form__group {
+.reserve-map-header {
+  text-align: left;
+}
+
+.reserve-title {
+  font-family: var(--playfair-display);
+  font-size: 42px;
+  color: var(--secondary-color);
+  margin-bottom: 8px;
+}
+
+.reserve-subtitle {
+  font-family: var(--plus-jakarta-sans);
+  color: var(--black-500);
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.reserve-legend {
+  display: flex;
+  gap: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--plus-jakarta-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--secondary-color);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Light mode defaults */
+.legend-color.available {
+  border: 2px solid var(--black-400);
+  background-color: transparent;
+}
+.legend-color.selected {
+  background-color: var(--primary-color);
+  border: 2px solid #8e3539;
+}
+.legend-color.occupied {
+  background-color: var(--black-500);
+  border: 2px solid #555555;
+  opacity: 0.5;
+}
+
+/* Dark mode overrides for legend */
+[data-theme="dark"] .legend-color.available {
+  border: 2px solid #ffffff;
+}
+[data-theme="dark"] .legend-color.selected {
+  border: 2px solid #d4585e;
+}
+[data-theme="dark"] .legend-color.occupied {
+  background-color: #555555;
+  border: 2px solid #333;
+}
+
+/* SVG Wrapper */
+.reserve-svg-wrapper {
+  width: 100%;
+  background-color: var(--color-white); /* automatically adapts to deep #25262B in dark mode and #fff in light mode */
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); /* very soft shadow */
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .reserve-svg-wrapper {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.reserve-svg-map {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 
+  -----------------------
+  SVG SEMANTIC CSS THEMING
+  -----------------------
+*/
+.svg-bg {
+  fill: var(--color-white); /* light: white, dark: #25262B */
+  transition: fill 0.3s ease;
+}
+
+.svg-wood {
+  fill: #c5a083; /* light mode wood */
+  transition: fill 0.3s ease;
+}
+
+[data-theme="dark"] .svg-wood {
+  fill: #694b37; /* dark mode wood */
+}
+
+.svg-wood-stroke {
+  stroke: #c5a083;
+  transition: stroke 0.3s ease;
+}
+
+[data-theme="dark"] .svg-wood-stroke {
+  stroke: #694b37;
+}
+
+.svg-kitchen-bg {
+  fill: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .svg-kitchen-bg {
+  fill: rgba(0, 0, 0, 0.3);
+}
+
+.svg-stone {
+  fill: #e0e0e0;
+}
+
+[data-theme="dark"] .svg-stone {
+  fill: #3c3e45;
+}
+
+.svg-text-accent {
+  fill: #8f6e52;
+}
+
+[data-theme="dark"] .svg-text-accent {
+  fill: #cda886;
+}
+
+.svg-text-muted {
+  stroke: #c1c2c5;
+}
+
+[data-theme="dark"] .svg-text-muted {
+  stroke: #5c5f66;
+}
+
+
+/* SVG Individual Seat styling */
+.reserve-seat {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.reserve-seat:not(.occupied):hover {
+  transform: scale(1.15);
+}
+
+.reserve-seat__shape {
+  stroke-width: 2;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.reserve-seat__text {
+  pointer-events: none;
+  font-family: var(--plus-jakarta-sans);
+  user-select: none;
+}
+
+/* SEAT STATES (Dynamic Light vs Dark) */
+/* 1. AVAILABLE */
+.reserve-seat.available .reserve-seat__shape {
+  fill: rgba(255, 255, 255, 0.5);
+  stroke: var(--black-400); 
+}
+
+.reserve-seat.available .reserve-seat__text {
+  fill: var(--black-400);
+}
+
+[data-theme="dark"] .reserve-seat.available .reserve-seat__shape {
+  fill: rgba(255, 255, 255, 0.05);
+  stroke: #ffffff;
+}
+
+[data-theme="dark"] .reserve-seat.available .reserve-seat__text {
+  fill: #fff0de;
+}
+
+/* 2. SELECTED */
+.reserve-seat.selected .reserve-seat__shape {
+  fill: var(--primary-color);
+  stroke: #8e3539; 
+}
+
+.reserve-seat.selected .reserve-seat__text {
+  fill: #ffffff;
+}
+
+[data-theme="dark"] .reserve-seat.selected .reserve-seat__shape {
+  stroke: #d4585e;
+}
+
+/* 3. OCCUPIED */
+.reserve-seat.occupied .reserve-seat__shape {
+  fill: #dddddd;
+  stroke: #b0b0b0; 
+}
+
+.reserve-seat.occupied .reserve-seat__text {
+  fill: #888888;
+}
+
+[data-theme="dark"] .reserve-seat.occupied .reserve-seat__shape {
+  fill: #444444;
+  stroke: #333333; 
+}
+
+/* Right Section: Sidebar Checkout */
+.reserve-sidebar {
+  background-color: var(--color-white); /* dynamically adjusts */
+  border-radius: 24px;
+  padding: 32px 40px;
+  color: var(--secondary-color); /* dynamically adjusts */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+  position: sticky;
+  top: 100px;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .reserve-sidebar {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-title {
+  font-family: var(--playfair-display);
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: var(--secondary-color);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding-bottom: 16px;
+  transition: border-color 0.3s ease;
+}
+
+[data-theme="dark"] .sidebar-title {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.sidebar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.reserve-form__label {
+.form-group label {
   font-family: var(--plus-jakarta-sans);
+  font-size: 13px;
+  color: var(--black-500);
   font-weight: 600;
+}
+
+.form-group input {
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: var(--color-creamson);
+  color: var(--secondary-color);
+  font-family: var(--plus-jakarta-sans);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .form-group input {
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(177, 69, 74, 0.1);
+}
+
+[data-theme="dark"] .form-group input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.sidebar-summary {
+  margin-top: 12px;
+  background-color: var(--color-creamson);
+  padding: 24px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-summary h3 {
+  font-family: var(--plus-jakarta-sans);
+  font-size: 16px;
+  color: var(--secondary-color);
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--plus-jakarta-sans);
   font-size: 14px;
+  color: var(--black-500);
+  margin-bottom: 12px;
+}
+
+.highlight-text {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-align: right;
+  max-width: 150px;
+}
+
+.total-row {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(0,0,0,0.1);
+  font-size: 18px;
+  font-weight: 700;
   color: var(--secondary-color);
 }
 
-.reserve-form__input {
-  width: 100%;
-  padding: 14px 16px;
-  font-family: var(--plus-jakarta-sans);
-  font-size: 15px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  outline: none;
-  transition: all 0.2s ease;
-  background-color: #fafafa;
+[data-theme="dark"] .total-row {
+  border-top: 1px dashed rgba(255,255,255,0.1);
 }
 
-.reserve-form__input:focus {
-  border-color: var(--primary-color);
-  background-color: var(--color-white);
-  box-shadow: 0 0 0 3px rgba(177, 69, 74, 0.1);
+.total-price {
+  color: var(--primary-color);
+  font-size: 20px;
 }
 
-.reserve-form__button {
-  width: 100%;
-  padding: 16px;
-  margin-top: 16px;
-  background-color: var(--secondary-color);
-  color: var(--color-white);
+.summary-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--gray-100);
+  font-style: italic;
   font-family: var(--plus-jakarta-sans);
+  line-height: 1.5;
+}
+
+.btn-proceed-payment {
+  background-color: var(--primary-color);
+  color: #fff;
+  font-family: var(--plus-jakarta-sans);
+  font-weight: 700;
   font-size: 16px;
-  font-weight: 600;
+  padding: 16px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
+  margin-top: 8px;
 }
 
-.reserve-form__button:hover {
-  opacity: 0.9;
+.btn-proceed-payment:hover {
+  background-color: #d4585e;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(177, 69, 74, 0.3);
 }
 
-.reserve-form__button:active {
-  transform: scale(0.98);
+.btn-proceed-payment:active {
+  transform: translateY(0);
 }
 
-/* Media Queries */
-@media screen and (max-width: 550px) {
-  .reserve-section h2 {
-    font-size: 40px;
+@media screen and (max-width: 1024px) {
+  .reserve-page-content {
+    grid-template-columns: 1fr;
   }
-  .reserve-form {
-    padding: 32px 24px;
+  .reserve-sidebar {
+    position: relative;
+    top: 0;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .reserve-title {
+    font-size: 32px;
+  }
+  .reserve-legend {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }
