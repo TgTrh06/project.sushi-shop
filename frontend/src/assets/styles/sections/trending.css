@@ -51,6 +51,12 @@
   padding: 32px 64px;
 }
 
+.trending__content p.sushi__subtitle {
+  margin: 0;
+  font-weight: 700;
+  font-family: var(--plus-jakarta-sans);
+}
+
 .trending__list {
   list-style: none;
 
