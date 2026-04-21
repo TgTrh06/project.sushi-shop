@@ -1,0 +1,75 @@
+ul {
+    list-style: none;
+}
+
+.example-2 {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+}
+
+.example-2 .icon-content {
+    margin: 0;
+    position: relative;
+}
+
+.example-2 .icon-content a {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 30%;
+    color: #4d4d4d;
+    background-color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+.example-2 .icon-content a:hover {
+    box-shadow: 3px 2px 45px 0px rgb(0 0 0 / 12%);
+}
+
+.example-2 .icon-content a svg {
+    position: relative;
+    z-index: 1;
+    width: 24px;
+    height: 24px;
+}
+
+.example-2 .icon-content a:hover {
+    color: white;
+}
+
+.example-2 .icon-content a .filled {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: #000;
+    transition: all 0.3s ease-in-out;
+}
+
+.example-2 .icon-content a:hover .filled {
+    height: 100%;
+}
+
+.example-2 .icon-content a[data-social="spotify"] .filled {
+    background-color: #1db954;
+}
+
+.example-2 .icon-content a[data-social="pinterest"] .filled {
+    background-color: #bd081c;
+}
+
+.example-2 .icon-content a[data-social="dribbble"] .filled {
+    background-color: #ea4c89;
+}
+
+.example-2 .icon-content a[data-social="telegram"] .filled {
+    background-color: #0088cc;
+}
