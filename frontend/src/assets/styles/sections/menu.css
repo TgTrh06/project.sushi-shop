@@ -1,36 +1,189 @@
-/* =========================================================
-   MENU PAGE
-   ========================================================= */
+/* .menu-page {
+  padding-bottom: 100px;
+} */
 
-/* The menu page generally reuses .popular-foods from popular.css
-   This file is added for any specific menu grid formatting if required */
-
-.menu-page__header {
+/* Header */
+.menu-header {
   text-align: center;
-  padding: 64px 32px 32px;
+  padding: 80px 0 60px;
+  margin-bottom: 40px;
+}
+
+.menu-title {
+  font-family: var(--playfair-display);
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--secondary-color);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.menu-subtitle {
+  font-family: var(--plus-jakarta-sans);
+  font-size: 18px;
+  color: var(--primary-color);
+  opacity: 0.8;
+}
+
+/* Toolbar */
+.menu-toolbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+[data-theme="dark"] .menu-toolbar {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.menu-toolbar__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.menu-categories {
+  background-color: var(--color-creamson);
+  display: flex;
+  border-radius: 24px;
+  padding: 8px 16px;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.menu-category-btn {
+  padding: 10px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--color-white);
+  color: var(--secondary-color);
+  font-family: var(--plus-jakarta-sans);
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .menu-category-btn {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-category-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.menu-category-btn.is-active {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 15px rgba(177, 69, 74, 0.3);
+}
+
+/* Search */
+.menu-search-container {
+  border-radius: 18px;
+  padding: 8px;
   background-color: var(--color-creamson);
 }
 
-.menu-page__title {
-  font-family: var(--playfair-display);
-  font-size: 56px;
+.menu-search {
+  position: relative;
+  min-width: 300px;
+}
+
+.menu-search__icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  opacity: 0.5;
+}
+
+.menu-search__input {
+  width: 100%;
+  padding: 12px 16px 12px 48px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--color-white);
   color: var(--secondary-color);
-  margin-bottom: 16px;
-}
-
-.menu-page__subtitle {
   font-family: var(--plus-jakarta-sans);
-  color: var(--primary-color);
-  font-size: 18px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.menu-page__filters {
-  justify-content: center;
-  margin-bottom: 48px;
+[data-theme="dark"] .menu-search__input {
+  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-@media screen and (max-width: 550px) {
-  .menu-page__title {
-    font-size: 40px;
+.menu-search__input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(177, 69, 74, 0.1);
+}
+
+.menu-grid-section {
+  background-color: var(--primary-color);
+  padding: 30px 0 60px 0;
+}
+
+/* Grid */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.menu-empty {
+  text-align: center;
+  padding: 100px 0;
+  font-family: var(--plus-jakarta-sans);
+  color: var(--secondary-color);
+  opacity: 0.5;
+}
+
+/* Responsive */
+@media screen and (max-width: 1200px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .menu-toolbar__inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .menu-search {
+    min-width: 100%;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .menu-title {
+    font-size: 48px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .menu-header {
+    padding: 60px 0 40px;
+  }
+
+  .menu-title {
+    font-size: 36px;
   }
 }

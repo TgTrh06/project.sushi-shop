@@ -7,16 +7,26 @@ import { AppRoutes } from "@/routes/AppRoutes";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Sidebar } from "@/components/layout/Sidebar";
 import { Loader } from "@/components/ui/Loader";
+import { useState } from "react";
 
 // Wrapper to conditionally render Navbar/Footer for non-admin routes
 const AppShell = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
     <>
-      {!isAdminRoute && <Navbar />}
+      {!isAdminRoute && (
+        <>
+          <Navbar onMenuClick={toggleSidebar} />
+          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        </>
+      )}
 
       {isAdminRoute ? (
         <AppRoutes />
@@ -30,6 +40,16 @@ const AppShell = () => {
     </>
   );
 };
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   const initialize = useAuthStore((state) => state.initialize);
@@ -53,6 +73,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Toaster position="top-right" reverseOrder={false} />
       <AppShell />
     </BrowserRouter>
