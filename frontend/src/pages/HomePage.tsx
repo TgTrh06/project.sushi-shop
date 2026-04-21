@@ -4,7 +4,7 @@ import { Icon } from "@/assets/svg";
 export const HomePage = () => {
   return (
     <div>
-      <section className="hero">
+      <section className="container-content hero">
         <div className="hero-image">
           <img src={Images.sushi.s1} alt="sushi" data-aos="fade-up" />
           <h2 data-aos="fade-up">
@@ -56,7 +56,7 @@ export const HomePage = () => {
         </div>
       </section>
 
-      <section className="about-us" id="about-us">
+      <section className="container-content about-us" id="about-us">
         <div className="about-us__image">
           <div className="about-us__image-sushi3">
             <img src={Images.sushi.s3} alt="sushi" data-aos="fade-right" />
@@ -85,98 +85,100 @@ export const HomePage = () => {
         </div>
       </section>
 
-      <section className="popular-foods" id="menu">
-        <h2 className="popular-foods__title" data-aos="flip-up">
-          Popular Food / 人気
-        </h2>
+      <section className="container-content" id="menu">
+        <div className="popular-foods">
+          <h2 className="popular-foods__title" data-aos="flip-up">
+            Popular Food / 人気
+          </h2>
 
-        <div
-          className="popular-foods__filters sushi__hide-scrollbar"
-          data-aos="fade-up"
-        >
-          <button className="popular-foods__filter-btn active">All</button>
-          <button className="popular-foods__filter-btn">
-            <img src={Images.sushi.s9} alt="sushi 9" />
-            Sushi
+          <div
+            className="popular-foods__filters sushi__hide-scrollbar"
+            data-aos="fade-up"
+          >
+            <button className="popular-foods__filter-btn active">All</button>
+            <button className="popular-foods__filter-btn">
+              <img src={Images.sushi.s9} alt="sushi 9" />
+              Sushi
+            </button>
+            <button className="popular-foods__filter-btn">
+              <img src={Images.sushi.s8} alt="sushi 8" />
+              Ramen
+            </button>
+            <button className="popular-foods__filter-btn">
+              <img src={Images.sushi.s7} alt="sushi 7" />
+              Udon
+            </button>
+            <button className="popular-foods__filter-btn">
+              <img src={Images.sushi.s6} alt="sushi 6" />
+              Danggo
+            </button>
+            <button className="popular-foods__filter-btn">All</button>
+          </div>
+
+          <div className="popular-foods__catalogue" data-aos="fade-up">
+            <article className="popular-foods__card">
+              <img
+                className="popular-foods__card-image"
+                src={Images.sushi.s12}
+                alt="sushi-12"
+              />
+              <h4 className="popular-foods__card-title">Chezu Sushi</h4>
+
+              <div className="popular-foods__card-details flex-between">
+                <div className="popular-foods__card-rating">
+                  <img src={Icon.star} alt="star" />
+                  <p>4.9</p>
+                </div>
+
+                <p className="popular-foods__card-price">$21.00</p>
+              </div>
+            </article>
+
+            <article className="popular-foods__card active-card">
+              <img
+                className="popular-foods__card-image"
+                src={Images.sushi.s11}
+                alt="sushi-11"
+              />
+              <h4 className="popular-foods__card-title">Original Sushi</h4>
+
+              <div className="popular-foods__card-details flex-between">
+                <div className="popular-foods__card-rating">
+                  <img src={Icon.star} alt="star" />
+                  <p>5.0</p>
+                </div>
+
+                <p className="popular-foods__card-price">$19.00</p>
+              </div>
+            </article>
+
+            <article className="popular-foods__card">
+              <img
+                className="popular-foods__card-image"
+                src={Images.sushi.s10}
+                alt="sushi-10"
+              />
+              <h4 className="popular-foods__card-title">Ramen Legendo</h4>
+
+              <div className="popular-foods__card-details flex-between">
+                <div className="popular-foods__card-rating">
+                  <img src={Icon.star} alt="star" />
+                  <p>4.7</p>
+                </div>
+
+                <p className="popular-foods__card-price">$13.00</p>
+              </div>
+            </article>
+          </div>
+
+          <button className="popular-foods__button">
+            Explore Food
+            <img src={Icon.arrowRight} alt="arrow-right" />
           </button>
-          <button className="popular-foods__filter-btn">
-            <img src={Images.sushi.s8} alt="sushi 8" />
-            Ramen
-          </button>
-          <button className="popular-foods__filter-btn">
-            <img src={Images.sushi.s7} alt="sushi 7" />
-            Udon
-          </button>
-          <button className="popular-foods__filter-btn">
-            <img src={Images.sushi.s6} alt="sushi 6" />
-            Danggo
-          </button>
-          <button className="popular-foods__filter-btn">All</button>
         </div>
-
-        <div className="popular-foods__catalogue" data-aos="fade-up">
-          <article className="popular-foods__card">
-            <img
-              className="popular-foods__card-image"
-              src={Images.sushi.s12}
-              alt="sushi-12"
-            />
-            <h4 className="popular-foods__card-title">Chezu Sushi</h4>
-
-            <div className="popular-foods__card-details flex-between">
-              <div className="popular-foods__card-rating">
-                <img src={Icon.star} alt="star" />
-                <p>4.9</p>
-              </div>
-
-              <p className="popular-foods__card-price">$21.00</p>
-            </div>
-          </article>
-
-          <article className="popular-foods__card active-card">
-            <img
-              className="popular-foods__card-image"
-              src={Images.sushi.s11}
-              alt="sushi-11"
-            />
-            <h4 className="popular-foods__card-title">Original Sushi</h4>
-
-            <div className="popular-foods__card-details flex-between">
-              <div className="popular-foods__card-rating">
-                <img src={Icon.star} alt="star" />
-                <p>5.0</p>
-              </div>
-
-              <p className="popular-foods__card-price">$19.00</p>
-            </div>
-          </article>
-
-          <article className="popular-foods__card">
-            <img
-              className="popular-foods__card-image"
-              src={Images.sushi.s10}
-              alt="sushi-10"
-            />
-            <h4 className="popular-foods__card-title">Ramen Legendo</h4>
-
-            <div className="popular-foods__card-details flex-between">
-              <div className="popular-foods__card-rating">
-                <img src={Icon.star} alt="star" />
-                <p>4.7</p>
-              </div>
-
-              <p className="popular-foods__card-price">$13.00</p>
-            </div>
-          </article>
-        </div>
-
-        <button className="popular-foods__button">
-          Explore Food
-          <img src={Icon.arrowRight} alt="arrow-right" />
-        </button>
       </section>
 
-      <section className="trending" id="food">
+      <section className="container-content trending" id="food">
         <section className="trending-sushi">
           <div className="trending__content" data-aos="fade-right">
             <p className="sushi__subtitle">What’s Trending / トレンド</p>
@@ -243,7 +245,7 @@ export const HomePage = () => {
           <p>Discover</p>
         </div>
 
-        <section className="trending-drinks">
+        <section className="container-content trending-drinks">
           <div className="trending__image flex-center">
             <img src={Images.sushi.s4} alt="sushi-4" data-aos="fade-right" />
 
@@ -304,19 +306,6 @@ export const HomePage = () => {
             </ul>
           </div>
         </section>
-      </section>
-
-      <section className="subscription flex-center" id="services">
-        <h2 data-aos="flip-down">
-          Get offers stright <br />
-          to your inbox
-        </h2>
-        <p data-aos="fade-up">Sign up for the Itsusushi newsletter</p>
-
-        <div className="subscription__form" data-aos="fade-up">
-          <input type="text" placeholder="Enter your email address" />
-          <button>Get Started</button>
-        </div>
       </section>
     </div>
   );
