@@ -8,7 +8,8 @@ import { RegisterPage } from "@/pages/auth/RegisterPage";
 import { HomePage } from "@/pages/HomePage";
 import { AboutPage } from "@/pages/AboutPage";
 import MenuPage from "@/pages/MenuPage";
-import ReservePage from "@/pages/customer/ReservePage";
+import ProductDetailPage from "@/pages/ProductDetailPage";
+import ReservePage from "@/pages/customer/ReservationPage";
 
 // Admin Layout & Pages
 import { AdminLayout } from "@/components/layout/AdminLayout";
@@ -25,7 +26,8 @@ export const AppRoutes = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/menu" element={<MenuPage />} />
-      <Route path="/reserve" element={<ReservePage />} />
+      <Route path="/reservation" element={<ReservePage />} />
+      <Route path="/product/:id" element={<ProductDetailPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/unauthorized" element={<h2 style={{ textAlign: "center", marginTop: 80, color: "#94a3b8" }}>🚫 Bạn không có quyền truy cập trang này!</h2>} />
