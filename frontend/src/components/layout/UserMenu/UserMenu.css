@@ -43,8 +43,15 @@
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: scale(0.95) translateY(-10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .droplist-item {
@@ -61,12 +68,17 @@
 
 .droplist-item:hover {
   background-color: var(--color-creamson);
+  color: var(--primary-color) !important;
 }
 
 .droplist-item.signout {
-  color: #ff4d4f;
+  color: var(--color-gold);
   border-top: 1px solid #eee;
   margin-top: 4px;
+}
+
+.droplist-item.signout:hover {
+  color: red !important;
 }
 
 /* Mũi tên nhỏ trên dropdown */

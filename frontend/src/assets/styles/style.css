@@ -7,9 +7,12 @@
 @import url("sections/popular.css");
 @import url("sections/trending.css");
 @import url("sections/auth.css");
-@import url("sections/reserve.css");
-@import url("sections/menu.css");
-@import url("sections/product-detail.css");
+
+@import url("pages/MenuPage.css");
+@import url("pages/ProductDetailPage.css");
+@import url("pages/ReservationPage.css");
+@import url("pages/AboutPage.css");
+@import url("components/DotNav.css");
 
 /* CSS variables for reusablity across all files (including above imported) */
 :root {
@@ -61,7 +64,6 @@
 }
 
 .page-container {
-  padding-top: var(--navbar-sticky-height);
   min-height: 100vh;
 }
 
