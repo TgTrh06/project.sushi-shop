@@ -14,6 +14,10 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const isHomePage = location.pathname === "/";
+  const isMenuPage = location.pathname === "/menu" || location.pathname.startsWith("/product/");
+  const isReservationPage = location.pathname === "/reservation";
+  const isAboutPage = location.pathname === "/about";
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/reset-password" || location.pathname === "/verify-email";
   const [hasScrolledPast, setHasScrolledPast] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
@@ -27,12 +31,6 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
   }, []);
 
   useEffect(() => {
-    // Only listen for scroll on homepage to toggle transparency
-    if (!isHomePage) {
-      setHasScrolledPast(true); // Always "scrolled past" on other pages to trigger sticky style
-      return;
-    }
-
     const handleScroll = () => {
       setHasScrolledPast(window.scrollY > 50);
     };
@@ -42,16 +40,20 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHomePage]);
+  }, []);
 
   const headerClass = hasScrolledPast ? "header--sticky" : "header--transparent";
+  const aboutClass = isAboutPage ? "is-about-page" : "";
+  const menuClass = isMenuPage ? "is-menu-page" : "";
+  const reservationClass = isReservationPage ? "is-reservation-page" : "";
+  const authClass = isAuthPage ? "is-auth-page" : "";
 
   return (
-    <header className={`header ${headerClass}`}>
+    <header className={`header ${headerClass} ${aboutClass} ${menuClass} ${reservationClass} ${authClass}`}>
       <nav className="header__nav">
         <div className="header__logo">
           <Link to="/">
-            <h4 data-aos="fade-down">ItsuSushi</h4>
+            <h4 data-aos="fade-down">Itsu<span>Sushi</span></h4>
           </Link>
         </div>
 
@@ -80,11 +82,13 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
             <li>
               <NavLink to="/about">About</NavLink>
             </li>
-            <li>
-              <ThemeToggle />
-            </li>
-            <li className="header__auth-btn">
-              {user ? <UserMenu /> : <Link to="/login">Login</Link>}
+            <li className="header__action">
+              <div>
+                <ThemeToggle />
+              </div>
+              <div className="header__auth-btn">
+                {user ? <UserMenu /> : <Link to="/login">Login</Link>}
+              </div>
             </li>
           </ul>
         )}
