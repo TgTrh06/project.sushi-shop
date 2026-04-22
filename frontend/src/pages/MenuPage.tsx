@@ -31,14 +31,12 @@ export default function MenuPage() {
   return (
     <div className="page-container menu-page">
       {/* Header Section */}
-      <section className="menu-header">
+      <section className="menu-hero">
         <div className="container-content">
-          <h1 className="menu-title">Our Menu</h1>
-          <p className="menu-subtitle">A symphony of authentic Japanese flavors</p>
+          <h1 className="menu-hero-title">Our Menu</h1>
+          <p className="menu-hero-subtitle">A symphony of authentic Japanese flavors</p>
         </div>
       </section>
-
-
 
       {/* Product Grid */}
       <section className="menu-grid-section">
