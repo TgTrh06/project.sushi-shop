@@ -3,13 +3,13 @@
 } */
 
 /* Header */
-.menu-header {
+.menu-hero {
   text-align: center;
-  padding: 80px 0 60px;
-  margin-bottom: 40px;
+  /* padding: 80px 0 60px; */
+  padding: 160px 0px 120px;
 }
 
-.menu-title {
+.menu-hero-title {
   font-family: var(--playfair-display);
   font-size: 64px;
   font-weight: 800;
@@ -18,7 +18,7 @@
   letter-spacing: -0.02em;
 }
 
-.menu-subtitle {
+.menu-hero-subtitle {
   font-family: var(--plus-jakarta-sans);
   font-size: 18px;
   color: var(--primary-color);
@@ -29,6 +29,9 @@
 .menu-toolbar {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   margin-bottom: 30px;
+  padding: 8px;
+  background-color: var(--color-creamson);
+  border-radius: 18px;
 }
 
 [data-theme="dark"] .menu-toolbar {
@@ -43,10 +46,7 @@
 }
 
 .menu-categories {
-  background-color: var(--color-creamson);
   display: flex;
-  border-radius: 24px;
-  padding: 8px 16px;
   gap: 12px;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -85,8 +85,6 @@
 /* Search */
 .menu-search-container {
   border-radius: 18px;
-  padding: 8px;
-  background-color: var(--color-creamson);
 }
 
 .menu-search {
@@ -101,25 +99,38 @@
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  opacity: 0.5;
+  opacity: 0.8;
+  color: var(--primary-color);
 }
 
 .menu-search__input {
   width: 100%;
-  padding: 12px 16px 12px 48px;
+  padding: 14px 16px 14px 48px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0, 0, 0, 0.08); /* Slightly thicker and more distinct */
   background-color: var(--color-white);
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* More readable than primary */
   font-family: var(--plus-jakarta-sans);
   font-size: 14px;
   outline: none;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Subtle shadow for depth */
 }
 
 [data-theme="dark"] .menu-search__input {
-  border-color: rgba(255, 255, 255, 0.1);
-  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .menu-search__input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .menu-search__icon {
+  color: #fff;
+  opacity: 0.6;
 }
 
 .menu-search__input:focus {
