@@ -1,10 +1,61 @@
+import { useEffect, useState, useRef } from "react";
 import { Images } from "@/assets/image";
 import { Icon } from "@/assets/svg";
 
 export const HomePage = () => {
+  const [activeSection, setActiveSection] = useState(0);
+
+  const sectionRefs = [
+    useRef<HTMLElement>(null),
+    useRef<HTMLElement>(null),
+    useRef<HTMLElement>(null),
+    useRef<HTMLElement>(null),
+  ];
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.6,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = sectionRefs.findIndex(
+            (ref) => ref.current === entry.target
+          );
+          if (index !== -1) setActiveSection(index);
+        }
+      });
+    }, observerOptions);
+
+    sectionRefs.forEach((ref) => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToSection = (index: number) => {
+    sectionRefs[index].current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div>
-      <section className="container-content hero">
+    <div className="home-page-container">
+      {/* VERTICAL DOT NAVIGATION */}
+      <div className={`dot-nav ${activeSection === 0 ? "is-on-dark" : "is-on-light"}`}>
+        {[0, 1, 2, 3].map((index) => (
+          <button
+            key={index}
+            className={`dot-nav__item ${activeSection === index ? "is-active" : ""}`}
+            onClick={() => scrollToSection(index)}
+            aria-label={`Go to section ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      <section ref={sectionRefs[0]} className="container-content hero">
         <div className="hero-image">
           <img src={Images.sushi.s1} alt="sushi" data-aos="fade-up" />
           <h2 data-aos="fade-up">
@@ -56,7 +107,7 @@ export const HomePage = () => {
         </div>
       </section>
 
-      <section className="container-content about-us" id="about-us">
+      <section ref={sectionRefs[1]} className="container-content about-us" id="about-us">
         <div className="about-us__image">
           <div className="about-us__image-sushi3">
             <img src={Images.sushi.s3} alt="sushi" data-aos="fade-right" />
@@ -85,7 +136,7 @@ export const HomePage = () => {
         </div>
       </section>
 
-      <section className="container-content" id="menu">
+      <section ref={sectionRefs[2]} className="container-content" id="menu">
         <div className="popular-foods">
           <h2 className="popular-foods__title" data-aos="flip-up">
             Popular Food / 人気
@@ -178,7 +229,7 @@ export const HomePage = () => {
         </div>
       </section>
 
-      <section className="container-content trending" id="food">
+      <section ref={sectionRefs[3]} className="container-content trending" id="food">
         <section className="trending-sushi">
           <div className="trending__content" data-aos="fade-right">
             <p className="sushi__subtitle">What’s Trending / トレンド</p>
