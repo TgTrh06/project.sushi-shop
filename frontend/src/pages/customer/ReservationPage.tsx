@@ -1,24 +1,79 @@
-import { useState } from "react";
-import { ReserveSeatMap } from "@/components/ui/Reserve/ReserveSeatMap";
+import { useState, useEffect, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { ReserveSeatMap } from "@/components/ui/Reserve/ReserveSeatMap";
+import { TimeSlotPicker } from "@/components/ui/Reserve/TimeSlotPicker";
+import { SeatMapSkeleton } from "@/components/ui/Reserve/SeatMapSkeleton";
+import { useAuthStore } from "@/stores/useAuthStore";
+import api from "@/lib/axios";
+
+interface LocationState {
+  from?: string;
+  bookingState?: {
+    selectedSeats: string[];
+    date: string;
+    slotId: string;
+    name: string;
+    phone: string;
+  };
+}
 
 export default function ReservePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LocationState;
+
+  const { user } = useAuthStore();
   const DEPOSIT_PER_SEAT = 100000;
 
-  const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
-  // Mock occupied seats reflecting the new layout IDs
-  const [occupiedSeats] = useState<Set<string>>(new Set(["C3", "C4", "T1-A", "T1-B", "C8"]));
+  // States
+  const [selectedSeats, setSelectedSeats] = useState<Set<string>>(
+    new Set(locationState?.bookingState?.selectedSeats || [])
+  );
+  const [occupiedSeats, setOccupiedSeats] = useState<Set<string>>(new Set());
+  const [isLoadingSeats, setIsLoadingSeats] = useState(false);
 
   const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    date: "",
-    time: "",
+    name: locationState?.bookingState?.name || "",
+    phone: locationState?.bookingState?.phone || "",
+    date: locationState?.bookingState?.date || new Date().toISOString().split("T")[0],
+    slotId: locationState?.bookingState?.slotId || null as string | null,
   });
 
+  // Fetch occupied seats whenever date or slotId changes
+  const fetchAvailability = useCallback(async (date: string, slotId: string) => {
+    setIsLoadingSeats(true);
+    try {
+      const response = await api.get(`/resevations/occupied-seats`, {
+        params: { date, slot: slotId },
+      });
+      if (response.data.success) {
+        setOccupiedSeats(new Set(response.data.data));
+      }
+    } catch (error) {
+      console.error("Failed to fetch availability:", error);
+      toast.error("Could not load seat availability. Please try again.");
+    } finally {
+      setIsLoadingSeats(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (form.date && form.slotId) {
+      fetchAvailability(form.date, form.slotId);
+      // Clear selected seats when changing date/slot unless it's the initial restoration
+      if (!locationState?.bookingState) {
+        setSelectedSeats(new Set());
+      }
+    }
+  }, [form.date, form.slotId, fetchAvailability]);
+
   const handleSeatClick = (seatId: string) => {
+    if (!form.slotId || !form.date) {
+      toast.error("Please select a date and time slot first.");
+      return;
+    }
+
     setSelectedSeats((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(seatId)) {
@@ -32,37 +87,87 @@ export default function ReservePage() {
 
   const handleProceedPayment = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!form.date || !form.slotId) {
+      toast.error("Please select a date and time slot.");
+      return;
+    }
+
     if (selectedSeats.size === 0) {
       toast.error("Please select at least one seat.");
       return;
     }
-    if (!form.name || !form.phone || !form.date || !form.time) {
-      toast.error("Please fill in your contact details and time.");
+
+    // AUTH GUARD
+    if (!user) {
+      toast.error("Please login to proceed with your booking.");
+      // Redirect to login with current booking state
+      navigate("/login", {
+        state: {
+          from: location.pathname,
+          bookingState: {
+            selectedSeats: Array.from(selectedSeats),
+            date: form.date,
+            slotId: form.slotId,
+            name: form.name,
+            phone: form.phone,
+          },
+        },
+      });
       return;
     }
 
     const totalDeposit = selectedSeats.size * DEPOSIT_PER_SEAT;
 
-    // Trigger Payment logic here
-    toast.success(`Redirecting to VNPay for ${totalDeposit.toLocaleString("vi-VN")} VND`);
+    // Proceed to payment (Mock)
+    toast.success(`Processing payment of ${totalDeposit.toLocaleString("vi-VN")} VND...`);
+
+    // Here we would call the create booking API
+    // api.post("/resevations", { ...form, seatIds: Array.from(selectedSeats), totalDeposit })
 
     setTimeout(() => {
-      // simulate redirect for now
       navigate("/");
     }, 2000);
   };
 
   return (
     <div className="page-container reserve-page-container">
-      <div className="reserve-page-content">
+      {/* Header Section */}
+      <section className="reserve-hero">
+        <div className="container-content">
+          <h1 className="reserve-hero-title">Reservation</h1>
+          <p className="reserve-hero-subtitle">Secure your exclusive Omakase session. Guests are invited to browse availability before signing in.</p>
+        </div>
+      </section>
 
-        {/* Left Side: Seat Map */}
+      <div className="reserve-page-content">
+        {/* Left Side: Seat Map & Slots */}
         <div className="reserve-map-section">
           <div className="reserve-map-header">
             <h1 className="reserve-title">Tasting Menu Reservation</h1>
-            <p className="reserve-subtitle">Select your preferred seating below for our exclusive Omakase session or intimate 2-person tables.</p>
+            <p className="reserve-subtitle">
+              Secure your exclusive Omakase session. Guests are invited to browse availability before signing in.
+            </p>
 
-            <div className="reserve-legend">
+            <div className="form-group" style={{ marginBottom: "24px", maxWidth: "300px" }}>
+              <label>1. Select Date</label>
+              <input
+                type="date"
+                min={new Date().toISOString().split("T")[0]}
+                value={form.date}
+                onChange={(e) => setForm({ ...form, date: e.target.value })}
+              />
+            </div>
+
+            <div className="slot-picker-wrapper">
+              <label className="session-title" style={{ display: "block", marginBottom: "16px" }}>2. Choose Time Slot</label>
+              <TimeSlotPicker
+                selectedSlotId={form.slotId}
+                onSlotSelect={(id) => setForm({ ...form, slotId: id })}
+              />
+            </div>
+
+            <div className="reserve-legend" style={{ marginTop: "32px" }}>
               <div className="legend-item">
                 <span className="legend-color available"></span> Available
               </div>
@@ -75,12 +180,28 @@ export default function ReservePage() {
             </div>
           </div>
 
-          <div className="reserve-map-body">
-            <ReserveSeatMap
-              selectedSeats={selectedSeats}
-              occupiedSeats={occupiedSeats}
-              onSeatClick={handleSeatClick}
-            />
+          <div className="reserve-map-body" style={{ position: "relative" }}>
+            {isLoadingSeats ? (
+              <SeatMapSkeleton />
+            ) : (
+              <ReserveSeatMap
+                selectedSeats={selectedSeats}
+                occupiedSeats={occupiedSeats}
+                onSeatClick={handleSeatClick}
+              />
+            )}
+            {!form.slotId && !isLoadingSeats && (
+              <div className="map-overlay-message" style={{
+                position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
+                background: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center",
+                justifyContent: "center", borderRadius: "24px", zIndex: 10,
+                backdropFilter: "blur(2px)"
+              }}>
+                <p style={{ fontWeight: 700, color: "var(--secondary-color)", textAlign: "center", padding: "0 20px" }}>
+                  Please select a date and time slot to view seat availability.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -93,7 +214,7 @@ export default function ReservePage() {
               <label>Full Name</label>
               <input
                 type="text"
-                placeholder="Nguyen Van A"
+                placeholder="e.g. John Doe"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
@@ -103,33 +224,22 @@ export default function ReservePage() {
               <label>Phone Number</label>
               <input
                 type="tel"
-                placeholder="0901234567"
+                placeholder="e.g. 0901234567"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label>Date</label>
-                <input
-                  type="date"
-                  value={form.date}
-                  onChange={(e) => setForm({ ...form, date: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label>Time</label>
-                <input
-                  type="time"
-                  value={form.time}
-                  onChange={(e) => setForm({ ...form, time: e.target.value })}
-                />
-              </div>
-            </div>
-
             <div className="sidebar-summary">
               <h3>Summary</h3>
+              <div className="summary-row">
+                <span>Date:</span>
+                <span className="highlight-text">{form.date || "Not selected"}</span>
+              </div>
+              <div className="summary-row">
+                <span>Slot:</span>
+                <span className="highlight-text">{form.slotId || "Not selected"}</span>
+              </div>
               <div className="summary-row">
                 <span>Selected Seats:</span>
                 <span className="highlight-text">
@@ -150,11 +260,10 @@ export default function ReservePage() {
             </div>
 
             <button type="submit" className="btn-proceed-payment">
-              Proceed to Payment
+              {user ? "Proceed to Payment" : "Login to Book Now"}
             </button>
           </form>
         </aside>
-
       </div>
     </div>
   );
