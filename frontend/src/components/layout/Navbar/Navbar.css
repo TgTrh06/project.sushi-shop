@@ -29,6 +29,7 @@
   color: var(--secondary-color);
 }
 
+.header--sticky.is-home-page .header__nav h4,
 .header--sticky.is-menu-page .header__nav h4,
 .header--sticky.is-reservation-page .header__nav h4,
 .header--sticky.is-about-page .header__nav h4,
@@ -36,6 +37,7 @@
   color: var(--primary-color);
 }
 
+.header--sticky.is-home-page .header__nav h4 span,
 .header--sticky.is-menu-page .header__nav h4 span,
 .header--sticky.is-reservation-page .header__nav h4 span,
 .header--sticky.is-about-page .header__nav h4 span,
@@ -43,8 +45,12 @@
   color: var(--secondary-color);
 }
 
+.header--transparent.is-home-page .header__nav h4 {
+  color: #fff;
+}
+
 .header--transparent.is-about-page .header__nav h4 {
-  color: var(--color-gold);
+  color: var(--primary-color);
 }
 
 .header--transparent.is-about-page .header__nav h4 span {

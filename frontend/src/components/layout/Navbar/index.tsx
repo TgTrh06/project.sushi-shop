@@ -43,13 +43,14 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
   }, []);
 
   const headerClass = hasScrolledPast ? "header--sticky" : "header--transparent";
+  const homeClass = isHomePage ? "is-home-page" : "";
   const aboutClass = isAboutPage ? "is-about-page" : "";
   const menuClass = isMenuPage ? "is-menu-page" : "";
   const reservationClass = isReservationPage ? "is-reservation-page" : "";
   const authClass = isAuthPage ? "is-auth-page" : "";
 
   return (
-    <header className={`header ${headerClass} ${aboutClass} ${menuClass} ${reservationClass} ${authClass}`}>
+    <header className={`header ${headerClass} ${homeClass} ${aboutClass} ${menuClass} ${reservationClass} ${authClass}`}>
       <nav className="header__nav">
         <div className="header__logo">
           <Link to="/">
