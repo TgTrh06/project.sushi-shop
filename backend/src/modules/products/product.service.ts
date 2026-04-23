@@ -53,6 +53,15 @@ export default class ProductService {
     
     return product;
   }
+
+  async getProductBySlug(slug: string): Promise<ProductEntity | null> {
+    const product = await this.productRepo.findBySlug(slug);
+    if (!product) {
+      throw new NotFoundError("Product not found.")
+    }
+    
+    return product;
+  }
   
   /* ADMIN SERVICE */
   async createProduct(dto: CreateProductDTO): Promise<ProductEntity> {
