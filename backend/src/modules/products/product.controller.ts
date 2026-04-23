@@ -86,7 +86,7 @@ export default class ProductController {
     try {
       const { slug } = req.params;
 
-      const result = await this.productService.getProductById(slug);
+      const result = await this.productService.getProductBySlug(slug);
 
       return ResponseHandler.success(
         res,
