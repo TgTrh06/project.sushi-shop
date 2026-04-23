@@ -108,4 +108,8 @@ export default class ReservationService {
 
     return { RspCode: "00", Message: "Confirm Success" };
   }
+
+  async getOccupiedSeats(date: string, timeSlot: string) {
+    return await this.reservationRepo.findOccupiedSeats(date, timeSlot);
+  }
 }
