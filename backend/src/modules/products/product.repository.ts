@@ -24,7 +24,8 @@ export default class ProductRepository {
       price: doc.price,
       imageUrl: doc.imageUrl,
       description: doc.description,
-      categoryId: doc.categoryId.toString(),
+      categoryId: doc.categoryId?._id?.toString(),
+      categoryName: doc.categoryId?.name,
       isAvailable: doc.isAvailable,
       stockQuantity: doc.stockQuantity,
       createdAt: doc.createdAt ? new Date(doc.createdAt) : new Date(),
@@ -44,6 +45,7 @@ export default class ProductRepository {
     const [docs, total] = await Promise.all([
       this.productModel
         .find()
+        .populate("categoryId")
         .sort({ createdAt: -1 })
         .skip(offset)
         .limit(limit)
@@ -66,6 +68,7 @@ export default class ProductRepository {
     const [docs, total] = await Promise.all([
       this.productModel
         .find(filter)
+        .populate("categoryId")
         .sort({ createdAt: -1 })
         .skip(offset)
         .limit(limit)
@@ -79,12 +82,12 @@ export default class ProductRepository {
   }
 
   async findBySlug(slug: string): Promise<ProductEntity | null> {
-    const doc = await this.productModel.findOne({ slug }).lean();
+    const doc = await this.productModel.findOne({ slug }).populate("categoryId").lean();
     return doc ? this.mapToEntity(doc) : null;
   }
 
   async findById(id: string): Promise<ProductEntity | null> {
-    const doc = await this.productModel.findById(id).lean();
+    const doc = await this.productModel.findById(id).populate("categoryId").lean();
     return doc ? this.mapToEntity(doc) : null;
   }
 
