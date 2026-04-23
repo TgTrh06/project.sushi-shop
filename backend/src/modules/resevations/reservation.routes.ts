@@ -8,6 +8,7 @@ const router = Router();
 router.post("/", verifyAuth, reservationController.create); // Customer creates booking
 router.get("/vnpay_return", reservationController.vnpayReturn); // VNPay sync callback
 router.get("/vnpay_ipn", reservationController.vnpayIpn); // VNPay async webhook
+router.get("/occupied-seats", reservationController.getOccupiedSeats);
 
 // ADMIN ROUTES
 router.get("/", verifyAuth, verifyAdmin, reservationController.getAll);
