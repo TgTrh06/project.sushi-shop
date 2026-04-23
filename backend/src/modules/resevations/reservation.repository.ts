@@ -25,4 +25,15 @@ export default class ReservationRepository {
   async findById(id: string) {
     return ReservationModel.findById(id);
   }
+
+  async findOccupiedSeats(date: string, timeSlot: string) {
+    const reservations = await ReservationModel.find({
+      reservationDate: date,
+      timeSlot: timeSlot,
+      status: { $in: ["PAID", "PENDING_PAYMENT"] },
+    }).select("seatIds");
+
+    const occupiedSeats = reservations.flatMap((res) => res.seatIds);
+    return [...new Set(occupiedSeats)]; // Return unique seat IDs
+  }
 }
