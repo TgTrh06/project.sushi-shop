@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import { ProductCard, type Product } from "@/components/ui/ProductCard";
 import { Images } from "@/assets/image";
 import { Icon } from "@/assets/svg";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { Loader } from "@/components/ui/Loader";
 
 // Extended Product type for details
 interface ProductDetail extends Product {
@@ -81,9 +83,11 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="product-detail__loading container-content">
-        <h2>Dish not found...</h2>
-        <Link to="/menu" className="btn-back">Back to Menu</Link>
+      <div className="product-detail-page page-container">
+        <div className="product-detail__loading">
+          <Loader />
+          <Link to="/menu" className="btn-back">Back to Menu</Link>
+        </div>
       </div>
     );
   }
@@ -91,22 +95,10 @@ export default function ProductDetailPage() {
   return (
     <div className="product-detail-page page-container">
       {/* Breadcrumbs */}
-      <nav className="breadcrumbs">
-        <div className="breadcrumbs__inner">
-          <Link to="/" className="breadcrumb-item breadcrumb-item--first">
-            Home
-          </Link>
-          <Link to="/menu" className="breadcrumb-item breadcrumb-item--middle">
-            Menu
-          </Link>
-          <span className="breadcrumb-item breadcrumb-item--last is-active">
-            {product.name}
-          </span>
-        </div>
-      </nav>
-      <div className="container-content">
+      <Breadcrumb items={[{ label: "Menu", path: "/menu" }, { label: product.name }]} />
 
-        <div className="product-detail__main">
+      <div className="container-content">
+        <section className="product-detail__main">
           {/* Gallery */}
           <div className="product-detail__gallery">
             <div className="product-detail__main-image">
@@ -153,7 +145,7 @@ export default function ProductDetailPage() {
               </button>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Tabs */}
         <section className="product-detail__tabs">
