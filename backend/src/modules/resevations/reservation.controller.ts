@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import ReservationService from "./reservation.service";
 import { ResponseHandler } from "../../utils/common/response.util";
 import { GetByIdParams } from "@/types/params.type";
+import { BadRequestError } from "@/utils/common/error.util";
 
 export default class ReservationController {
-  constructor(private readonly reservationService: ReservationService) {}
+  constructor(private readonly reservationService: ReservationService) { }
 
   // POST /bookings — Public: Customer creates a booking
   create = async (req: Request, res: Response, next: NextFunction) => {
@@ -54,10 +55,24 @@ export default class ReservationController {
     try {
       const result = await this.reservationService.handleVNPayIPN(req.query);
       // VNPay IPN requires specific response format: RspCode and Message returned directly
-      return res.status(200).json(result);
+      return ResponseHandler.success(res, result, "VNPay IPN Processed");
     } catch (error) {
       // In case of system error, VNPay expects RspCode "99"
-      return res.status(200).json({ RspCode: "99", Message: "Unknown error" });
+      return new BadRequestError("Unknown error");
+    }
+  };
+
+  // GET /resevations/occupied-seats
+  getOccupiedSeats = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { date, slot } = req.query;
+      if (!date || !slot) {
+        return new BadRequestError("Date and slot are required.");
+      }
+      const data = await this.reservationService.getOccupiedSeats(date as string, slot as string);
+      return ResponseHandler.success(res, data, "Occupied seats retrieved successfully.");
+    } catch (error) {
+      next(error);
     }
   };
 }
