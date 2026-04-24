@@ -10,6 +10,7 @@ import { AboutPage } from "@/pages/AboutPage";
 import MenuPage from "@/pages/MenuPage";
 import ProductDetailPage from "@/pages/ProductDetailPage";
 import ReservePage from "@/pages/customer/ReservationPage";
+import ProfilePage from "@/pages/customer/ProfilePage";
 
 // Admin Layout & Pages
 import { AdminLayout } from "@/components/layout/AdminLayout";
@@ -39,6 +40,7 @@ export const AppRoutes = () => {
       {/* Shop / Customer Routes */}
       <Route element={<ProtectedRoute allowedRoles={[Role.CUSTOMER, Role.ADMIN]} />}>
         {/* Add customer-only routes here */}
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
       {/* ── Admin Routes ── */}
