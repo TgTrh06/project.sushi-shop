@@ -1,6 +1,6 @@
 import type { FieldValues, Path, UseFormSetError } from "react-hook-form";
-import type { AppError } from "@/types/error.type";
 import { showError } from "@/lib/toast";
+import type { AppError } from "@/types/error.type";
 
 export const handleFormError = <T extends FieldValues>(
   err: unknown,
