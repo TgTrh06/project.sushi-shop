@@ -1,0 +1,640 @@
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
+.hero {
+  display: flex;
+  min-height: calc(100vh);
+  overflow: hidden;
+}
+
+.hero-image {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+  z-index: 5
+}
+
+.hero-image img {
+  width: 120%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hero-image__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+
+  background-color: var(--primary-color);
+  z-index: -1;
+}
+
+.hero-image h2 {
+  position: absolute;
+  bottom: 0;
+  padding: 20px;
+
+  font-family: var(--playfair-display);
+  font-weight: 700;
+  font-size: 120px;
+  line-height: 138px;
+  color: #fff;
+}
+
+.hero-content {
+  flex: 1.22;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.hero-content-info {
+  padding: 64px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.hero-content-info h1 {
+  font-size: 80px;
+  font-weight: 600px;
+  font-family: var(--playfair-display);
+  color: var(--secondary-color);
+}
+
+.hero-content-info p {
+  margin: 32px 0 0 32px;
+
+  font-family: var(--plus-jakarta-sans);
+  color: var(--secondary-color);
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.hero-content__buttons {
+  margin: 41px 0 0 41px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 36px;
+}
+
+.hero-content__order-button {
+  padding: 20px;
+  border-radius: 36px;
+  min-width: 212px;
+  outline: none;
+  border: none;
+  background: var(--primary-color);
+
+  cursor: pointer;
+
+  color: #fff;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 23px;
+}
+
+.hero-content__play-button {
+  border: 1px solid var(--secondary-color);
+  outline: none;
+  background: transparent;
+  padding: 0 20px;
+  border-radius: 36px;
+
+  display: flex;
+  align-items: center;
+
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 23px;
+  color: var(--secondary-color);
+  font-family: var(--plus-jakarta-sans);
+
+  cursor: pointer;
+}
+
+.hero-content__play-button img {
+  margin-right: 12px;
+
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.hero-content__testimonial {
+  padding: 36px 36px 36px 64px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  background: var(--color-white)
+}
+
+.hero-content__customer {
+  flex: 1;
+  gap: 10px;
+}
+
+.hero-content__customer h4 {
+  font-size: 62px;
+  font-weight: 400;
+  font-family: var(--playfair-display)
+}
+
+.hero-content__customer p {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: var(--plus-jakarta-sans);
+  color: var(--secondary-color);
+  opacity: 0.5;
+}
+
+.hero-content__review {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding-left: 24px;
+  border-left: 1px solid rgba(2, 2, 2, 0.1);
+  min-width: 200px;
+}
+
+.hero-content__review img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.hero-content__review p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 32px;
+  font-family: var(--plus-jakarta-sans);
+  color: var(--secondary-color);
+  opacity: 0.8
+}
+
+/* =========================================================
+   ABOUT SECTION
+   ========================================================= */
+.about-us {
+  display: flex;
+  min-height: 720px;
+  overflow: hidden;
+}
+
+.about-us__image {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: var(--color-white);
+
+  position: relative;
+}
+
+.about-us__image div {
+  padding: 32px 64px;
+
+  flex: 1;
+  display: flex;
+  align-items: center;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.about-us__image-sushi3 {
+  border-bottom: 8px solid var(--color-creamson);
+
+  background-image: url("../../assets/about_bg1.png")
+}
+
+.about-us__image-sushi2 {
+  background-image: url("../../assets/about_bg2.png")
+}
+
+.about-us__image-sushi3 img {
+  width: 225px;
+  height: 200px;
+}
+
+.about-us__image-sushi2 img {
+  width: 240px;
+  height: 160px;
+}
+
+.about-us__button {
+  position: absolute;
+  right: 0;
+
+  padding: 12px 32px;
+  min-height: 64px;
+
+  background: var(--secondary-color);
+  border-radius: 32px 0 0 32px;
+  border: 0;
+  outline: 0;
+
+  color: #fff;
+  font-family: var(--plus-jakarta-sans);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 23px;
+
+  cursor: pointer;
+}
+
+.about-us__button img {
+  object-fit: contain;
+  margin-left: 32px;
+}
+
+.about-us__content {
+  padding: 64px;
+
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* =========================================================
+   POPULAR FOODS SECTION
+   ========================================================= */
+.popular-foods {
+  padding: 70px;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--primary-color);
+  background-image: url("../../assets/popular_bg.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  overflow: hidden;
+}
+
+.popular-foods__title {
+  font-size: 56px;
+  font-family: var(--playfair-display);
+  font-weight: 600;
+  line-height: 78px;
+  color: #fff;
+  text-align: center;
+}
+
+.popular-foods__filters {
+  margin-top: 48px;
+  max-width: 100%;
+  overflow-x: auto;
+
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.popular-foods__filter-btn {
+  padding: 10px 28px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 46px;
+
+  font-size: 16px;
+  font-weight: 300px;
+  line-height: 25px;
+  font-family: var(--plus-jakarta-sans);
+  color: #fff;
+  cursor: pointer;
+}
+
+.popular-foods__filter-btn img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.popular-foods__filter-btn.active {
+  background: #fff;
+  color: var(--primary-color)
+}
+
+.popular-foods__filter-btn:hover {
+  background: #fff;
+  color: var(--primary-color)
+}
+
+.popular-foods__catalogue {
+  margin-top: 64px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 56px;
+}
+
+.popular-foods__button {
+  width: fit-content;
+
+  padding: 20px 30px;
+  margin: 80px auto 0;
+
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 23px;
+  font-family: var(--plus-jakarta-sans);
+  color: #fff;
+
+  border: none;
+  outline: none;
+  background: var(--secondary-color);
+  border-radius: 64px;
+  cursor: pointer;
+}
+
+.popular-foods__button img {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+
+  margin-left: 21px;
+}
+
+.popular-foods__card {
+  padding: 38px;
+  min-width: 260px;
+  height: fit-content;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  border-radius: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.popular-foods__card-image {
+  width: 110px;
+  height: 84px;
+  object-fit: contain;
+}
+
+.popular-foods__card-title {
+  margin-top: 47px;
+
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  font-family: var(--playfair-display);
+  color: #fff;
+  text-align: center;
+}
+
+.popular-foods__card-details {
+  width: 100%;
+  margin-top: 32px;
+}
+
+.popular-foods__card-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.popular-foods__card-rating img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.popular-foods__card-rating p {
+  font-size: 20px;
+  font-weight: 300;
+  font-family: var(--plus-jakarta-sans);
+  color: #fff;
+}
+
+.popular-foods__card-price {
+  font-size: 20px;
+  font-weight: 500;
+  font-family: var(--plus-jakarta-sans);
+  color: #fff;
+}
+
+.popular-foods__card.active-card {
+  background: #fff;
+  min-width: 340px;
+}
+
+.popular-foods__card.active-card .popular-foods__card-image {
+  width: 214px;
+  height: 160px;
+}
+
+.popular-foods__card.active-card .popular-foods__card-title {
+  color: var(--black-500);
+  font-size: 32px;
+}
+
+.popular-foods__card.active-card .popular-foods__card-rating img {
+  width: 32px;
+  height: 32px;
+}
+
+.popular-foods__card.active-card .popular-foods__card-rating p {
+  font-size: 24px;
+  color: var(--gray-100);
+}
+
+.popular-foods__card.active-card .popular-foods__card-price {
+  font-size: 24px;
+  color: var(--secondary-color)
+}
+
+/* =========================================================
+   TRENDING SECTION
+   ========================================================= */
+.trending {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.trending__discover {
+  position: absolute;
+  top: 44%;
+  left: 44%;
+  z-index: 1;
+
+  width: 160px;
+  height: 160px;
+
+  border-radius: 100%;
+  background-color: var(--secondary-color);
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trending__discover p {
+  font-size: 18px;
+  font-weight: 500;
+  font-family: var(--plus-jakarta-sans);
+
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.trending-sushi,
+.trending-drinks {
+  width: 100%;
+  min-height: 640px;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.trending__content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  padding: 32px 64px;
+}
+
+.trending__content p.sushi__subtitle {
+  margin: 0;
+  font-weight: 700;
+  font-family: var(--plus-jakarta-sans);
+}
+
+.trending__list {
+  list-style: none;
+
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.trending__list li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 12px;
+
+  min-width: 210px;
+}
+
+.trending__icon {
+  width: 24px;
+  height: 24px;
+
+  border-radius: 100%;
+  background-color: var(--primary-color);
+}
+
+.trending__icon img {
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
+}
+
+.trending__list p {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--plus-jakarta-sans);
+
+  color: var(--secondary-color);
+}
+
+.trending__image {
+  flex: 1;
+
+  position: relative;
+  padding: 32px 64px;
+
+  background-color: var(--color-white);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.trending-sushi .trending__image {
+  background-image: url("../../assets/japanese_sushi.png");
+}
+
+.trending-drink .trending__image {
+  background-image: url("../../assets/japanese_drinks.png");
+}
+
+.trending__image img {
+  width: 254px;
+  height: 260px;
+  object-fit: contain;
+}
+
+/* Arrows */
+.trending__arrow {
+  position: absolute;
+  z-index: 1;
+}
+
+.trending__arrow img {
+  object-fit: contain;
+}
+
+.trending__arrow-left {
+  left: -2.5px;
+  top: 12%;
+}
+
+.trending__arrow-left img,
+.trending__arrow-top img {
+  width: auto;
+  height: 100%;
+}
+
+.trending__arrow-top {
+  top: -10.5px;
+  left: 12%;
+}
+
+.trending__arrow-bottom {
+  bottom: -6.5px;
+  right: 12%;
+}
+
+.trending__arrow-bottom img,
+.trending__arrow-right img {
+  width: 100%;
+  height: auto;
+}
+
+.trending__arrow-right {
+  right: -2.5px;
+  bottom: 12%;
+}
