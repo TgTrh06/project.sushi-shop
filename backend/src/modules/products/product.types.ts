@@ -5,20 +5,29 @@ import { BaseProductSchema } from "@shared/schemas/product.schema";
 export const CreateProductSchema = BaseProductSchema.pick({
   name: true,
   price: true,
-  imageUrl: true,
+  image: true,
+  gallery: true,
   description: true,
-  categoryId: true,
+  ingredients: true,
+  nutrition: true,
+  category: true,
   isAvailable: true,
-  stockQuantity: true,
 });
 
-export const UpdateProductSchema = BaseProductSchema.partial();
+export const UpdateProductSchema = BaseProductSchema.omit({
+  id: true,
+  ratingSummary: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
 
 // Entity shape - Use this for service layer and business logic
 export type ProductEntity = z.infer<typeof BaseProductSchema>
 
 // Database shape - Only use for Mongoose schema definition and database operations
-export type ProductDocument = Omit<ProductEntity, "id">;
+export type ProductDocument = Omit<ProductEntity, "id" | "category"> & {
+  categoryId: any;
+};
 
 // Input for controller usages
 export type CreateProductInput = z.input<typeof CreateProductSchema>
