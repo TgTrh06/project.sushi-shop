@@ -22,12 +22,22 @@ export default class ProductRepository {
       name: doc.name,
       slug: doc.slug,
       price: doc.price,
-      imageUrl: doc.imageUrl,
+      image: doc.image,
+      gallery: doc.gallery || [],
       description: doc.description,
-      categoryId: doc.categoryId?._id?.toString(),
-      categoryName: doc.categoryId?.name,
+      ingredients: doc.ingredients || [],
+      nutrition: doc.nutrition || [],
+      category: {
+        id: doc.categoryId?._id?.toString() || doc.categoryId,
+        name: doc.categoryId?.name || "",
+        slug: doc.categoryId?.slug || ""
+      },
       isAvailable: doc.isAvailable,
-      stockQuantity: doc.stockQuantity,
+      stockQuantity: doc.stockQuantity || 0,
+      ratingSummary: {
+        averageRating: doc.ratingSummary?.averageRating || 0,
+        totalReviews: doc.ratingSummary?.totalReviews || 0
+      },
       createdAt: doc.createdAt ? new Date(doc.createdAt) : new Date(),
       updatedAt: doc.updatedAt ? new Date(doc.updatedAt) : new Date(),
     };
