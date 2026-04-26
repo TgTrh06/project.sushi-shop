@@ -19,9 +19,9 @@ interface AuthState {
   clearState: () => void;
 
   // Async actions
-  signUp: (input: RegisterFormInput) => Promise<void>;
-  signIn: (input: LoginFormInput) => Promise<void>;
-  signOut: () => Promise<void>;
+  register: (input: RegisterFormInput) => Promise<void>;
+  login: (input: LoginFormInput) => Promise<void>;
+  logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
 
   // Initialize the authentication state while app starts (e.g., check for existing token, validate it, fetch user info)
@@ -41,11 +41,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ accessToken: null, user: null });
   },
 
-  signUp: async (input: RegisterFormInput) => {
+  register: async (input: RegisterFormInput) => {
     try {
       set({ loading: true });
 
-      await authService.signUp(input);
+      await authService.register(input);
 
       // showSuccess("Registration successful! Please check your email to verify your account.");
       showSuccess("Registration successful! You can now log in.");
@@ -58,11 +58,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signIn: async (input: LoginFormInput) => {
+  login: async (input: LoginFormInput) => {
     try {
       set({ loading: true });
 
-      const { accessToken, user } = await authService.signIn(input);
+      const { accessToken, user } = await authService.login(input);
       set({ accessToken, user, isInitialized: true }); // Mark as initialized after successful login
 
       showSuccess(`Welcome back, ${user.username}!`);
@@ -74,11 +74,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signOut: async () => {
+  logout: async () => {
     try {
       set({ loading: true });
 
-      await authService.signOut();
+      await authService.logout();
     } catch (error) {
       console.error("Logout error:", error);
       showError("Failed to logout.");
@@ -91,7 +91,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   refreshToken: async () => {
     try {
-      const { accessToken, user } = await authService.refreshToken();
+      const { accessToken, user } = await authService.refresh();
 
       set({ accessToken, user }); // Update access token and user info in state
     } catch (error) {
@@ -105,7 +105,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (get().isInitialized) return; // Prevent re-initialization if already done
     try {
       // Simulate an API call to check the current authentication status (e.g., validate existing token, fetch user info)
-      const { accessToken, user } = await authService.refreshToken(); // Attempt to refresh token on app load
+      const { accessToken, user } = await authService.refresh(); // Attempt to refresh token on app load
       set({ accessToken, user, isInitialized: true });
     } catch {
       // Mark as initialized even if refresh fails (expired/invalid token)
