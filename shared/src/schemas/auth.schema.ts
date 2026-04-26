@@ -10,7 +10,7 @@ export type Role = typeof Role[keyof typeof Role];
 
 export const LoginSchema = z.object({
   email: z.email("Invalid email format"),
-  password: z.string().min(6, "Password too short"),
+  password: z.string(),
 });
 
 export const RegisterSchema = LoginSchema.extend({
