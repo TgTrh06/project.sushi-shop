@@ -1,32 +1,57 @@
-import { useState, useMemo } from "react";
-import { ProductCard, type Product } from "@/components/ui/ProductCard";
-import { Images } from "@/assets/image";
+import { useState, useMemo, useEffect } from "react";
+import type { Product } from "@/features/products/product.types";
+import type { Category } from "@/features/categories/category.types";
+import { productService } from "@/features/products/product.service";
+import { categoryService } from "@/features/categories/category.service";
+import { ProductCard } from "@/components/ui/ProductCard";
 import { Icon } from "@/assets/svg";
-
-const CATEGORIES = ["All", "Sushi", "Ramen", "Udon", "Drinks"];
-
-const MOCK_PRODUCTS: Product[] = [
-  { id: "1", name: "Chezu Sushi", price: 21, image: Images.sushi.s12, rating: 4.9, category: "Sushi" },
-  { id: "2", name: "Original Sushi", price: 19, image: Images.sushi.s11, rating: 5.0, category: "Sushi" },
-  { id: "3", name: "Ramen Legendo", price: 13, image: Images.sushi.s10, rating: 4.7, category: "Ramen" },
-  { id: "4", name: "Salmon Sashimi", price: 25, image: Images.sushi.s9, rating: 4.8, category: "Sushi" },
-  { id: "5", name: "Udon Classic", price: 15, image: Images.sushi.s8, rating: 4.6, category: "Udon" },
-  { id: "6", name: "Green Tea", price: 5, image: Images.categories.drinks, rating: 4.9, category: "Drinks" },
-  { id: "7", name: "Dragon Roll", price: 22, image: Images.sushi.s7, rating: 4.8, category: "Sushi" },
-  { id: "8", name: "Miso Ramen", price: 14, image: Images.sushi.s6, rating: 4.5, category: "Ramen" },
-];
+import { Loader } from "@/components/ui/Loader";
 
 export default function MenuPage() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategorySlug, setActiveCategorySlug] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const cats = await categoryService.getCategories();
+        setCategories(cats);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const result = await productService.getProducts(1, 100, activeCategorySlug === "all" ? undefined : activeCategorySlug);
+        setProducts(result.data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [activeCategorySlug]);
 
   const filteredProducts = useMemo(() => {
-    return MOCK_PRODUCTS.filter((product) => {
-      const matchesCategory = activeCategory === "All" || product.category === activeCategory;
+    return products.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+      return matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [products, searchQuery]);
+
+  const activeCategoryName = useMemo(() => {
+    if (activeCategorySlug === "all") return "All";
+    return categories.find(c => c.slug === activeCategorySlug)?.name || activeCategorySlug;
+  }, [activeCategorySlug, categories]);
 
   return (
     <div className="page-container menu-page">
@@ -45,13 +70,19 @@ export default function MenuPage() {
           <div className="menu-toolbar">
             <div className="menu-toolbar__inner">
               <div className="menu-categories">
-                {CATEGORIES.map((cat) => (
+                <button
+                  className={`menu-category-btn ${activeCategorySlug === "all" ? "is-active" : ""}`}
+                  onClick={() => setActiveCategorySlug("all")}
+                >
+                  All
+                </button>
+                {categories.map((cat) => (
                   <button
-                    key={cat}
-                    className={`menu-category-btn ${activeCategory === cat ? "is-active" : ""}`}
-                    onClick={() => setActiveCategory(cat)}
+                    key={cat.id}
+                    className={`menu-category-btn ${activeCategorySlug === cat.slug ? "is-active" : ""}`}
+                    onClick={() => setActiveCategorySlug(cat.slug)}
                   >
-                    {cat}
+                    {cat.name}
                   </button>
                 ))}
               </div>
@@ -71,7 +102,11 @@ export default function MenuPage() {
             </div>
           </div>
 
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <div className="menu-grid">
+              <Loader />
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <div className="menu-grid">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
@@ -79,7 +114,7 @@ export default function MenuPage() {
             </div>
           ) : (
             <div className="menu-empty">
-              <p>No matches found for "{searchQuery}" in {activeCategory}.</p>
+              <p>No matches found in {activeCategoryName}.</p>
             </div>
           )}
         </div>
