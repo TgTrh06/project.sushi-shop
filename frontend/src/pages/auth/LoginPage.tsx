@@ -1,15 +1,16 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { LoginSchema, type LoginFormInput, type LoginFormValues } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 
 export const LoginPage = () => {
-  const signIn = useAuthStore((state) => state.signIn);
+  const login = useAuthStore((state) => state.login);
   const loading = useAuthStore((state) => state.loading);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     register,
@@ -23,8 +24,12 @@ export const LoginPage = () => {
 
   const onSubmit = async (data: LoginFormInput) => {
     try {
-      await signIn(data);
-      navigate("/");
+      await login(data);
+      // Redirect back to original page with state preservation
+      const from = (location.state as any)?.from || "/";
+      const bookingState = (location.state as any)?.bookingState;
+
+      navigate(from, { state: { bookingState }, replace: true });
     } catch (error) {
       handleFormError(error, setError);
     }
