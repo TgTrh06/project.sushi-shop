@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// =========================================================
+// BASE SCHEMAS FOR BOTH FRONTEND & BACKEND
+// =========================================================
+
 export const ReservationStatus = [
   "PENDING_PAYMENT",
   "PAID",
@@ -9,7 +13,7 @@ export const ReservationStatus = [
   "COMPLETED",
 ] as const;
 
-export const reservationZodSchema = z.object({
+export const BaseReservationSchema = z.object({
   userId: z.string(),
   customerName: z.string().min(2),
   customerPhone: z.string().regex(/^[0-9]{10}$/),
@@ -20,7 +24,7 @@ export const reservationZodSchema = z.object({
   notes: z.string().optional(),
 });
 
-export type IReservation = z.infer<typeof reservationZodSchema> & {
+export type IReservation = z.infer<typeof BaseReservationSchema> & {
   _id: string;
   status: (typeof ReservationStatus)[number];
   vnp_TxnRef: string; // Mã giao dịch để đối soát VNPay
