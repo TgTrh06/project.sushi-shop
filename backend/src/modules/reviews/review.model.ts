@@ -3,10 +3,10 @@ import type { ReviewDocument } from "./review.types";
 
 const ReviewSchema = new Schema<ReviewDocument>({
   productId: { type: String, required: true },
-  userId: { 
-    type: Schema.Types.ObjectId, 
+  userId: {
+    type: Schema.Types.ObjectId,
     ref: "User",
-    required: true 
+    required: true
   },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, required: true, maxlength: 1000 },
@@ -53,8 +53,7 @@ ReviewSchema.post("save", async function (this: any) {
   await (this.constructor as any).calcAverageRatings(this.productId);
 });
 
-// 2. Trước khi Delete/Update (Dùng findOneAndDelete thay cho findByIdAndDelete)
-// Lưu ý: findByIdAndDelete thực chất gọi findOneAndDelete
+// 2. Trước khi Delete/Update
 ReviewSchema.post("findOneAndDelete", async function (doc: any) {
   if (doc) {
     await (doc.constructor as any).calcAverageRatings(doc.productId);
