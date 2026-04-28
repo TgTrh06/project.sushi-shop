@@ -14,7 +14,7 @@ type FormMode = "create" | "edit";
 const EMPTY_FORM: CreateProductPayload = {
   name: "",
   price: 0,
-  imageUrl: "",
+  image: "",
   description: "",
   categoryId: "",
   isAvailable: true,
@@ -72,7 +72,7 @@ export const ProductsManagementPage = () => {
     setForm({
       name: product.name,
       price: product.price,
-      imageUrl: product.imageUrl,
+      image: product.image,
       description: product.description ?? "",
       categoryId: product.categoryId,
       isAvailable: product.isAvailable,
@@ -82,7 +82,7 @@ export const ProductsManagementPage = () => {
   };
 
   const handleSave = async () => {
-    if (!form.name || !form.imageUrl || !form.categoryId) {
+    if (!form.name || !form.image || !form.categoryId) {
       showError("Vui lòng điền đầy đủ thông tin bắt buộc.");
       return;
     }
@@ -184,7 +184,7 @@ export const ProductsManagementPage = () => {
                     </td>
                     <td>
                       <img
-                        src={p.imageUrl}
+                        src={p.image}
                         alt={p.name}
                         className="admin-img-preview"
                         onError={(e) => {
@@ -287,8 +287,8 @@ export const ProductsManagementPage = () => {
                   <label className="admin-form-label">URL ảnh *</label>
                   <input
                     className="admin-form-input"
-                    value={form.imageUrl}
-                    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                    value={form.image}
+                    onChange={(e) => setForm({ ...form, image: e.target.value })}
                     placeholder="https://example.com/image.jpg"
                   />
                 </div>
