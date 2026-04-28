@@ -11,10 +11,15 @@ export default class ReviewRepository {
 
   private mapToEntity(doc: any): ReviewEntity {
     if (!doc) return null as any;
+    // userId may be populated (object with _id, username) or a plain ObjectId string
+    const userObj = typeof doc.userId === "object" && doc.userId !== null
+      ? { id: doc.userId._id?.toString() || doc.userId.toString(), name: doc.userId.username || "" }
+      : { id: doc.userId?.toString() || "", name: "" };
+
     return {
       id: doc._id.toString(),
       productId: doc.productId.toString(),
-      userId: doc.userId.toString(),
+      user: userObj,
       rating: doc.rating,
       comment: doc.comment,
       createdAt: doc.createdAt,
@@ -23,21 +28,23 @@ export default class ReviewRepository {
   }
 
   async create(dto: CreateReviewDTO): Promise<ReviewEntity> {
-    const doc = await this.model.create(dto);
+    const doc = await this.model.create({
+      productId: dto.productId,
+      userId: dto.user.id,
+      rating: dto.rating,
+      comment: dto.comment,
+    });
     return this.mapToEntity(doc);
   }
 
   async findByProductId(productId: string): Promise<ReviewEntity[]> {
     const docs = await this.model
       .find({ productId })
-      .populate("userId", "username") // Populate user name
+      .populate("userId", "username")
       .sort({ createdAt: -1 })
       .lean();
     
-    return docs.map(doc => ({
-        ...this.mapToEntity(doc),
-        user: (doc.userId as any).username // Extra field for convenience
-    }));
+    return docs.map(doc => this.mapToEntity(doc));
   }
 
   async findByProductIdPaginated(
@@ -48,6 +55,7 @@ export default class ReviewRepository {
     const [docs, total] = await Promise.all([
       this.model
         .find({ productId })
+        .populate("userId", "username")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -62,7 +70,7 @@ export default class ReviewRepository {
   }
 
   async findByUserId(userId: string): Promise<ReviewEntity[]> {
-    const docs = await this.model.find({ userId }).sort({ createdAt: -1 }).lean();
+    const docs = await this.model.find({ userId }).populate("userId", "username").sort({ createdAt: -1 }).lean();
     return docs.map(doc => this.mapToEntity(doc));
   }
 
