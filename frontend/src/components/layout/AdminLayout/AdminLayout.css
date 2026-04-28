@@ -434,6 +434,13 @@
   color: var(--admin-text-secondary);
 }
 
+.admin-stat-card__subtitle {
+  font-size: 11px;
+  color: var(--admin-text-muted);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
 /* ── Table ── */
 .admin-table-wrapper {
   overflow-x: auto;
@@ -800,6 +807,123 @@
   color: var(--admin-text-primary);
 }
 
+/* =========================================================
+   SKELETON LOADER
+   ========================================================= */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.admin-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--admin-border) 25%,
+    rgba(177, 69, 74, 0.06) 50%,
+    var(--admin-border) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--admin-radius-sm);
+}
+
+.admin-skeleton-card {
+  pointer-events: none;
+}
+
+.admin-skeleton--icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--admin-radius-sm);
+  flex-shrink: 0;
+}
+
+.admin-skeleton--value {
+  height: 28px;
+  width: 72px;
+  margin-bottom: 8px;
+}
+
+.admin-skeleton--label {
+  height: 14px;
+  width: 96px;
+}
+
+/* =========================================================
+   CATEGORY BREAKDOWN CARD
+   ========================================================= */
+.admin-breakdown-card {
+  padding: 0;
+}
+
+.admin-breakdown-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-breakdown-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  margin: 0;
+}
+
+.admin-breakdown-card__list {
+  padding: 16px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-breakdown-item {
+  display: grid;
+  grid-template-columns: 1fr 2fr 40px;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-breakdown-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-breakdown-item__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+}
+
+.admin-breakdown-item__count {
+  font-size: 11px;
+  color: var(--admin-text-muted);
+}
+
+.admin-breakdown-item__bar {
+  height: 8px;
+  background: var(--admin-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.admin-breakdown-item__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--admin-accent), #e4757a);
+  border-radius: 4px;
+  min-width: 4px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-breakdown-item__pct {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--admin-text-secondary);
+  text-align: right;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .admin-root {
@@ -834,5 +958,24 @@
 
   .admin-search-input {
     width: 100%;
+  }
+
+  .admin-breakdown-item {
+    grid-template-columns: 1fr 1.5fr 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-breakdown-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .admin-breakdown-item__pct {
+    text-align: left;
   }
 }
