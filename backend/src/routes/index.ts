@@ -7,10 +7,7 @@ import categoryRoutes from "@/modules/categories/category.routes";
 import productRoutes from "@/modules/products/product.routes";
 import bookingRoutes from "@/modules/resevations/reservation.routes";
 import reviewRoutes from "@/modules/reviews/review.routes";
-import { UserModel } from "@/modules/users/user.model";
-import { ProductModel } from "@/modules/products/product.model";
-import { CategoryModel } from "@/modules/categories/category.model";
-import { ReservationModel } from "@/modules/resevations/reservation.model";
+import statsRoutes from "@/modules/stats/stats.routes";
 
 const router = Router();
 
@@ -19,35 +16,9 @@ router.get("/", (req, res) => {
   res.send("Welcome to the Sushi Shop API!");
 });
 
-// Admin Stats endpoint
-router.get("/admin/stats", verifyAuth, verifyAdmin, async (_req, res, next) => {
-  try {
-    const [totalUsers, totalProducts, totalCategories, totalBookings, pendingBookings] =
-      await Promise.all([
-        UserModel.countDocuments({ role: "customer" }),
-        ProductModel.countDocuments(),
-        CategoryModel.countDocuments(),
-        ReservationModel.countDocuments(),
-        ReservationModel.countDocuments({ status: "pending" }),
-      ]);
-
-    res.json({
-      success: true,
-      data: {
-        totalUsers,
-        totalProducts,
-        totalCategories,
-        totalBookings,
-        pendingBookings,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
 // API routes
 router.use("/auth", authRoutes);
+router.use("/admin/stats", verifyAuth, verifyAdmin, statsRoutes);
 router.use("/admin", adminRoutes);
 router.use("/users", userRoutes);
 router.use("/categories", categoryRoutes);
