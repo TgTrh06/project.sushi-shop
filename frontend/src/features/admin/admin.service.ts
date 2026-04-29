@@ -9,15 +9,15 @@ import type {
   UpdateCategoryPayload,
   CreateProductPayload,
   UpdateProductPayload,
-  DashboardStats,
+  SystemStats,
   PaginatedResult,
   BookingStatus,
 } from "./admin.types";
 
 // ─── Dashboard ─────────────────────────────────────────
 export const adminService = {
-  async getStats(): Promise<DashboardStats> {
-    const res = await api.get<ApiResponse<DashboardStats>>("/admin/stats");
+  async getStats(): Promise<SystemStats> {
+    const res = await api.get<ApiResponse<SystemStats>>("/admin/stats");
     return res.data.data;
   },
 
