@@ -1,4 +1,8 @@
 import type { Role } from "@shared/schemas/auth.schema";
+import type { SystemStats, CategoryBreakdown } from "@shared/schemas/stats.schema";
+
+// Re-export shared stats types for convenience
+export type { SystemStats, CategoryBreakdown };
 
 // ─── User ──────────────────────────────────────────────
 export interface AdminUser {
@@ -35,7 +39,7 @@ export interface AdminProduct {
   name: string;
   slug: string;
   price: number;
-  imageUrl: string;
+  image?: string;
   description?: string;
   categoryId: string;
   isAvailable: boolean;
@@ -47,7 +51,7 @@ export interface AdminProduct {
 export interface CreateProductPayload {
   name: string;
   price: number;
-  imageUrl: string;
+  image?: string;
   description?: string;
   categoryId: string;
   isAvailable?: boolean;
@@ -72,14 +76,8 @@ export interface AdminBooking {
   createdAt?: string;
 }
 
-// ─── Dashboard Stats ───────────────────────────────────
-export interface DashboardStats {
-  totalUsers: number;
-  totalProducts: number;
-  totalCategories: number;
-  totalBookings: number;
-  pendingBookings: number;
-}
+// ─── Dashboard Stats (Legacy compat alias) ─────────────
+export type DashboardStats = SystemStats;
 
 // ─── Pagination ────────────────────────────────────────
 export interface PaginatedResult<T> {
