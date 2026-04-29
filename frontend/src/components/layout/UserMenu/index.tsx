@@ -8,9 +8,9 @@ export const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  
+
   // Lấy thông tin user từ store của bạn
-  const { user, signOut } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   // Đóng menu khi click ra ngoài vùng chứa
   useEffect(() => {
@@ -24,7 +24,7 @@ export const UserMenu = () => {
   }, []);
 
   const handleLogout = () => {
-    signOut();
+    logout();
     setIsOpen(false);
     navigate("/");
   };
