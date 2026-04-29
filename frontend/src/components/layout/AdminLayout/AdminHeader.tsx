@@ -13,7 +13,7 @@ export const AdminHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const signOut = useAuthStore((s) => s.signOut);
+  const signOut = useAuthStore((s) => s.logout);
 
   const currentTitle = pageTitles[location.pathname] ?? "Admin";
   const initials = user?.username
