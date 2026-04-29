@@ -1,6 +1,19 @@
 import { useEffect, useState } from "react";
 import { adminService } from "@/features/admin/admin.service";
 import type { SystemStats, AdminBooking } from "@/features/admin/admin.types";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from "recharts";
 
 /* ─── Skeleton Loader ──────────────────────────────────── */
 const SkeletonCard = () => (
@@ -39,49 +52,113 @@ const StatCard = ({
   </div>
 );
 
-/* ─── Category Breakdown Card ──────────────────────────── */
-const CategoryBreakdownCard = ({ stats }: { stats: SystemStats }) => (
-  <div className="admin-card admin-breakdown-card">
-    <div className="admin-breakdown-card__header">
-      <h3 className="admin-breakdown-card__title">📊 Sản phẩm theo danh mục</h3>
-      <span className="admin-badge admin-badge--blue">
-        {stats.totalCategories} danh mục
-      </span>
-    </div>
+/* ─── Charts ─────────────────────────────────────────────── */
+const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
+  const barData = stats.productsByCategory.map((c) => ({
+    name: c.categoryName,
+    count: c.count,
+  }));
 
-    {stats.productsByCategory.length === 0 ? (
-      <div className="admin-empty" style={{ padding: "32px 24px" }}>
-        <p className="admin-empty__text">Chưa có dữ liệu danh mục.</p>
-      </div>
-    ) : (
-      <div className="admin-breakdown-card__list">
-        {stats.productsByCategory.map((cat) => {
-          const percentage = stats.totalProducts > 0
-            ? Math.round((cat.count / stats.totalProducts) * 100)
-            : 0;
+  const pieData = [
+    { name: "Chờ thanh toán", value: stats.pendingReservations, color: "#f59e0b" },
+    { name: "Hoàn thành", value: stats.completedReservations, color: "#10b981" },
+  ];
+  
+  const others = stats.totalReservations - (stats.pendingReservations + stats.completedReservations);
+  if (others > 0) {
+    pieData.push({ name: "Khác", value: others, color: "#6b7280" });
+  }
 
-          return (
-            <div key={cat.categoryId} className="admin-breakdown-item">
-              <div className="admin-breakdown-item__info">
-                <span className="admin-breakdown-item__name">{cat.categoryName}</span>
-                <span className="admin-breakdown-item__count">
-                  {cat.count} sản phẩm
-                </span>
-              </div>
-              <div className="admin-breakdown-item__bar">
-                <div
-                  className="admin-breakdown-item__fill"
-                  style={{ width: `${percentage}%` }}
+  // Filter out 0 value for pie chart so it looks better
+  const filteredPieData = pieData.filter(d => d.value > 0);
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "24px" }}>
+      {/* Bar Chart */}
+      <div className="admin-card">
+        <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
+          <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0 }}>
+            📊 Sản phẩm theo danh mục
+          </h3>
+        </div>
+        {stats.productsByCategory.length === 0 ? (
+          <div className="admin-empty">
+            <p className="admin-empty__text">Chưa có dữ liệu danh mục.</p>
+          </div>
+        ) : (
+          <div style={{ width: "100%", height: 300 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: "#6b7280", fontSize: 12 }} 
+                  dy={10}
                 />
-              </div>
-              <span className="admin-breakdown-item__pct">{percentage}%</span>
-            </div>
-          );
-        })}
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: "#6b7280", fontSize: 12 }} 
+                />
+                <Tooltip 
+                  cursor={{ fill: "#f3f4f6" }}
+                  contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
+                />
+                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Sản phẩm" barSize={40} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </div>
-    )}
-  </div>
-);
+
+      {/* Pie Chart */}
+      <div className="admin-card">
+        <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
+          <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0 }}>
+            🥧 Trạng thái đặt bàn
+          </h3>
+        </div>
+        {filteredPieData.length === 0 ? (
+          <div className="admin-empty">
+            <p className="admin-empty__text">Chưa có dữ liệu đặt bàn.</p>
+          </div>
+        ) : (
+          <div style={{ width: "100%", height: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={filteredPieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={5}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {filteredPieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
+                />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36} 
+                  iconType="circle"
+                  formatter={(value) => <span style={{ color: "#374151", fontSize: 13, fontWeight: 500 }}>{value}</span>}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 /* ─── Page Component ───────────────────────────────────── */
 export const DashboardOverviewPage = () => {
@@ -193,10 +270,10 @@ export const DashboardOverviewPage = () => {
         )}
       </div>
 
-      {/* Category Breakdown */}
+      {/* Charts */}
       {!loading && stats && (
         <div style={{ marginBottom: 28 }}>
-          <CategoryBreakdownCard stats={stats} />
+          <DashboardCharts stats={stats} />
         </div>
       )}
 
