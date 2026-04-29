@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterPage = () => {
-  const signUp = useAuthStore((state) => state.signUp);
+  const signUp = useAuthStore((state) => state.register);
+  const navigate = useNavigate();
   const loading = useAuthStore((state) => state.loading);
 
   const {
@@ -29,6 +31,7 @@ export const RegisterPage = () => {
   const onSubmit = async (data: RegisterFormInput) => {
     try {
       await signUp(data);
+      navigate('/login');
     } catch (error) {
       handleFormError(error, setError);
     }
