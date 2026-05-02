@@ -35,10 +35,11 @@ export default class ReviewController {
 
   getByProductPaginated = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { productId, page = "1", limit = "5" } = req.query;
+      const { productId } = req.params;
+      const { page = "1", limit = "5" } = req.query;
       
       if (!productId || typeof productId !== "string") {
-        return new BadRequestError("productId query parameter is required.");
+        throw new BadRequestError("productId parameter is required.");
       }
 
       const pageNum = parseInt(page as string, 10);
