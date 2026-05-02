@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { Response } from "express";
 import { env } from "@/config/env.config";
 import { REFRESH_COOKIE_OPTIONS, REFRESH_TOKEN_NAME } from "@/config/cookie.config";
@@ -11,6 +12,7 @@ interface AccessTokenPayload {
 
 interface RefreshTokenPayload {
   id: string;
+  jti?: string;
 }
 
 export function generateAccessToken(payload: AccessTokenPayload): string {
@@ -18,7 +20,10 @@ export function generateAccessToken(payload: AccessTokenPayload): string {
 }
 
 export function generateRefreshToken(payload: RefreshTokenPayload): string {
-  return jwt.sign({ id: payload.id }, env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ id: payload.id }, env.JWT_REFRESH_SECRET, { 
+    expiresIn: "7d",
+    jwtid: crypto.randomUUID()
+  });
 }
 
 export function verifyAccessToken(token: string): AccessTokenPayload {
