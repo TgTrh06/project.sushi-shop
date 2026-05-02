@@ -107,14 +107,17 @@
   width: 100%;
   padding: 14px 16px 14px 48px;
   border-radius: 12px;
-  border: 2px solid rgba(0, 0, 0, 0.08); /* Slightly thicker and more distinct */
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  /* Slightly thicker and more distinct */
   background-color: var(--color-white);
-  color: var(--secondary-color); /* More readable than primary */
+  color: var(--secondary-color);
+  /* More readable than primary */
   font-family: var(--plus-jakarta-sans);
   font-size: 14px;
   outline: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Subtle shadow for depth */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  /* Subtle shadow for depth */
 }
 
 [data-theme="dark"] .menu-search__input {

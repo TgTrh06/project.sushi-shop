@@ -21,6 +21,25 @@ export const adminService = {
     return res.data.data;
   },
 
+  // ─── Uploads ───────────────────────────────────────────
+  async uploadImage(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("image", file);
+    const res = await api.post<ApiResponse<{ url: string }>>("/upload/image", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.data.url;
+  },
+
+  async uploadGallery(files: File[] | FileList): Promise<string[]> {
+    const formData = new FormData();
+    Array.from(files).forEach((file) => formData.append("images", file));
+    const res = await api.post<ApiResponse<{ urls: string[] }>>("/upload/gallery", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.data.urls;
+  },
+
   // ─── Users ───────────────────────────────────────────
   async getUsers(page = 1, limit = 10): Promise<PaginatedResult<AdminUser>> {
     const res = await api.get<ApiResponse<PaginatedResult<AdminUser>>>("/admin/users", {

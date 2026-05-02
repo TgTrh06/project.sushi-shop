@@ -1,91 +1,108 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ProductCard, type Product } from "@/components/ui/ProductCard";
-import { Images } from "@/assets/image";
+import { ProductCard } from "@/components/ui/ProductCard";
 import { Icon } from "@/assets/svg";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Loader } from "@/components/ui/Loader";
-
-// Extended Product type for details
-interface ProductDetail extends Product {
-  gallery: string[];
-  description: string;
-  ingredients: string[];
-  nutrition: { label: string; value: string }[];
-  reviews: { id: string; user: string; rating: number; date: string; comment: string; likes: number }[];
-}
-
-const MOCK_DETAIL_DATA: Record<string, ProductDetail> = {
-  "1": {
-    id: "1",
-    name: "Chezu Sushi",
-    price: 21,
-    image: Images.sushi.s12,
-    rating: 4.9,
-    category: "Sushi",
-    gallery: [Images.sushi.s12, Images.sushi.s11, Images.sushi.s10],
-    description: "Inspired by the serene winters of Hokkaido, Chezu Sushi combines premium aged cheddar with the freshest Atlantic salmon. A daring yet harmonious fusion that melts on the tongue, crafted by Chef Itsu to challenge and delight the palate.",
-    ingredients: ["Atlantic Salmon", "Aged Cheddar", "Vinegared Rice", "Nori", "Wasabi", "Pickled Ginger"],
-    nutrition: [
-      { label: "Calories", value: "320 kcal" },
-      { label: "Protein", value: "18g" },
-      { label: "Carbs", value: "42g" },
-      { label: "Fat", value: "12g" }
-    ],
-    reviews: [
-      { id: "r1", user: "Yuki Tanaka", rating: 5, date: "2024-03-15", comment: "An unexpected masterpiece. The cheese doesn't overpower the fish, it enhances it.", likes: 12 },
-      { id: "r2", user: "Michael Chen", rating: 4, date: "2024-03-10", comment: "Beautiful presentation. A bit rich for some, but definitely a unique experience.", likes: 5 }
-    ]
-  },
-  "2": {
-    id: "2",
-    name: "Original Sushi",
-    price: 19,
-    image: Images.sushi.s11,
-    rating: 5.0,
-    category: "Sushi",
-    gallery: [Images.sushi.s11, Images.sushi.s12, Images.sushi.s9],
-    description: "The essence of ItsuSushi. Pure, simple, and perfected through decades of tradition. Hand-pressed rice meets catch-of-the-day yellowtail, seasoned with our secret shoyu blend.",
-    ingredients: ["Yellowtail Fish", "Vinegared Rice", "House Shoyu", "Wasabi"],
-    nutrition: [
-      { label: "Calories", value: "280 kcal" },
-      { label: "Protein", value: "22g" },
-      { label: "Carbs", value: "38g" },
-      { label: "Fat", value: "6g" }
-    ],
-    reviews: [
-      { id: "r3", user: "Sato San", rating: 5, date: "2024-03-20", comment: "This is what sushi should be. Perfection in simplicity.", likes: 24 }
-    ]
-  }
-};
-
-const RELATED_PRODUCTS: Product[] = [
-  { id: "3", name: "Ramen Legendo", price: 13, image: Images.sushi.s10, rating: 4.7, category: "Ramen" },
-  { id: "4", name: "Salmon Sashimi", price: 25, image: Images.sushi.s9, rating: 4.8, category: "Sushi" },
-  { id: "2", name: "Original Sushi", price: 19, image: Images.sushi.s11, rating: 5.0, category: "Sushi" },
-  { id: "5", name: "Udon Classic", price: 15, image: Images.sushi.s8, rating: 4.6, category: "Udon" },
-];
+import { productService } from "@/features/products/product.service";
+import { reviewService } from "@/features/reviews/review.service";
+import { ReviewForm } from "@/features/reviews/ReviewForm";
+import { useAuthStore } from "@/stores/useAuthStore";
+import type { ProductDetail, Product, Review } from "@/features/products/product.types";
 
 export default function ProductDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const [activeImage, setActiveImage] = useState<string>("");
+  const { slug } = useParams<{ slug: string }>();
+  const { user: currentUser } = useAuthStore();
+  const [activeImage, setActiveImage] = useState<string | undefined>(undefined);
   const [activeTab, setActiveTab] = useState<"ingredients" | "nutrition" | "policy">("ingredients");
   const [product, setProduct] = useState<ProductDetail | null>(null);
 
-  useEffect(() => {
-    // Simulate API fetch
-    if (id && MOCK_DETAIL_DATA[id]) {
-      const data = MOCK_DETAIL_DATA[id];
-      setProduct(data);
-      setActiveImage(data.gallery[0]);
+  // Lazy loading state
+  const [allReviews, setAllReviews] = useState<Review[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMoreReviews, setHasMoreReviews] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchReviewsPage = useCallback(
+    async (productId: string, page: number) => {
+      try {
+        setLoadingReviews(true);
+        const data = await reviewService.getProductReviewsPaginated(productId, page, 5);
+
+        if (page === 1) {
+          // First page: replace all reviews
+          setAllReviews(data.reviews);
+        } else {
+          // Subsequent pages: append reviews
+          setAllReviews(prev => [...prev, ...data.reviews]);
+        }
+
+        setCurrentPage(page);
+        setHasMoreReviews(data.hasMore);
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      } finally {
+        setLoadingReviews(false);
+      }
+    },
+    []
+  );
+
+  const handleLoadMore = useCallback(() => {
+    if (product && !loadingReviews && hasMoreReviews) {
+      fetchReviewsPage(product.id, currentPage + 1);
     }
-  }, [id]);
+  }, [product, currentPage, loadingReviews, hasMoreReviews, fetchReviewsPage]);
+
+  const handleReviewAdded = useCallback(() => {
+    if (product) {
+      // Reset to page 1 when new review is added
+      setCurrentPage(1);
+      setAllReviews([]);
+      fetchReviewsPage(product.id, 1);
+    }
+  }, [product, fetchReviewsPage]);
+
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      if (!slug) return;
+      setLoading(true);
+      try {
+        const data = await productService.getProductBySlug(slug);
+        setProduct(data);
+        setActiveImage(data.image);
+
+        // Fetch first page of reviews
+        await fetchReviewsPage(data.id, 1);
+
+        // Fetch related products
+        const related = await productService.getProducts(1, 4, data.category.id);
+        setRelatedProducts(related.data.filter(p => p.slug !== slug));
+      } catch (error) {
+        console.error("Failed to fetch product details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProductDetail();
+  }, [slug, fetchReviewsPage]);
+
+  if (loading) {
+    return (
+      <div className="product-detail-page page-container" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+        <Loader />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
       <div className="product-detail-page page-container">
         <div className="product-detail__loading">
-          <Loader />
+          <h2>Dish not found...</h2>
           <Link to="/menu" className="btn-back">Back to Menu</Link>
         </div>
       </div>
@@ -99,27 +116,29 @@ export default function ProductDetailPage() {
 
       <div className="container-content">
         <section className="product-detail__main">
-          {/* Gallery */}
+            {/* Gallery */}
           <div className="product-detail__gallery">
             <div className="product-detail__main-image">
               <img src={activeImage} alt={product.name} />
             </div>
-            <div className="product-detail__thumbnails">
-              {product.gallery.map((img, idx) => (
-                <div
-                  key={idx}
-                  className={`thumbnail ${activeImage === img ? "active" : ""}`}
-                  onClick={() => setActiveImage(img)}
-                >
-                  <img src={img} alt={`${product.name} thumbnail ${idx}`} />
-                </div>
-              ))}
-            </div>
+            {(product.gallery?.length ?? 0) > 0 && (
+              <div className="product-detail__thumbnails">
+                {product.gallery!.map((img, idx) => (
+                  <div
+                    key={idx}
+                    className={`thumbnail ${activeImage === img ? "active" : ""}`}
+                    onClick={() => setActiveImage(img)}
+                  >
+                    <img src={img} alt={`${product.name} thumbnail ${idx}`} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Info */}
           <div className="product-detail__info">
-            <span className="product-detail__category">{product.category}</span>
+            <span className="product-detail__category">{product.category.name || "Japanese Dish"}</span>
             <h1 className="product-detail__name">{product.name}</h1>
 
             <div className="product-detail__meta">
@@ -129,10 +148,13 @@ export default function ProductDetailPage() {
                     key={i}
                     src={Icon.star}
                     alt="star"
-                    className={i < Math.floor(product.rating) ? "star--filled" : "star--empty"}
+                    className={i < Math.floor(product.ratingSummary.averageRating) ? "star--filled" : "star--empty"}
                   />
                 ))}
-                <span>({product.rating})</span>
+                <span>({product.ratingSummary.averageRating.toFixed(1)})</span>
+                {product.ratingSummary.totalReviews > 0 && (
+                  <span className="reviews-count">{product.ratingSummary.totalReviews} {product.ratingSummary.totalReviews === 1 ? "review" : "reviews"}</span>
+                )}
               </div>
               <p className="product-detail__price">${product.price}.00</p>
             </div>
@@ -157,17 +179,25 @@ export default function ProductDetailPage() {
           <div className="tab-content">
             {activeTab === "ingredients" && (
               <ul className="ingredients-list">
-                {product.ingredients.map((ing, i) => <li key={i}>{ing}</li>)}
+                {product.ingredients?.length ? (
+                  product.ingredients.map((ing, i) => <li key={i}>{ing}</li>)
+                ) : (
+                  <li style={{ color: "var(--text-muted)", listStyle: "none" }}>No ingredient information available.</li>
+                )}
               </ul>
             )}
             {activeTab === "nutrition" && (
               <div className="nutrition-grid">
-                {product.nutrition.map((item, i) => (
-                  <div key={i} className="nutrition-item">
-                    <span className="label">{item.label}</span>
-                    <span className="value">{item.value}</span>
-                  </div>
-                ))}
+                {product.nutrition?.length ? (
+                  product.nutrition.map((item, i) => (
+                    <div key={i} className="nutrition-item">
+                      <span className="label">{item.label}</span>
+                      <span className="value">{item.value}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ color: "var(--text-muted)" }}>No nutrition information available.</p>
+                )}
               </div>
             )}
             {activeTab === "policy" && (
@@ -182,36 +212,62 @@ export default function ProductDetailPage() {
         {/* Reviews */}
         <section className="product-detail__reviews">
           <h2 className="section-title">Guest Experience</h2>
+
+          {currentUser ? (
+            <ReviewForm productId={product.id} onReviewAdded={handleReviewAdded} />
+          ) : (
+            <div className="review-login-prompt">
+              <p>Please <Link to="/login">login</Link> to share your experience.</p>
+            </div>
+          )}
+
           <div className="reviews-list">
-            {product.reviews.map(review => (
-              <div key={review.id} className="review-card">
-                <div className="review-header">
-                  <span className="review-user">{review.user}</span>
-                  <span className="review-date">{review.date}</span>
-                </div>
-                <div className="review-rating">
-                  {[...Array(5)].map((_, i) => (
-                    <img key={i} src={Icon.star} alt="star" className={i < review.rating ? "star--filled" : ""} />
-                  ))}
-                </div>
-                <p className="review-comment">{review.comment}</p>
-                <div className="review-actions">
-                  <button className="btn-like">Helpful ({review.likes})</button>
-                </div>
-              </div>
-            ))}
+            {product.ratingSummary.totalReviews === 0 ? (
+              <p className="no-reviews">No reviews yet. Be the first to share your thoughts!</p>
+            ) : allReviews.length > 0 ? (
+              <>
+                {allReviews.map((review, idx) => (
+                  <div key={review.id} className="review-card" style={{ animationDelay: `${idx * 0.1}s` }}>
+                    <div className="review-header">
+                      <span className="review-user">{(review as Review).user.name || "Anonymous User"}</span>
+                      <span className="review-date">{new Date(review.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div className="review-rating">
+                      {[...Array(5)].map((_, i) => (
+                        <img key={i} src={Icon.star} alt="star" className={i < review.rating ? "star--filled" : ""} />
+                      ))}
+                    </div>
+                    <p className="review-comment">{review.comment}</p>
+                  </div>
+                ))}
+
+                {hasMoreReviews && (
+                  <button
+                    className="btn-load-more"
+                    onClick={handleLoadMore}
+                    disabled={loadingReviews}
+                  >
+                    {loadingReviews ? "Loading..." : "Load More Reviews"}
+                  </button>
+                )}
+              </>
+            ) : (
+              loadingReviews && <Loader />
+            )}
           </div>
         </section>
 
         {/* Related */}
-        <section className="product-detail__related">
-          <h2 className="section-title">You Might Also Like</h2>
-          <div className="related-grid">
-            {RELATED_PRODUCTS.map(p => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
+        {relatedProducts.length > 0 && (
+          <section className="product-detail__related">
+            <h2 className="section-title">You Might Also Like</h2>
+            <div className="related-grid">
+              {relatedProducts.map(p => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

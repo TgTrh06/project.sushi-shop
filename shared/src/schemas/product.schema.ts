@@ -20,12 +20,12 @@ export const BaseProductSchema = z.object({
   isAvailable: z.boolean().default(true).optional(),
   stockQuantity: z.number().min(0).default(0),
 
-  ingredients: z.array(z.string()),
+  ingredients: z.array(z.string()).optional(),
 
   nutrition: z.array(z.object({
     label: z.string(),
     value: z.string()
-  })),
+  })).optional(),
 
   ratingSummary: z.object({
     averageRating: z.number().default(0),

@@ -40,6 +40,7 @@ export interface AdminProduct {
   slug: string;
   price: number;
   image?: string;
+  gallery?: string[];
   description?: string;
   categoryId: string;
   isAvailable: boolean;
@@ -52,6 +53,7 @@ export interface CreateProductPayload {
   name: string;
   price: number;
   image?: string;
+  gallery?: string[];
   description?: string;
   categoryId: string;
   isAvailable?: boolean;

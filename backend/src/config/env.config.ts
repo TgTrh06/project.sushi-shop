@@ -21,4 +21,6 @@ export const env = {
   JWT_ACCESS_SECRET: jwtAccessSecret,
   JWT_REFRESH_SECRET: jwtRefreshSecret,
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN as string,
+
+  FRONTEND_URL: process.env.FRONTEND_URL as string,
 };

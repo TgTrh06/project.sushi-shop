@@ -10,6 +10,7 @@ export const BaseReviewSchema = z.object({
   user: z.object({
     id: z.string(),
     name: z.string(),
+    avatar: z.string().optional(),
   }),
   rating: z.number().min(1).max(5),
   comment: z.string().min(1).max(1000),

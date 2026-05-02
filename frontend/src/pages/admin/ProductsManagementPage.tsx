@@ -15,6 +15,7 @@ const EMPTY_FORM: CreateProductPayload = {
   name: "",
   price: 0,
   image: "",
+  gallery: [],
   description: "",
   categoryId: "",
   isAvailable: true,
@@ -34,6 +35,10 @@ export const ProductsManagementPage = () => {
   const [editTarget, setEditTarget] = useState<AdminProduct | null>(null);
   const [form, setForm] = useState<CreateProductPayload>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  
+  // Upload state
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 
   // Confirm delete
   const [confirmDelete, setConfirmDelete] = useState<AdminProduct | null>(null);
@@ -63,6 +68,8 @@ export const ProductsManagementPage = () => {
     setFormMode("create");
     setEditTarget(null);
     setForm(EMPTY_FORM);
+    setImageFile(null);
+    setGalleryFiles([]);
     setModalOpen(true);
   };
 
@@ -73,26 +80,42 @@ export const ProductsManagementPage = () => {
       name: product.name,
       price: product.price,
       image: product.image,
+      gallery: product.gallery || [],
       description: product.description ?? "",
       categoryId: product.categoryId,
       isAvailable: product.isAvailable,
       stockQuantity: product.stockQuantity,
     });
+    setImageFile(null);
+    setGalleryFiles([]);
     setModalOpen(true);
   };
 
   const handleSave = async () => {
-    if (!form.name || !form.image || !form.categoryId) {
-      showError("Vui lòng điền đầy đủ thông tin bắt buộc.");
+    if (!form.name || (!form.image && !imageFile) || !form.categoryId) {
+      showError("Vui lòng điền đầy đủ thông tin bắt buộc (Tên, Ảnh, Danh mục).");
       return;
     }
     setSaving(true);
     try {
+      let finalImage = form.image;
+      let finalGallery = form.gallery || [];
+
+      if (imageFile) {
+        finalImage = await adminService.uploadImage(imageFile);
+      }
+
+      if (galleryFiles.length > 0) {
+        finalGallery = await adminService.uploadGallery(galleryFiles);
+      }
+
+      const payload = { ...form, image: finalImage, gallery: finalGallery };
+
       if (formMode === "create") {
-        await adminService.createProduct(form);
+        await adminService.createProduct(payload);
         showSuccess("Đã tạo sản phẩm thành công.");
       } else if (editTarget) {
-        await adminService.updateProduct(editTarget.id, form as UpdateProductPayload);
+        await adminService.updateProduct(editTarget.id, payload as UpdateProductPayload);
         showSuccess("Đã cập nhật sản phẩm thành công.");
       }
       setModalOpen(false);
@@ -284,13 +307,61 @@ export const ProductsManagementPage = () => {
                   />
                 </div>
                 <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
-                  <label className="admin-form-label">URL ảnh *</label>
+                  <label className="admin-form-label">Ảnh chính (Tải lên hoặc nhập URL) *</label>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImageFile(e.target.files[0]);
+                        }
+                      }}
+                    />
+                    <span>Hoặc URL:</span>
+                    <input
+                      className="admin-form-input"
+                      style={{ flex: 1 }}
+                      value={form.image || ""}
+                      onChange={(e) => setForm({ ...form, image: e.target.value })}
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+                  {(imageFile || form.image) && (
+                    <div style={{ marginTop: "8px" }}>
+                      <img
+                        src={imageFile ? URL.createObjectURL(imageFile) : form.image}
+                        alt="Preview"
+                        style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "4px" }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
+                  <label className="admin-form-label">Thư viện ảnh (Gallery - Tối đa 10 ảnh)</label>
                   <input
-                    className="admin-form-input"
-                    value={form.image}
-                    onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        const files = Array.from(e.target.files).slice(0, 10);
+                        setGalleryFiles(files);
+                      }
+                    }}
                   />
+                  <div style={{ display: "flex", gap: "8px", marginTop: "8px", flexWrap: "wrap" }}>
+                    {galleryFiles.length > 0 ? (
+                      galleryFiles.map((file, i) => (
+                        <img key={i} src={URL.createObjectURL(file)} style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "4px" }} alt="" />
+                      ))
+                    ) : (
+                      form.gallery?.map((url, i) => (
+                        <img key={i} src={url} style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "4px" }} alt="" />
+                      ))
+                    )}
+                  </div>
                 </div>
                 <div className="admin-form-group">
                   <label className="admin-form-label">Danh mục *</label>
