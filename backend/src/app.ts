@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import path from "path";
 import cookieParser from "cookie-parser";
 import { env } from "./config/env.config";
 import { globalErrorHandler } from "./middleware/error.middleware";
@@ -20,6 +21,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use("/api/v1", mainRouter);
 
