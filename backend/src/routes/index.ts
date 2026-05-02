@@ -8,6 +8,7 @@ import productRoutes from "@/modules/products/product.routes";
 import bookingRoutes from "@/modules/resevations/reservation.routes";
 import reviewRoutes from "@/modules/reviews/review.routes";
 import statsRoutes from "@/modules/stats/stats.routes";
+import uploadRoutes from "@/modules/upload/upload.routes";
 
 const router = Router();
 
@@ -25,5 +26,6 @@ router.use("/categories", categoryRoutes);
 router.use("/products", productRoutes);
 router.use("/reservation", bookingRoutes);
 router.use("/reviews", reviewRoutes);
+router.use("/upload", uploadRoutes);
 
 export default router;
