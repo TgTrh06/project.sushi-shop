@@ -18,7 +18,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 2px solid currentColor;
+  border: 2px solid var(--black-300);
   background: transparent;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -26,24 +26,22 @@
 }
 
 .dot-nav__item.is-active {
-  background: currentColor;
+  background: var(--black-300);
   transform: scale(1.5);
 }
 
-.dot-nav.is-on-dark {
-  color: rgba(255, 255, 255, 0.6);
+.dot-nav__item.is-active:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
-.dot-nav.is-on-dark .dot-nav__item:hover {
-  color: #fff;
+.dot-nav__item:hover {
+  border-color: var(--primary-color);
+  transform: scale(1.25);
 }
 
-.dot-nav.is-on-light {
-  color: rgba(0, 0, 0, 0.3);
-}
-
-.dot-nav.is-on-light .dot-nav__item:hover {
-  color: var(--primary-color);
+.dot-nav {
+  color: var(--black-300);
 }
 
 /* Responsive */

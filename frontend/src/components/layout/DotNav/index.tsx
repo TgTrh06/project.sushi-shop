@@ -7,10 +7,8 @@ interface DotNavProps {
 }
 
 export const DotNav = ({ activeSection, totalSections, scrollToSection }: DotNavProps) => {
-    const navThemeClass = activeSection === 0 ? "is-on-dark" : "is-on-light";
-
     return (
-        <div className={`dot-nav ${navThemeClass}`}>
+        <div className="dot-nav">
             {Array.from({ length: totalSections }).map((_: any, index: number) => (
                 <button
                     key={index}
