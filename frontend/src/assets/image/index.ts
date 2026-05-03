@@ -1,3 +1,6 @@
+// Logo
+import logo from "./src/logo.png";
+
 // Backgrounds
 import aboutBg1 from "./src/about_bg1.png";
 import aboutBg2 from "./src/about_bg2.png";
@@ -26,6 +29,7 @@ import sushi11 from "./src/sushi-11.png";
 import sushi12 from "./src/sushi-12.png";
 
 export const Images = {
+  logo: logo,
   about: {
     bg1: aboutBg1,
     bg2: aboutBg2,
