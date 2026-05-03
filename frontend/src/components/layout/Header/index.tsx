@@ -1,4 +1,4 @@
-import "./Navbar.css";
+import "./Header.css";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { UserMenu } from "../UserMenu";
@@ -6,11 +6,11 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { Icon } from "@/assets/svg";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-interface NavbarProps {
+interface HeaderProps {
   onMenuClick?: () => void;
 }
 
-export const Navbar = ({ onMenuClick }: NavbarProps) => {
+export const Header = ({ onMenuClick }: HeaderProps) => {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const isHomePage = location.pathname === "/";

@@ -5,7 +5,7 @@ import { BrowserRouter, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AppRoutes } from "@/routes/AppRoutes";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Navbar } from "@/components/layout/Navbar";
+import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Loader } from "@/components/ui/Loader";
@@ -24,7 +24,7 @@ const AppShell = () => {
     <>
       {!isAdminRoute && (
         <>
-          <Navbar onMenuClick={toggleSidebar} />
+          <Header onMenuClick={toggleSidebar} />
           <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         </>
       )}

@@ -130,7 +130,7 @@
 
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
 
   background: var(--color-white)
 }
@@ -141,7 +141,7 @@
 }
 
 .hero-content__customer h4 {
-  font-size: 62px;
+  font-size: 60px;
   font-weight: 400;
   font-family: var(--playfair-display)
 }
@@ -151,7 +151,7 @@
   font-weight: 400;
   font-family: var(--plus-jakarta-sans);
   color: var(--secondary-color);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .hero-content__review {
