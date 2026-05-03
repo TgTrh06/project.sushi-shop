@@ -4,6 +4,7 @@ import { ResponseHandler } from "@/utils/common/response.util";
 import type { CreateReviewDTO } from "./review.types";
 import { GetByIdParams } from "@/types/params.type";
 import { BadRequestError } from "@/utils/common/error.util";
+import { PaginationParams } from "@/utils/common/pagination.util";
 
 export default class ReviewController {
   constructor(private readonly reviewService: ReviewService) { }
@@ -23,23 +24,13 @@ export default class ReviewController {
     }
   };
 
-  getByProduct = async (req: Request<GetByIdParams>, res: Response, next: NextFunction) => {
+  getByProductPaginated = async (req: Request<GetByIdParams, any, PaginationParams>, res: Response, next: NextFunction) => {
     try {
       const { id: productId } = req.params;
-      const result = await this.reviewService.getProductReviews(productId);
-      return ResponseHandler.success(res, result, "Reviews retrieved successfully.");
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getByProductPaginated = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { productId } = req.params;
       const { page = "1", limit = "5" } = req.query;
-      
+
       if (!productId || typeof productId !== "string") {
-        throw new BadRequestError("productId parameter is required.");
+        return new BadRequestError("productId query parameter is required.");
       }
 
       const pageNum = parseInt(page as string, 10);
