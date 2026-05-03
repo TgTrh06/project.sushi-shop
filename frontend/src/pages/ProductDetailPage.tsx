@@ -8,14 +8,14 @@ import { productService } from "@/features/products/product.service";
 import { reviewService } from "@/features/reviews/review.service";
 import { ReviewForm } from "@/features/reviews/ReviewForm";
 import { useAuthStore } from "@/stores/useAuthStore";
-import type { ProductDetail, Product, Review } from "@/features/products/product.types";
+import type { Product, Review } from "@/features/products/product.types";
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { user: currentUser } = useAuthStore();
   const [activeImage, setActiveImage] = useState<string | undefined>(undefined);
   const [activeTab, setActiveTab] = useState<"ingredients" | "nutrition" | "policy">("ingredients");
-  const [product, setProduct] = useState<ProductDetail | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
 
   // Lazy loading state
   const [allReviews, setAllReviews] = useState<Review[]>([]);
@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
 
       <div className="container-content">
         <section className="product-detail__main">
-            {/* Gallery */}
+          {/* Gallery */}
           <div className="product-detail__gallery">
             <div className="product-detail__main-image">
               <img src={activeImage} alt={product.name} />

@@ -4,12 +4,6 @@ import type { BaseReviewSchema } from "@shared/schemas/review.schema";
 
 export type Product = z.infer<typeof BaseProductSchema>;
 
-export interface ProductDetail extends Product {
-  gallery: string[];
-  ingredients: string[];
-  nutrition: { label: string; value: string }[];
-}
-
 export type Review = z.infer<typeof BaseReviewSchema>;
 
 export interface PaginatedReviews {
