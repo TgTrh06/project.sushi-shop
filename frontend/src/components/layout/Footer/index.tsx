@@ -24,9 +24,8 @@ export const Footer = () => {
             <h4 className="footer__heading">Quick Links</h4>
             <ul className="footer__links">
               <li><Link to="/menu">Our Menu</Link></li>
-              <li><Link to="/reserve">Reservations</Link></li>
+              <li><Link to="/reservation">Reservations</Link></li>
               <li><Link to="/about">Our Story</Link></li>
-              <li><Link to="/careers">Careers</Link></li>
             </ul>
           </div>
 
