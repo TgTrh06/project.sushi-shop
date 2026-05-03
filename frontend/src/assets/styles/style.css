@@ -16,7 +16,7 @@
   --playfair-display: "Playfair Display", serif;
   --plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
 
-  --primary-color: #b1454a;
+  --primary-color: #990011;
   --secondary-color: #121212;
 
   --black-200: #020202;
@@ -26,7 +26,7 @@
   --gray-100: #888888;
 
   --color-white: #fff;
-  --color-creamson: #fff0de;
+  --color-creamson: #fcf6f5;
   --color-gold: #ffee99;
 
   --transparent-button-text-color: #fff0de;
@@ -39,6 +39,8 @@
 
 /* Dark Theme Variables */
 [data-theme="dark"] {
+  --primary-color: #b32d3a;
+
   --color-creamson: #282a30;
   --color-white: #25262b;
   --secondary-color: #f1f3f5;
