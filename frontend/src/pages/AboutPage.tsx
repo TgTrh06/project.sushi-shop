@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useThemeStore } from "@/stores/useThemeStore";
+import { DotNav } from "@/components/layout/DotNav";
 
 export const AboutPage = () => {
   const { theme } = useThemeStore();
@@ -20,15 +21,6 @@ export const AboutPage = () => {
     garden: "/about_garden.png",
     chef: "/about_chef.png",
   };
-
-  // Color Mapping logic
-  const sectionColors = [
-    { light: "transparent", dark: "transparent", isDark: true }, // Hero (Image)
-    { light: "#f9f7f2", dark: "#0d1117", isDark: false },      // Philosophy
-    { light: "#f0efea", dark: "#161b22", isDark: false },      // Pillars
-    { light: "#ffffff", dark: "#020617", isDark: false },      // Gallery
-    { light: "#eceae5", dark: "#1a1b22", isDark: false },      // CTA
-  ];
 
   useEffect(() => {
     const options = {
@@ -55,8 +47,6 @@ export const AboutPage = () => {
     return () => observer.disconnect();
   }, []);
 
-  const currentBg = theme === "dark" ? sectionColors[activeSection].dark : sectionColors[activeSection].light;
-
   const scrollToSection = (index: number) => {
     sectionRefs[index].current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -64,19 +54,13 @@ export const AboutPage = () => {
   return (
     <div
       className="page-container about-page"
-      style={{ backgroundColor: currentBg }}
     >
       {/* VERTICAL DOT NAVIGATION */}
-      <div className={`dot-nav ${theme === "dark" || activeSection === 0 ? "is-on-dark" : "is-on-light"}`}>
-        {sectionColors.map((_, index) => (
-          <button
-            key={index}
-            className={`dot-nav__item ${activeSection === index ? "is-active" : ""}`}
-            onClick={() => scrollToSection(index)}
-            aria-label={`Go to section ${index + 1}`}
-          />
-        ))}
-      </div>
+      <DotNav
+        activeSection={activeSection}
+        totalSections={sectionRefs.length}
+        scrollToSection={scrollToSection}
+      />
 
       {/* SECTION 1: ATMOSPHERIC HERO */}
       <section

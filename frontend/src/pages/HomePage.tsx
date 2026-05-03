@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Images } from "@/assets/image";
 import { Icon } from "@/assets/svg";
+import { DotNav } from "@/components/layout/DotNav";
 
 export const HomePage = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -44,16 +45,11 @@ export const HomePage = () => {
   return (
     <div className="home-page-container">
       {/* VERTICAL DOT NAVIGATION */}
-      <div className={`dot-nav ${activeSection === 0 ? "is-on-dark" : "is-on-light"}`}>
-        {[0, 1, 2, 3].map((index) => (
-          <button
-            key={index}
-            className={`dot-nav__item ${activeSection === index ? "is-active" : ""}`}
-            onClick={() => scrollToSection(index)}
-            aria-label={`Go to section ${index + 1}`}
-          />
-        ))}
-      </div>
+      <DotNav
+        activeSection={activeSection}
+        totalSections={sectionRefs.length}
+        scrollToSection={scrollToSection}
+      />
 
       <section ref={sectionRefs[0]} className="container-content hero">
         <div className="hero-image">
