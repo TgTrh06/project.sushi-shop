@@ -40,10 +40,11 @@
 /* Dark Theme Variables */
 [data-theme="dark"] {
   --primary-color: #b32d3a;
+  --secondary-color: #fcf6f5;
 
   --color-creamson: #282a30;
   --color-white: #25262b;
-  --secondary-color: #f1f3f5;
+
   --black-500: #c1c2c5;
   --black-400: #2c2e33;
   --black-300: #e9ecef;
