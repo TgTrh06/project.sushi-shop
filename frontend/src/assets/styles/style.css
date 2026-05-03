@@ -9,7 +9,6 @@
 @import url("pages/AboutPage.css");
 @import url("pages/AuthPage.css");
 @import url("pages/ProfilePage.css");
-@import url("components/DotNav.css");
 
 /* CSS variables for reusablity across all files (including above imported) */
 :root {
