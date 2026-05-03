@@ -1,3 +1,5 @@
+import "./DotNav.css"
+
 interface DotNavProps {
     activeSection: number;
     totalSections: number;
