@@ -89,13 +89,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Dark mode overrides for Sticky state */
-[data-theme="dark"] .header--sticky {
-  background-color: rgba(37, 38, 43, 0.8);
-  /* Maps to #25262B in dark mode but with transparency */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
 .header--transparent .header__menu div.header__auth-btn,
 .header--sticky .header__menu div.header__auth-btn {
   background-color: var(--primary-color);
@@ -142,12 +135,8 @@
 }
 
 .header--sticky .header__menu li a:hover {
-  color: #ffee99;
-  opacity: 0.9;
-}
-
-[data-theme="dark"] .header--sticky .header__menu li a:hover {
   color: var(--primary-color);
+  opacity: 0.9;
 }
 
 .header--sticky .header__menu li a.active {
