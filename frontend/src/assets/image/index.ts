@@ -29,12 +29,12 @@ import sushi11 from "./src/sushi-11.png";
 import sushi12 from "./src/sushi-12.png";
 
 export const Images = {
-  logo: logo,
   about: {
     bg1: aboutBg1,
     bg2: aboutBg2,
   },
   common: {
+    logo,
     popularBg,
     subscribeBg,
     userAvatar,

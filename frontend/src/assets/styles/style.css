@@ -18,6 +18,9 @@
   --primary-color: #990011;
   --secondary-color: #121212;
 
+  --raw-white: #fcf6f5;
+  --raw-beige: #FFF8E6;
+
   --black-200: #020202;
   --black-300: #333333;
   --black-400: #1f1e31;
@@ -25,14 +28,13 @@
   --gray-100: #888888;
 
   --color-white: #fff;
-  --color-creamson: #fcf6f5;
+  --color-creamson: var(--raw-white);
 
   --transparent-button-text-color: #fff0de;
   --sticky-button-text-color: #b1454a;
 
   --navbar-height: 80px;
   --navbar-sticky-height: 60px;
-  --footer-bg: #f9fafb;
 }
 
 /* Dark Theme Variables */
@@ -50,7 +52,6 @@
 
   --transparent-button-text-color: #f1f3f5;
   --sticky-button-text-color: #f1f3f5;
-  --footer-bg: #020617;
   /* High-end Slate-950 equivalent */
 }
 
