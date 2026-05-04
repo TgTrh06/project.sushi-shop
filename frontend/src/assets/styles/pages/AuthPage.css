@@ -3,7 +3,8 @@
    ========================================================= */
 
 .auth__container {
-  min-height: 100vh;
+  margin-top: 4vh;
+  min-height: 96vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +18,7 @@
   max-width: 480px;
   background-color: var(--color-white);
   border-radius: 24px;
-  padding: 48px;
+  padding: 36px 48px 48px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
 }
 
@@ -27,8 +28,8 @@
 }
 
 .auth__icon {
-  font-size: 40px;
-  margin-bottom: 16px;
+  height: 60px;
+  margin-bottom: 10px;
   display: inline-block;
 }
 
@@ -79,13 +80,13 @@
   border-radius: 12px;
   outline: none;
   transition: all 0.2s ease;
-  background-color: #fafafa;
+  background-color: var(--raw-white);
 }
 
 .auth__input:focus {
   border-color: var(--primary-color);
-  background-color: var(--color-white);
   box-shadow: 0 0 0 3px rgba(177, 69, 74, 0.1);
+  background-color: var(--raw-beige);
 }
 
 .auth__input--error {
