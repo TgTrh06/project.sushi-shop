@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { LoginSchema, type LoginFormInput, type LoginFormValues } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
-
+import { Images } from "@/assets/image";
 
 export const LoginPage = () => {
   const login = useAuthStore((state) => state.login);
@@ -40,7 +40,7 @@ export const LoginPage = () => {
       <div className="auth__card">
         {/* Header */}
         <div className="auth__header">
-          <div className="auth__icon">🍣</div>
+          <img className="auth__icon" src={Images.common.logo} alt="Logo" />
           <h1 className="auth__title">Welcome back</h1>
           <p className="auth__subtitle">Sign in to your account</p>
         </div>

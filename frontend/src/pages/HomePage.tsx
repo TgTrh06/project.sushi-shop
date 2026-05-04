@@ -51,6 +51,7 @@ export const HomePage = () => {
         scrollToSection={scrollToSection}
       />
 
+      {/* SECTION 0: HERO */}
       <section ref={sectionRefs[0]} className="container-content hero">
         <div className="hero-image">
           <img src={Images.sushi.s1} alt="sushi" data-aos="fade-up" />
@@ -103,6 +104,7 @@ export const HomePage = () => {
         </div>
       </section>
 
+      {/* SECTION 1: ABOUT US */}
       <section ref={sectionRefs[1]} className="container-content about-us" id="about-us">
         <div className="about-us__image">
           <div className="about-us__image-sushi3">
@@ -132,6 +134,7 @@ export const HomePage = () => {
         </div>
       </section>
 
+      {/* SECTION 2: POPULAR */}
       <section ref={sectionRefs[2]} className="container-content" id="menu">
         <div className="popular-foods">
           <h2 className="popular-foods__title" data-aos="flip-up">
@@ -159,7 +162,6 @@ export const HomePage = () => {
               <img src={Images.sushi.s6} alt="sushi 6" />
               Danggo
             </button>
-            <button className="popular-foods__filter-btn">All</button>
           </div>
 
           <div className="popular-foods__catalogue" data-aos="fade-up">
@@ -225,6 +227,7 @@ export const HomePage = () => {
         </div>
       </section>
 
+      {/* SECTION 3: TRENDING */}
       <section ref={sectionRefs[3]} className="container-content trending" id="food">
         <section className="trending-sushi">
           <div className="trending__content" data-aos="fade-right">

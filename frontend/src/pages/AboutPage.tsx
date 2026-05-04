@@ -1,10 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useThemeStore } from "@/stores/useThemeStore";
 import { DotNav } from "@/components/layout/DotNav";
 
 export const AboutPage = () => {
-  const { theme } = useThemeStore();
   const [activeSection, setActiveSection] = useState(0);
 
   const sectionRefs = [

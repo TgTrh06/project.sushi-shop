@@ -5,6 +5,7 @@ import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from 
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import { Images } from "@/assets/image";
 
 export const RegisterPage = () => {
   const signUp = useAuthStore((state) => state.register);
@@ -42,7 +43,7 @@ export const RegisterPage = () => {
       <div className="auth__card">
         {/* Header */}
         <div className="auth__header">
-          <div className="auth__icon">🍣</div>
+          <img className="auth__icon" src={Images.common.logo} alt="Logo" />
           <h1 className="auth__title">Create account</h1>
           <p className="auth__subtitle">Join us and enjoy fresh sushi</p>
         </div>
