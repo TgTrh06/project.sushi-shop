@@ -72,7 +72,7 @@
 }
 
 .droplist-item.signout {
-  color: var(--color-gold);
+  color: yellow;
   border-top: 1px solid #eee;
   margin-top: 4px;
 }
