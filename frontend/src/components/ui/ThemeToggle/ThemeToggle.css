@@ -1,7 +1,7 @@
 .toggle {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 12px;
   border: 2px solid var(--primary-color);
   background-color: var(--primary-color);
   display: grid;
