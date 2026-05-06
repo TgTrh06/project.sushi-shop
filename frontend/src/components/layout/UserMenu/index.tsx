@@ -31,7 +31,7 @@ export const UserMenu = () => {
 
   return (
     <div className="user-menu-container" ref={menuRef}>
-      {/* Nút bấm Avatar */}
+      {/* Avatar */}
       <button className="user-avatar-btn" onClick={() => setIsOpen(!isOpen)}>
         <img src={Images.common.userAvatarSmall} alt="User Avatar" />
       </button>
