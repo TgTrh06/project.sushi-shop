@@ -6,6 +6,7 @@ import { env } from "./config/env.config";
 import { globalErrorHandler } from "./middleware/error.middleware";
 import { connectDB } from "./config/database.config";
 import mainRouter from "./routes";
+import "./config/cloudinary.config"; // Initialize Cloudinary
 
 const PORT = env.PORT;
 
