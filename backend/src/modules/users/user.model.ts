@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { Role } from "@shared/schemas/auth.schema";
+import { Role } from "@shared/schemas/user.schema";
 import type { User } from "@shared/schemas/user.schema";
 
 // =========================================================
@@ -32,6 +32,8 @@ const UserSchema = new Schema<UserDocument>({
     default: Role.CUSTOMER,
   },
   avatar_id: { type: String, default: null },
+  phoneNumber: { type: Number, default: null },
+  passwordLastUpdated: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now },
 });
 

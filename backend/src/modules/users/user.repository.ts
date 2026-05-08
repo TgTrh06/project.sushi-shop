@@ -1,6 +1,8 @@
 import { Model } from "mongoose";
 import { UserModel, UserEntity, UserDocument } from "./user.model";
-import { RegisterFormValues, Role, UpdateUserFormValues } from "@shared/schemas/auth.schema";
+import { Role } from "@shared/schemas/user.schema";
+import { RegisterFormValues } from "@shared/schemas/auth.schema";
+import { UpdateUserFormValues } from "@shared/schemas/user.schema";
 
 export default class UserRepository {
   private model: Model<UserDocument>;
@@ -17,6 +19,8 @@ export default class UserRepository {
       username: doc.username,
       email: doc.email,
       avatar_id: doc.avatar_id,
+      phoneNumber: doc.phoneNumber ?? undefined,
+      passwordLastUpdated: doc.passwordLastUpdated ? new Date(doc.passwordLastUpdated) : undefined,
       // Only map password if exist in doc (use +hashedPassword)
       ...(doc.hashedPassword && { hashedPassword: doc.hashedPassword }),
       role: doc.role,
@@ -50,6 +54,11 @@ export default class UserRepository {
 
   async findById(id: string): Promise<UserEntity | null> {
     const doc = await this.model.findById(id).lean();
+    return doc ? this.mapToEntity(doc) : null;
+  }
+
+  async findByIdWithPassword(id: string): Promise<UserEntity | null> {
+    const doc = await this.model.findById(id).select("+hashedPassword").lean();
     return doc ? this.mapToEntity(doc) : null;
   }
 
@@ -88,7 +97,7 @@ export default class UserRepository {
     };
   }
 
-  async update(id: string, data: UpdateUserFormValues): Promise<UserEntity | null> {
+  async update(id: string, data: UpdateUserFormValues | Record<string, any>): Promise<UserEntity | null> {
     const doc = await this.model
       .findByIdAndUpdate(
         id, 
