@@ -19,7 +19,6 @@ const EMPTY_FORM: CreateProductPayload = {
   image_id: "",
   gallery_ids: [],
   categoryId: "",
-  description: "",
   isAvailable: true,
 };
 
@@ -82,7 +81,6 @@ export const ProductsManagementPage = () => {
       price: product.price,
       image_id: product.image_id,
       gallery_ids: product.gallery_ids || [],
-      description: product.description ?? "",
       categoryId: product.categoryId,
       isAvailable: product.isAvailable,
       stockQuantity: product.stockQuantity,
@@ -416,16 +414,6 @@ export const ProductsManagementPage = () => {
                       Is Available
                     </label>
                   </div>
-                </div>
-                <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
-                  <label className="admin-form-label">Description</label>
-                  <textarea
-                    className="admin-form-textarea"
-                    value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    placeholder="Short description of the product..."
-                    rows={3}
-                  />
                 </div>
               </div>
             </div>

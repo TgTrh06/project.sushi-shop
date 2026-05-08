@@ -7,7 +7,6 @@ export const CreateProductSchema = BaseProductSchema.pick({
   price: true,
   image_id: true,
   gallery_ids: true,
-  description: true,
   categoryId: true,
   isAvailable: true,
 });

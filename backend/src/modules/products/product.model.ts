@@ -7,7 +7,6 @@ const ProductSchema = new Schema<ProductDocument>({
   price: { type: Number, required: true },
   image_id: { type: String, default: null }, // Cloudinary public_id for featured image
   gallery_ids: { type: [String], default: [] }, // Cloudinary public_ids for gallery images
-  description: { type: String },
   ratingSummary: {
     averageRating: { type: Number, default: 0, min: 0, max: 5 },
     totalReviews: { type: Number, default: 0, min: 0 }
