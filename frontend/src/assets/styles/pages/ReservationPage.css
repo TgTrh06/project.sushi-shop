@@ -55,7 +55,7 @@
 
 .reserve-subtitle {
   font-family: var(--plus-jakarta-sans);
-  color: var(--black-500);
+  color: var(--text-muted);
   font-size: var(--fs-body-md);
   margin-bottom: 24px;
 }
@@ -85,7 +85,7 @@
 
 /* Light mode defaults */
 .legend-color.available {
-  border: 2px solid var(--black-400);
+  border: 2px solid var(--text-deep);
   background-color: transparent;
 }
 
@@ -95,7 +95,7 @@
 }
 
 .legend-color.occupied {
-  background-color: var(--black-500);
+  background-color: var(--text-muted);
   border: 2px solid #555555;
   opacity: 0.5;
 }
@@ -152,7 +152,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--black-500);
+  color: var(--text-muted);
   margin-bottom: 12px;
 }
 
@@ -317,11 +317,11 @@
 /* 1. AVAILABLE */
 .reserve-seat.available .reserve-seat__shape {
   fill: rgba(255, 255, 255, 0.5);
-  stroke: var(--black-400);
+  stroke: var(--text-deep);
 }
 
 .reserve-seat.available .reserve-seat__text {
-  fill: var(--black-400);
+  fill: var(--text-deep);
 }
 
 [data-theme="dark"] .reserve-seat.available .reserve-seat__shape {
@@ -417,7 +417,7 @@
 .form-group label {
   font-family: var(--plus-jakarta-sans);
   font-size: var(--fs-label);
-  color: var(--black-500);
+  color: var(--text-muted);
   font-weight: 600;
 }
 
@@ -467,7 +467,7 @@
   justify-content: space-between;
   font-family: var(--plus-jakarta-sans);
   font-size: var(--fs-body-xs);
-  color: var(--black-500);
+  color: var(--text-muted);
   margin-bottom: 12px;
 }
 
@@ -499,7 +499,7 @@
 .summary-note {
   margin-top: 12px;
   font-size: var(--fs-label-sm);
-  color: var(--gray-100);
+  color: var(--text-subtle);
   font-style: italic;
   font-family: var(--plus-jakarta-sans);
   line-height: 1.5;

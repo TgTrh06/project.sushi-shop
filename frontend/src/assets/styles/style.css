@@ -28,13 +28,6 @@
   --text-muted: #555555;       /* was --black-500: medium gray, secondary text */
   --text-subtle: #888888;      /* was --gray-100: light gray, placeholders/captions */
 
-  /* Legacy aliases — kept for backward compatibility */
-  --black-200: var(--text-ink);
-  --black-300: var(--text-dark);
-  --black-400: var(--text-deep);
-  --black-500: var(--text-muted);
-  --gray-100: var(--text-subtle);
-
   --color-white: #fff;
   --color-creamson: var(--raw-white);
 
@@ -85,12 +78,6 @@
   --text-deep: #2c2e33;        /* was --black-400 */
   --text-dark: #e9ecef;        /* was --black-300 */
   --text-ink: #ffffff;         /* was --black-200 */
-
-  /* Legacy aliases in dark mode */
-  --black-500: var(--text-muted);
-  --black-400: var(--text-deep);
-  --black-300: var(--text-dark);
-  --black-200: var(--text-ink);
 
   --transparent-button-text-color: #f1f3f5;
   --sticky-button-text-color: #f1f3f5;

@@ -209,20 +209,20 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
 
               {/* Theme */}
               <div className="user-dropdown__section-label">Theme</div>
-              <div className="user-dropdown__theme-row">
-                <button
-                  className={`theme-btn ${theme === "dark" ? "theme-btn--active" : ""}`}
-                  onClick={() => setTheme("dark")}
-                >
-                  <Moon size={16} strokeWidth={1.5} />
-                  <span>Dark</span>
-                </button>
+              <div className="user-dropdown__theme-row">                
                 <button
                   className={`theme-btn ${theme === "light" ? "theme-btn--active" : ""}`}
                   onClick={() => setTheme("light")}
                 >
                   <Sun size={16} strokeWidth={1.5} />
                   <span>Light</span>
+                </button>
+                <button
+                  className={`theme-btn ${theme === "dark" ? "theme-btn--active" : ""}`}
+                  onClick={() => setTheme("dark")}
+                >
+                  <Moon size={16} strokeWidth={1.5} />
+                  <span>Dark</span>
                 </button>
               </div>
             </>

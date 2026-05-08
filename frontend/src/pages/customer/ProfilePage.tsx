@@ -65,11 +65,12 @@ const ProfilePage: React.FC = () => {
 
   const renderPersonalInfo = () => (
     <div className="card">
-      <h3 className="sectionTitle">Personal Information</h3>
-
-      <div className="idBadge" onClick={handleCopyId} title="Click to copy ID">
-        <span>ID: {profileData.id}</span>
-        <Copy size={14} />
+      <div className="cardHeader">
+        <h3 className="sectionTitle">Personal Information</h3>
+        <div className="idBadge" onClick={handleCopyId} title="Click to copy ID">
+          <span>ID: {profileData.id}</span>
+          <Copy size={14} />
+        </div>
       </div>
 
       <div className="fieldRow">

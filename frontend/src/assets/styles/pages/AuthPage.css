@@ -43,7 +43,7 @@
 
 .auth__subtitle {
   font-size: var(--fs-body-sm);
-  color: var(--black-500);
+  color: var(--text-muted);
 }
 
 .auth__form-group {
@@ -129,7 +129,7 @@
   text-align: center;
   margin-top: 32px;
   font-size: var(--fs-body-xs);
-  color: var(--black-500);
+  color: var(--text-muted);
 }
 
 /* Media Queries */

@@ -4,6 +4,7 @@ import type { Category } from "@/features/categories/category.types";
 import { productService } from "@/features/products/product.service";
 import { categoryService } from "@/features/categories/category.service";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Icon } from "@/assets/svg";
 import { Loader } from "@/components/ui/Loader";
 
@@ -55,53 +56,46 @@ export default function MenuPage() {
 
   return (
     <div className="page-container menu-page">
-      {/* Header Section */}
-      <section className="menu-hero">
-        <div className="container-content">
-          <h1 className="menu-hero-title">Our Menu</h1>
-          <p className="menu-hero-subtitle">A symphony of authentic Japanese flavors</p>
-        </div>
-      </section>
+      {/* Breadcrumb */}
+      <Breadcrumb items={[{ label: "Menu" }]} />
 
-      {/* Product Grid */}
-      <section className="menu-grid-section">
-        <div className="container-content">
-          {/* Toolbar Section */}
-          <div className="menu-toolbar">
-            <div className="menu-toolbar__inner">
-              <div className="menu-categories">
+      <div className="menu-page-content">
+        {/* Toolbar Card */}
+        <div className="menu-card menu-toolbar-card">
+          <div className="menu-toolbar__inner">
+            <div className="menu-categories">
+              <button
+                className={`menu-category-btn ${activeCategorySlug === "all" ? "is-active" : ""}`}
+                onClick={() => setActiveCategorySlug("all")}
+              >
+                All
+              </button>
+              {categories.map((cat) => (
                 <button
-                  className={`menu-category-btn ${activeCategorySlug === "all" ? "is-active" : ""}`}
-                  onClick={() => setActiveCategorySlug("all")}
+                  key={cat.id}
+                  className={`menu-category-btn ${activeCategorySlug === cat.slug ? "is-active" : ""}`}
+                  onClick={() => setActiveCategorySlug(cat.slug)}
                 >
-                  All
+                  {cat.name}
                 </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    className={`menu-category-btn ${activeCategorySlug === cat.slug ? "is-active" : ""}`}
-                    onClick={() => setActiveCategorySlug(cat.slug)}
-                  >
-                    {cat.name}
-                  </button>
-                ))}
-              </div>
+              ))}
+            </div>
 
-              <div className="menu-search-container">
-                <div className="menu-search">
-                  <img src={Icon.search} alt="search" className="menu-search__icon" />
-                  <input
-                    type="text"
-                    placeholder="Search your favorites..."
-                    className="menu-search__input"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
+            <div className="menu-search">
+              <img src={Icon.search} alt="search" className="menu-search__icon" />
+              <input
+                type="text"
+                placeholder="Search your favorites..."
+                className="menu-search__input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
+        </div>
 
+        {/* Products Card */}
+        <div className="menu-card menu-grid-card">
           {loading ? (
             <div className="menu-grid">
               <Loader />
@@ -118,7 +112,7 @@ export default function MenuPage() {
             </div>
           )}
         </div>
-      </section>
+      </div>
     </div>
   );
 }

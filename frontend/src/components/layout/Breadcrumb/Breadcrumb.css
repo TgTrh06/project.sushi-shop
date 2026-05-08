@@ -29,7 +29,7 @@
 }
 
 .breadcrumbItem {
-    color: var(--black-500);
+    color: var(--text-muted);
     transition: color 0.2s;
 }
 

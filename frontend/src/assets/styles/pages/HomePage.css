@@ -442,7 +442,7 @@
 
 .popular-foods__card.active-card .popular-foods__card-rating p {
   font-size: var(--fs-body-lg);
-  color: var(--gray-100);
+  color: var(--text-subtle);
 }
 
 .popular-foods__card.active-card .popular-foods__card-price {
