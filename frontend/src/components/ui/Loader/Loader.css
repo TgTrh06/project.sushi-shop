@@ -1,14 +1,21 @@
 .loader-container {
   display: flex;
-  justify-content: center; /* Center Horizontal */
-  align-items: center; /* Center Vertical */
-  min-height: 100vh; /* 100% Devices Height */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   width: 100%;
   background-color: var(--color-crimson);
-  position: fixed; /* Fixed on the screen while loading */
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999; /* Always place in the top */
+  z-index: 9999;
+}
+
+.loader-container--inline {
+  position: relative;
+  min-height: 300px;
+  background-color: transparent;
+  z-index: auto;
 }
 
 .wheel-and-hamster {

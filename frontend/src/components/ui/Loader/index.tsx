@@ -1,8 +1,12 @@
 import "./Loader.css";
 
-export const Loader = () => {
+interface LoaderProps {
+  inline?: boolean;
+}
+
+export const Loader = ({ inline }: LoaderProps) => {
   return (
-    <div className="loader-container">
+    <div className={inline ? "loader-container loader-container--inline" : "loader-container"}>
       <div
         aria-label="Orange and tan hamster running in a metal wheel"
         role="img"

@@ -97,9 +97,7 @@ export default function MenuPage() {
         {/* Products Card */}
         <div className="menu-card menu-grid-card">
           {loading ? (
-            <div className="menu-grid">
-              <Loader />
-            </div>
+              <Loader inline />
           ) : filteredProducts.length > 0 ? (
             <div className="menu-grid">
               {filteredProducts.map((product) => (
