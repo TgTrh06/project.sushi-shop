@@ -7,7 +7,7 @@ import { CreateReviewSchema } from "@shared/schemas/review.schema";
 const router = Router();
 
 // Get paginated reviews for a product (Public)
-router.get("/:productId/paginated", reviewController.getByProductPaginated);
+router.get("/:id/paginated", reviewController.getByProductPaginated);
 
 // Add a review (Protected)
 router.post(
