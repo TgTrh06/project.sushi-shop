@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Role } from "@shared/schemas/auth.schema";
+import type { User } from "@shared/schemas/user.schema";
 import type { BaseProductSchema } from "@shared/schemas/product.schema";
 import type { SystemStats, CategoryBreakdown } from "@shared/schemas/stats.schema";
 import type { BaseCategorySchema } from "@shared/schemas/category.schema";
@@ -8,14 +8,7 @@ import type { BaseCategorySchema } from "@shared/schemas/category.schema";
 export type { SystemStats, CategoryBreakdown };
 
 // ─── User ──────────────────────────────────────────────
-export interface AdminUser {
-  id: string;
-  username: string;
-  email: string;
-  role: Role;
-  avatar_id?: string;
-  createdAt?: string;
-}
+export type AdminUser = User;
 
 // ─── Category ──────────────────────────────────────────
 export type AdminCategory = z.infer<typeof BaseCategorySchema>;

@@ -1,20 +1,21 @@
 import { Schema, model } from "mongoose";
 import { Role } from "@shared/schemas/auth.schema";
+import type { User } from "@shared/schemas/user.schema";
 
-// Business Entity
-export interface UserEntity {
-  id: string;
-  username: string;
-  email: string;
+// =========================================================
+// BUSINESS ENTITY — extends shared User with hashedPassword
+// =========================================================
+
+export interface UserEntity extends User {
   hashedPassword: string;
-  role: Role;
-  avatar_id?: string; // Cloudinary public_id
-  createdAt: Date;
 }
 
-export type SafeUser = Omit<UserEntity, "hashedPassword">;
+export type SafeUser = User; // User from BaseUserSchema is already safe (no hashedPassword)
 
-// Database shape (Mongoose Document)
+// =========================================================
+// DATABASE SHAPE (Mongoose Document)
+// =========================================================
+
 export interface UserDocument extends Omit<UserEntity, "id"> {}
 
 const UserSchema = new Schema<UserDocument>({
@@ -25,12 +26,12 @@ const UserSchema = new Schema<UserDocument>({
     required: true,
     select: false,
   },
-  role: { 
-    type: String, 
-    enum: Object.values(Role), 
-    default: Role.CUSTOMER 
+  role: {
+    type: String,
+    enum: Object.values(Role),
+    default: Role.CUSTOMER,
   },
-  avatar_id: { type: String, default: null }, // Cloudinary public_id
+  avatar_id: { type: String, default: null },
   createdAt: { type: Date, default: Date.now },
 });
 
