@@ -11,16 +11,16 @@
 
 .menu-hero-title {
   font-family: var(--playfair-display);
-  font-size: 64px;
+  font-size: var(--fs-display-md);
   font-weight: 800;
   color: var(--secondary-color);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   letter-spacing: -0.02em;
 }
 
 .menu-hero-subtitle {
   font-family: var(--plus-jakarta-sans);
-  font-size: 18px;
+  font-size: var(--fs-body-md);
   color: var(--primary-color);
   opacity: 0.8;
 }
@@ -60,7 +60,7 @@
   color: var(--secondary-color);
   font-family: var(--plus-jakarta-sans);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--fs-body-xs);
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -108,16 +108,13 @@
   padding: 14px 16px 14px 48px;
   border-radius: 12px;
   border: 2px solid rgba(0, 0, 0, 0.08);
-  /* Slightly thicker and more distinct */
   background-color: var(--color-white);
   color: var(--secondary-color);
-  /* More readable than primary */
   font-family: var(--plus-jakarta-sans);
-  font-size: 14px;
+  font-size: var(--fs-body-xs);
   outline: none;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  /* Subtle shadow for depth */
 }
 
 [data-theme="dark"] .menu-search__input {
@@ -183,7 +180,7 @@
   }
 
   .menu-title {
-    font-size: 48px;
+    font-size: 36px;
   }
 }
 
@@ -198,6 +195,10 @@
   }
 
   .menu-title {
-    font-size: 36px;
+    font-size: var(--fs-heading-md);
+  }
+
+  .menu-hero-title {
+    font-size: var(--fs-heading-lg);
   }
 }
