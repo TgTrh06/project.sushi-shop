@@ -1,86 +1,25 @@
-import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { DotNav } from "@/components/layout/DotNav";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
 
 export const AboutPage = () => {
-  const [activeSection, setActiveSection] = useState(0);
-
-  const sectionRefs = [
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-  ];
-
   const images = {
-    hero: "/about_hero.png",
     counter: "/about_interior.png",
     garden: "/about_garden.png",
+    hero: "/about_hero.png",
     chef: "/about_chef.png",
   };
 
-  useEffect(() => {
-    const options = {
-      root: null,
-      threshold: 0.6,
-    };
-
-    const callback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const index = sectionRefs.findIndex((ref) => ref.current === entry.target);
-          if (index !== -1) {
-            setActiveSection(index);
-          }
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(callback, options);
-    sectionRefs.forEach((ref) => {
-      if (ref.current) observer.observe(ref.current);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const scrollToSection = (index: number) => {
-    sectionRefs[index].current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <div
-      className="page-container about-page"
-    >
-      {/* VERTICAL DOT NAVIGATION */}
-      <DotNav
-        activeSection={activeSection}
-        totalSections={sectionRefs.length}
-        scrollToSection={scrollToSection}
-      />
+    <div className="page-container about-page">
+      {/* Breadcrumb */}
+      <Breadcrumb items={[{ label: "About" }]} />
 
-      {/* SECTION 1: ATMOSPHERIC HERO */}
-      <section
-        ref={sectionRefs[0]}
-        className="about-hero"
-        style={{ backgroundImage: `url(${images.hero})` }}
-      >
-        <div className="about-hero__content">
-          <h1 className="about-hero__title" data-aos="fade-up">
-            Itsu (粋) – The Art of Sophistication
-          </h1>
-          <p className="about-hero__subtitle" data-aos="fade-up" data-aos-delay="200">
-            Where traditional craft meets modern minimalist soul.
-          </p>
-        </div>
-      </section>
+      <div className="about-page-content">
 
-      {/* SECTION 2: OUR PHILOSOPHY */}
-      <section ref={sectionRefs[1]} className="about-section">
-        <div className="container-content about-philosophy">
+        {/* SECTION 1: PHILOSOPHY */}
+        <section className="about-card about-philosophy-card" data-aos="fade-up">
           <div className="about-philosophy__kanji">魂</div>
-          <div className="about-philosophy__text" data-aos="fade-right">
+          <div className="about-philosophy__text">
             <h2 className="about-philosophy__title">Breathe Life into Every Grain</h2>
             <p>
               "Itsu" is more than a name; it is an ideal of effortless elegance.
@@ -92,15 +31,14 @@ export const AboutPage = () => {
               we celebrate the momentary peak of excellence, captured right at our L-shaped Hinoki counter.
             </p>
           </div>
-          <div className="about-philosophy__image" data-aos="fade-left">
+          <div className="about-philosophy__image">
             <img src={images.chef} alt="Chef Craft" />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* SECTION 3: THE THREE PILLARS */}
-      <section ref={sectionRefs[2]} className="about-section">
-        <div className="container-content">
+        {/* SECTION 2: THE THREE PILLARS */}
+        <section className="about-card" data-aos="fade-up">
+          <h2 className="about-section-title">Our Three Pillars</h2>
           <div className="about-pillars">
             <div className="pillar-card" data-aos="fade-up">
               <div className="pillar-card__kanji">旬</div>
@@ -118,7 +56,7 @@ export const AboutPage = () => {
               </p>
             </div>
 
-            <div className="pillar-card" data-aos="fade-up" data-aos-delay="200">
+            <div className="pillar-card" data-aos="fade-up" data-aos-delay="150">
               <div className="pillar-card__kanji">匠</div>
               <div className="pillar-card__icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -133,7 +71,7 @@ export const AboutPage = () => {
               </p>
             </div>
 
-            <div className="pillar-card" data-aos="fade-up" data-aos-delay="400">
+            <div className="pillar-card" data-aos="fade-up" data-aos-delay="300">
               <div className="pillar-card__kanji">誠</div>
               <div className="pillar-card__icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -147,16 +85,12 @@ export const AboutPage = () => {
               </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* SECTION 4: THE SPACE GALLERY */}
-      <section ref={sectionRefs[3]} className="about-section">
-        <div className="container-content">
-          <h2 className="about-philosophy__title" style={{ textAlign: 'center', marginBottom: '60px' }} data-aos="fade-up">
-            Enter the Zen Space
-          </h2>
-          <div className="about-gallery" data-aos="zoom-in">
+        {/* SECTION 3: GALLERY */}
+        <section className="about-card" data-aos="fade-up">
+          <h2 className="about-section-title">Enter the Zen Space</h2>
+          <div className="about-gallery">
             <div className="gallery-item gallery-item--1">
               <img src={images.counter} alt="Omakase Counter" />
             </div>
@@ -170,19 +104,18 @@ export const AboutPage = () => {
               <img src={images.chef} alt="Chef Hands" />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* SECTION 5: CTA */}
-      <section ref={sectionRefs[4]} className="about-section about-cta" data-aos="fade-up">
-        <div className="container-content">
+        {/* SECTION 4: CTA */}
+        <section className="about-card about-cta-card" data-aos="fade-up">
           <h3 className="about-philosophy__title">The table is prepared.</h3>
-          <p style={{ marginBottom: '40px', opacity: 0.6 }}>Experience the soul of ItsuSushi.</p>
+          <p className="about-cta-subtitle">Experience the soul of ItsuSushi.</p>
           <Link to="/reservation" className="btn-elegant">
             Book your experience
           </Link>
-        </div>
-      </section>
+        </section>
+
+      </div>
     </div>
   );
 };

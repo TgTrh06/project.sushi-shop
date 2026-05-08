@@ -1,103 +1,76 @@
 /* =========================================================
-   ABOUT PAGE (INDEPENDENT PAGE STYLES)
+   ABOUT PAGE
    ========================================================= */
 
 .about-page {
+  min-height: calc(100vh - var(--navbar-height));
+  padding-top: var(--navbar-height);
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: var(--color-creamson);
   color: var(--secondary-color);
-  transition: background-color 1s ease, color 1s ease;
-  will-change: background-color;
-  position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-[data-theme="dark"] .about-page {
-  color: #f1f3f5;
+/* ── Page content wrapper ── */
+.about-page-content {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.about-section {
-  padding: 120px 0;
+/* ── Card base ── */
+.about-card {
+  background-color: var(--color-white);
+  border-radius: 24px;
+  padding: 56px 64px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
 }
 
-/* 1. Atmospheric Hero */
-.about-hero {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  background-color: transparent !important;
-  /* Ensure image shows */
+[data-theme="dark"] .about-card {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
-.about-hero::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1;
-}
-
-[data-theme="dark"] .about-hero::before {
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.about-hero__content {
-  position: relative;
-  z-index: 2;
-  color: #fff;
-  max-width: 800px;
-  padding: 0 20px;
-}
-
-.about-hero__title {
+/* ── Section title ── */
+.about-section-title {
   font-family: var(--playfair-display);
-  font-size: clamp(3rem, 8vw, 5rem);
-  font-weight: 700;
-  margin-bottom: 24px;
-  line-height: 1.1;
+  font-size: var(--fs-heading-md);
+  color: var(--secondary-color);
+  margin-bottom: 48px;
+  text-align: center;
 }
 
-.about-hero__subtitle {
-  font-family: var(--plus-jakarta-sans);
-  font-size: clamp(1rem, 3vw, 1.25rem);
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.9;
-}
+/* =========================================================
+   PHILOSOPHY CARD
+   ========================================================= */
 
-/* 2. Our Philosophy */
-.about-philosophy {
+.about-philosophy-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 64px;
   align-items: center;
-  width: 100%;
 }
 
 .about-philosophy__kanji {
   position: absolute;
-  left: 5%;
+  left: 4%;
   top: 50%;
   transform: translateY(-50%);
   font-family: serif;
-  font-size: 30rem;
+  font-size: 22rem;
   opacity: 0.03;
   pointer-events: none;
   line-height: 1;
   color: var(--secondary-color);
   z-index: 0;
-  transition: opacity 1s ease;
 }
 
 [data-theme="dark"] .about-philosophy__kanji {
@@ -112,98 +85,119 @@
 
 .about-philosophy__title {
   font-family: var(--playfair-display);
-  font-size: 42px;
-  margin-bottom: 32px;
+  font-size: var(--fs-heading-xl);
+  margin-bottom: 28px;
+  color: var(--secondary-color);
+  line-height: 1.2;
 }
 
 .about-philosophy p {
   font-family: var(--plus-jakarta-sans);
-  font-size: 18px;
+  font-size: var(--fs-body-lg);
   line-height: 1.8;
   opacity: 0.8;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+}
+
+.about-philosophy__text p {
+  font-family: var(--plus-jakarta-sans);
+  font-size: var(--fs-body-md);
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.about-philosophy__image {
+  position: relative;
+  z-index: 1;
 }
 
 .about-philosophy__image img {
   width: 100%;
-  border-radius: 24px;
+  border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
 }
 
-/* 3. The Three Pillars */
+/* =========================================================
+   PILLARS CARD
+   ========================================================= */
+
 .about-pillars {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  width: 100%;
+  gap: 24px;
 }
 
 .pillar-card {
   text-align: center;
-  padding: 60px 40px;
-  background-color: rgba(0, 0, 0, 0.02);
-  border-radius: 24px;
-  transition: all 0.4s ease;
+  padding: 48px 32px;
+  background-color: var(--color-creamson);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
 }
 
 [data-theme="dark"] .pillar-card {
   background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .pillar-card:hover {
-  transform: translateY(-10px);
-  background-color: var(--color-white);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="dark"] .pillar-card:hover {
-  background-color: #1a1b22;
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+  border-color: var(--primary-color);
 }
 
 .pillar-card__kanji {
   position: absolute;
-  top: 40px;
-  right: 40px;
-  font-size: 4rem;
-  opacity: 0.05;
+  top: 20px;
+  right: 24px;
+  font-size: 3.5rem;
+  opacity: 0.06;
   font-family: serif;
+  pointer-events: none;
 }
 
 .pillar-card__icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 32px;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 24px;
   color: var(--primary-color);
 }
 
 .pillar-card__title {
   font-family: var(--playfair-display);
-  font-size: 24px;
-  margin-bottom: 16px;
+  font-size: var(--fs-heading-xs);
+  margin-bottom: 12px;
+  color: var(--secondary-color);
 }
 
 .pillar-card__description {
   font-family: var(--plus-jakarta-sans);
-  font-size: 16px;
-  line-height: 1.6;
-  opacity: 0.7;
+  font-size: var(--fs-body-sm);
+  line-height: 1.7;
+  color: var(--text-muted);
 }
 
-/* 4. The Space Gallery */
+/* =========================================================
+   GALLERY CARD
+   ========================================================= */
+
 .about-gallery {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(2, 300px);
-  gap: 24px;
-  width: 100%;
+  grid-template-rows: repeat(2, 280px);
+  gap: 16px;
 }
 
 .gallery-item {
   position: relative;
-  border-radius: 24px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .gallery-item img {
@@ -211,11 +205,11 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s ease;
+  transition: transform 0.5s ease;
 }
 
 .gallery-item:hover img {
-  transform: scale(1.1);
+  transform: scale(1.06);
 }
 
 .gallery-item--1 {
@@ -238,43 +232,97 @@
   grid-row: 2 / 3;
 }
 
-/* 5. CTA */
-.about-cta {
+/* =========================================================
+   CTA CARD
+   ========================================================= */
+
+.about-cta-card {
   text-align: center;
-  width: 100%;
+  padding: 72px 64px;
+}
+
+.about-cta-subtitle {
+  font-family: var(--plus-jakarta-sans);
+  font-size: var(--fs-body-md);
+  color: var(--text-muted);
+  margin-bottom: 40px;
+  margin-top: 8px;
 }
 
 .btn-elegant {
   display: inline-block;
-  padding: 18px 48px;
-  border: 1px solid var(--secondary-color);
+  padding: 16px 48px;
+  border: 1.5px solid var(--secondary-color);
   font-family: var(--plus-jakarta-sans);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 14px;
+  letter-spacing: 0.15em;
+  font-size: var(--fs-body-xs);
   transition: all 0.3s ease;
   color: var(--secondary-color);
   cursor: pointer;
+  border-radius: 4px;
 }
 
 [data-theme="dark"] .btn-elegant {
-  border-color: #f1f3f5;
-  color: #f1f3f5;
+  border-color: var(--raw-white);
+  color: var(--raw-white);
 }
 
 .btn-elegant:hover {
-  background-color: var(--secondary-color);
-  color: #fff;
-  padding-right: 60px;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--raw-white);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(153, 0, 17, 0.25);
 }
 
-[data-theme="dark"] .btn-elegant:hover {
-  background-color: #f1f3f5;
-  color: #121212;
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media screen and (max-width: 1024px) {
+  .about-philosophy-card {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .about-gallery {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+
+  .gallery-item--1,
+  .gallery-item--2,
+  .gallery-item--3,
+  .gallery-item--4 {
+    grid-column: auto;
+    grid-row: auto;
+    height: 240px;
+  }
 }
 
-.gallery-item {
-  grid-column: 1 / 13 !important;
-  grid-row: auto !important;
+@media screen and (max-width: 640px) {
+  .about-card {
+    padding: 32px 24px;
+  }
+
+  .about-cta-card {
+    padding: 48px 24px;
+  }
+
+  .about-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item--1,
+  .gallery-item--2,
+  .gallery-item--3,
+  .gallery-item--4 {
+    height: 200px;
+  }
 }
