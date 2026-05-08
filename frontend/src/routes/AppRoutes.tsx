@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { Role } from "@shared/schemas/auth.schema";
+import { Role } from "@shared/schemas/user.schema";
 
 // Public pages
 import { LoginPage } from "@/pages/auth/LoginPage";

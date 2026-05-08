@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "../../utils/common/response.util";
 import UserService from "./user.service";
-import { PaginationParams, PaginationUtils } from "../../utils/common/pagination.util";
-import { UpdateUserFormInput } from "@shared/schemas/auth.schema";
+import { PaginationUtils } from "../../utils/common/pagination.util";
+import { UpdateUserFormInput, ChangePasswordFormInput } from "@shared/schemas/user.schema";
 import { GetByIdParams } from "@/types/params.type";
 
 export default class UserController {
@@ -31,16 +31,18 @@ export default class UserController {
   // PUT /users/me
   update = async (req: Request<{}, any, UpdateUserFormInput>, res: Response, next: NextFunction) => {
     try {
-      const newProfile = await this.userService.updateProfile(
-        req.user!.id,
-        req.body,
-      );
+      const newProfile = await this.userService.updateProfile(req.user!.id, req.body);
+      return ResponseHandler.success(res, newProfile, "Profile updated successfully.");
+    } catch (error) {
+      next(error);
+    }
+  }
 
-      return ResponseHandler.success(
-        res,
-        newProfile,
-        "User updated successfully.",
-      );
+  // PUT /users/me/password
+  changePassword = async (req: Request<{}, any, ChangePasswordFormInput>, res: Response, next: NextFunction) => {
+    try {
+      await this.userService.changePassword(req.user!.id, req.body);
+      return ResponseHandler.success(res, null, "Password changed successfully.");
     } catch (error) {
       next(error);
     }

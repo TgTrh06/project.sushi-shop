@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "@/utils/security/jwt.util";
 import { ForbiddenError, UnauthorizedError } from "@/utils/common/error.util";
-import { Role } from "@shared/schemas/auth.schema";
+import { Role } from "@shared/schemas/user.schema";
 
 export const verifyAuth = (
   req: Request,

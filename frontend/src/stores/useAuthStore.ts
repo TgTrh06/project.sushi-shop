@@ -17,6 +17,7 @@ interface AuthState {
   setAccessToken: (accessToken: string) => void;
   setLoading: (status: boolean) => void;
   clearState: () => void;
+  updateUser: (user: User) => void;
 
   // Async actions
   register: (input: RegisterFormInput) => Promise<void>;
@@ -36,6 +37,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   setAccessToken: (accessToken) => set({ accessToken }),
   setLoading: (status: boolean) => set({ loading: status }),
+  updateUser: (user: User) => set({ user }),
 
   clearState: () => {
     set({ accessToken: null, user: null });

@@ -1,16 +1,5 @@
 import z from "zod";
-
-// =========================================================
-// ROLE
-// =========================================================
-
-export const Role = {
-  CUSTOMER: "customer",
-  STAFF: "staff",
-  ADMIN: "admin"
-} as const;
-
-export type Role = typeof Role[keyof typeof Role];
+import { Role } from "./user.schema";
 
 // =========================================================
 // AUTH SCHEMAS
@@ -59,5 +48,5 @@ export type ResetPasswordFormValues = z.infer<typeof ResetPasswordSchema>;
 // RE-EXPORT UpdateUserSchema from user.schema for backward compat
 // =========================================================
 
-export { UpdateUserSchema } from "./user.schema";
-export type { UpdateUserFormInput, UpdateUserFormValues } from "./user.schema";
+export { UpdateUserSchema, ChangePasswordSchema } from "./user.schema";
+export type { UpdateUserFormInput, UpdateUserFormValues, ChangePasswordFormInput, ChangePasswordFormValues } from "./user.schema";

@@ -1,9 +1,9 @@
 import UserRepository from "./user.repository";
 import { type SafeUser, UserEntity } from "./user.model";
-import { UpdateUserFormValues } from "@shared/schemas/auth.schema";
-import { BadRequestError, NotFoundError } from "@/utils/common/error.util";
+import { UpdateUserFormValues, ChangePasswordFormValues } from "@shared/schemas/user.schema";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "@/utils/common/error.util";
 import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.util";
-import { hashPassword } from "@/utils/security/bcrypt.util";
+import { hashPassword, comparePassword } from "@/utils/security/bcrypt.util";
 import * as cloudinaryService from "@/modules/upload/cloudinary.service";
 
 function sanitizeUser(user: UserEntity): SafeUser {
@@ -15,11 +15,10 @@ export default class UserService {
   constructor(private readonly userRepo: UserRepository) {};
 
   /* CUSTOMER SERVICE */
+
   async getUserById(id: string): Promise<SafeUser> {
     const user = await this.userRepo.findById(id);
-
     if (!user) throw new NotFoundError("User not found");
-
     return sanitizeUser(user);
   }
 
@@ -27,53 +26,45 @@ export default class UserService {
     const existingUser = await this.userRepo.findById(id);
     if (!existingUser) throw new NotFoundError("User not found");
 
-    const updateData: any = { ...dto };
-
-    if (dto.password) {
-      // Hash the new password before saving
-      updateData.hashedPassword = await hashPassword(dto.password);
-      delete updateData.password; // Remove plain password from update data
-    }
-
-    // Handle avatar cleanup if avatar_id is being updated
-    if (updateData.avatar_id && updateData.avatar_id !== existingUser.avatar_id && existingUser.avatar_id) {
+    // Handle avatar cleanup if avatar_id is being replaced
+    if (dto.avatar_id && dto.avatar_id !== existingUser.avatar_id && existingUser.avatar_id) {
       try {
         await cloudinaryService.deleteImage(existingUser.avatar_id);
       } catch (error) {
         console.error("Failed to delete old avatar from Cloudinary:", error);
-        // Continue with update even if Cloudinary cleanup fails
       }
     }
-    
-    const updatedUser = await this.userRepo.update(id, updateData);
-    if (!updatedUser) throw new BadRequestError("Failed to update user");
+
+    const updatedUser = await this.userRepo.update(id, dto);
+    if (!updatedUser) throw new BadRequestError("Failed to update profile");
 
     return sanitizeUser(updatedUser);
   }
 
-  /* ADMIN SERVICES */
-  async getUsers(
-    page: number,
-    limit: number,
-    offset: number,
-  ): Promise<PaginationResult<SafeUser>> {
-    const { docs, total } = await this.userRepo.findUsers(limit, offset);
+  async changePassword(id: string, dto: ChangePasswordFormValues): Promise<void> {
+    // Fetch user with password included
+    const user = await this.userRepo.findByIdWithPassword(id);
+    if (!user) throw new NotFoundError("User not found");
 
-    const safeData = docs.map(sanitizeUser);
+    // Verify current password
+    const isMatch = await comparePassword(dto.currentPassword, user.hashedPassword);
+    if (!isMatch) throw new UnauthorizedError("Current password is incorrect");
 
-    return PaginationUtils.format(safeData, total, page, limit);
+    // Hash and save new password + stamp the timestamp
+    const hashedPassword = await hashPassword(dto.newPassword);
+    await this.userRepo.update(id, { hashedPassword, passwordLastUpdated: new Date() } as any);
   }
 
-  async getStaffs(
-    page: number,
-    limit: number,
-    offset: number,
-  ): Promise<PaginationResult<SafeUser>> {
+  /* ADMIN SERVICES */
+
+  async getUsers(page: number, limit: number, offset: number): Promise<PaginationResult<SafeUser>> {
+    const { docs, total } = await this.userRepo.findUsers(limit, offset);
+    return PaginationUtils.format(docs.map(sanitizeUser), total, page, limit);
+  }
+
+  async getStaffs(page: number, limit: number, offset: number): Promise<PaginationResult<SafeUser>> {
     const { docs, total } = await this.userRepo.findStaffs(limit, offset);
-
-    const safeData = docs.map(sanitizeUser);
-
-    return PaginationUtils.format(safeData, total, page, limit);
+    return PaginationUtils.format(docs.map(sanitizeUser), total, page, limit);
   }
 
   async delete(targetId: string, currentUserId: string): Promise<void> {
@@ -88,13 +79,11 @@ export default class UserService {
       throw new BadRequestError("Cannot delete other admin users");
     }
 
-    // Clean up Cloudinary avatar before deletion
     if (existingUser.avatar_id) {
       try {
         await cloudinaryService.deleteImage(existingUser.avatar_id);
       } catch (error) {
         console.error("Failed to delete user avatar from Cloudinary:", error);
-        // Continue with deletion even if Cloudinary cleanup fails
       }
     }
 
