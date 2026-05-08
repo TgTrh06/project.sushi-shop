@@ -1,11 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useCategoryStore } from "@/stores/useCategoryStore";
 import { adminService } from "@/features/admin/admin.service";
+import { getImageUrl } from "@/lib/cloudinary";
+import type { PaginatedResult } from "@/types/paginated.type";
 import type {
-  AdminCategory,
   AdminProduct,
   CreateProductPayload,
   UpdateProductPayload,
-  PaginatedResult,
 } from "@/features/admin/admin.types";
 import { showSuccess, showError } from "@/lib/toast";
 
@@ -14,21 +15,23 @@ type FormMode = "create" | "edit";
 const EMPTY_FORM: CreateProductPayload = {
   name: "",
   price: 0,
-  image: "",
-  gallery: [],
-  description: "",
-  categoryId: "",
-  isAvailable: true,
   stockQuantity: 0,
+  image_id: "",
+  gallery_ids: [],
+  categoryId: "",
+  description: "",
+  isAvailable: true,
 };
 
 export const ProductsManagementPage = () => {
+  const { categories, fetchCategories, getCategoryName, refreshCategories } = useCategoryStore();
+
   const [result, setResult] = useState<PaginatedResult<AdminProduct> | null>(null);
-  const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [formMode, setFormMode] = useState<FormMode>("create");
@@ -47,18 +50,16 @@ export const ProductsManagementPage = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [prodsData, catsData] = await Promise.all([
-        adminService.getProducts(page, 10),
-        adminService.getCategories(1, 100),
+      await Promise.all([
+        adminService.getProducts(page, 10).then(setResult),
+        fetchCategories(),
       ]);
-      setResult(prodsData);
-      setCategories(catsData.data);
     } catch {
       showError("Không thể tải danh sách sản phẩm.");
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, fetchCategories]);
 
   useEffect(() => {
     fetchData();
@@ -79,8 +80,8 @@ export const ProductsManagementPage = () => {
     setForm({
       name: product.name,
       price: product.price,
-      image: product.image,
-      gallery: product.gallery || [],
+      image_id: product.image_id,
+      gallery_ids: product.gallery_ids || [],
       description: product.description ?? "",
       categoryId: product.categoryId,
       isAvailable: product.isAvailable,
@@ -92,36 +93,42 @@ export const ProductsManagementPage = () => {
   };
 
   const handleSave = async () => {
-    if (!form.name || (!form.image && !imageFile) || !form.categoryId) {
-      showError("Vui lòng điền đầy đủ thông tin bắt buộc (Tên, Ảnh, Danh mục).");
+    if (!form.name || (!form.image_id && !imageFile) || !form.categoryId) {
+      showError("Please fill in all required fields (Name, Image, Category).");
       return;
     }
     setSaving(true);
     try {
-      let finalImage = form.image;
-      let finalGallery = form.gallery || [];
+      let finalImageId: string | undefined = form.image_id;
+      let finalGalleryIds = form.gallery_ids || [];
 
       if (imageFile) {
-        finalImage = await adminService.uploadImage(imageFile);
+        const uploadResult = await adminService.uploadImage(imageFile);
+        finalImageId = uploadResult.public_id;
       }
 
       if (galleryFiles.length > 0) {
-        finalGallery = await adminService.uploadGallery(galleryFiles);
+        const uploadResult = await adminService.uploadGallery(galleryFiles);
+        finalGalleryIds = uploadResult.public_ids;
       }
 
-      const payload = { ...form, image: finalImage, gallery: finalGallery };
+      const payload = { 
+        ...form, 
+        image_id: finalImageId,
+        gallery_ids: finalGalleryIds
+      };
 
       if (formMode === "create") {
         await adminService.createProduct(payload);
-        showSuccess("Đã tạo sản phẩm thành công.");
+        showSuccess("Product created successfully.");
       } else if (editTarget) {
         await adminService.updateProduct(editTarget.id, payload as UpdateProductPayload);
-        showSuccess("Đã cập nhật sản phẩm thành công.");
+        showSuccess("Product updated successfully.");
       }
       setModalOpen(false);
       fetchData();
     } catch {
-      showError("Lỗi khi lưu sản phẩm.");
+      showError("Error occurred while saving the product.");
     } finally {
       setSaving(false);
     }
@@ -132,32 +139,42 @@ export const ProductsManagementPage = () => {
     setDeleting(true);
     try {
       await adminService.deleteProduct(confirmDelete.id);
-      showSuccess(`Đã xóa "${confirmDelete.name}".`);
+      showSuccess(`Product deleted successfully.`);
       setConfirmDelete(null);
       fetchData();
     } catch {
-      showError("Không thể xóa sản phẩm.");
+      showError("Error occurred while deleting the product.");
     } finally {
       setDeleting(false);
     }
   };
+  
+  const filtered = useMemo(() => {
+    const searchTerm = search.toLowerCase().trim();
 
-  const catName = (id: string) =>
-    categories.find((c) => c.id === id)?.name ?? id;
+    return result?.data?.filter((p) => {
+      const matchesCategory = selectedCategory === "all" || p.categoryId === selectedCategory;
+      
+      const categoryName = getCategoryName(p.categoryId).toLowerCase();
+      const matchesSearch = !searchTerm || (
+        p.name.toLowerCase().includes(searchTerm) ||
+        p.slug.toLowerCase().includes(searchTerm) ||
+        categoryName.includes(searchTerm)
+      );
 
-  const filtered = result?.data?.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  ) ?? [];
+      return matchesCategory && matchesSearch;
+    }) ?? [];
+  }, [result?.data, search, selectedCategory, getCategoryName]);
 
   return (
     <div>
       <div className="admin-page-header">
         <div>
-          <h2 className="admin-page-title">Quản lý Sản phẩm</h2>
-          <p className="admin-page-subtitle">Tổng cộng {result?.total ?? 0} sản phẩm</p>
+          <h2 className="admin-page-title">Product Management</h2>
+          <p className="admin-page-subtitle">Total of {result?.total ?? 0} products</p>
         </div>
         <button className="admin-btn admin-btn--primary" onClick={openCreate} id="create-product-btn">
-          + Thêm sản phẩm
+          Add Product
         </button>
       </div>
 
@@ -165,24 +182,42 @@ export const ProductsManagementPage = () => {
         <div className="admin-toolbar">
           <input
             className="admin-search-input"
-            placeholder="🔍  Tìm theo tên sản phẩm..."
+            placeholder="🔍  Search by product name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className="admin-btn admin-btn--secondary admin-btn--sm" onClick={fetchData}>
-            🔄 Làm mới
+          <select
+            className="admin-select"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="all">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+          <button 
+            className="admin-btn admin-btn--secondary admin-btn--sm" 
+            onClick={async () => {
+              await refreshCategories();
+              fetchData();
+            }}
+          >
+            🔄 Refresh
           </button>
         </div>
 
         {loading ? (
           <div className="admin-loading">
             <div className="admin-loading__spinner" />
-            <span>Đang tải...</span>
+            <span>Loading...</span>
           </div>
         ) : filtered.length === 0 ? (
           <div className="admin-empty">
             <div className="admin-empty__icon">🍣</div>
-            <p className="admin-empty__text">Không tìm thấy sản phẩm nào.</p>
+            <p className="admin-empty__text">No products found.</p>
           </div>
         ) : (
           <div className="admin-table-wrapper">
@@ -190,13 +225,13 @@ export const ProductsManagementPage = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Ảnh</th>
-                  <th>Tên sản phẩm</th>
-                  <th>Danh mục</th>
-                  <th>Giá</th>
-                  <th>Tồn kho</th>
-                  <th>Trạng thái</th>
-                  <th>Hành động</th>
+                  <th>Image</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -207,7 +242,7 @@ export const ProductsManagementPage = () => {
                     </td>
                     <td>
                       <img
-                        src={p.image}
+                        src={getImageUrl(p.image_id, "w_80,h_80,c_fill")}
                         alt={p.name}
                         className="admin-img-preview"
                         onError={(e) => {
@@ -220,14 +255,14 @@ export const ProductsManagementPage = () => {
                       <div style={{ fontWeight: 500 }}>{p.name}</div>
                       <div style={{ fontSize: 11, color: "var(--admin-text-muted)" }}>{p.slug}</div>
                     </td>
-                    <td>{catName(p.categoryId)}</td>
+                    <td>{getCategoryName(p.categoryId)}</td>
                     <td style={{ fontWeight: 600, color: "var(--admin-accent)" }}>
                       {p.price.toLocaleString("vi-VN")}đ
                     </td>
                     <td>{p.stockQuantity}</td>
                     <td>
                       <span className={`admin-badge ${p.isAvailable ? "admin-badge--green" : "admin-badge--gray"}`}>
-                        {p.isAvailable ? "Có sẵn" : "Hết hàng"}
+                        {p.isAvailable ? "In Stock" : "Out of Stock"}
                       </span>
                     </td>
                     <td>
@@ -269,23 +304,23 @@ export const ProductsManagementPage = () => {
           <div className="admin-modal admin-modal--lg" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
               <span className="admin-modal__title">
-                {formMode === "create" ? "➕ Thêm sản phẩm mới" : "✏️ Chỉnh sửa sản phẩm"}
+                {formMode === "create" ? "➕ Add New Product" : "✏️ Edit Product"}
               </span>
               <button className="admin-modal__close" onClick={() => setModalOpen(false)}>×</button>
             </div>
             <div className="admin-modal__body">
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
-                  <label className="admin-form-label">Tên sản phẩm *</label>
+                  <label className="admin-form-label">Product Name *</label>
                   <input
                     className="admin-form-input"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="VD: Cá hồi áp chảo"
+                    placeholder="E.g., Salmon Teriyaki"
                   />
                 </div>
                 <div className="admin-form-group">
-                  <label className="admin-form-label">Giá (VND) *</label>
+                  <label className="admin-form-label">Price (VND) *</label>
                   <input
                     className="admin-form-input"
                     type="number"
@@ -296,7 +331,7 @@ export const ProductsManagementPage = () => {
                   />
                 </div>
                 <div className="admin-form-group">
-                  <label className="admin-form-label">Tồn kho *</label>
+                  <label className="admin-form-label">Stock *</label>
                   <input
                     className="admin-form-input"
                     type="number"
@@ -307,9 +342,9 @@ export const ProductsManagementPage = () => {
                   />
                 </div>
                 <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
-                  <label className="admin-form-label">Ảnh chính (Tải lên hoặc nhập URL) *</label>
-                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                    <input
+                  <label className="admin-form-label">Main Image (Upload or enter URL)</label>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                      <input
                       type="file"
                       accept="image/*"
                       onChange={(e) => {
@@ -322,15 +357,15 @@ export const ProductsManagementPage = () => {
                     <input
                       className="admin-form-input"
                       style={{ flex: 1 }}
-                      value={form.image || ""}
-                      onChange={(e) => setForm({ ...form, image: e.target.value })}
+                      value={form.image_id || ""}
+                      onChange={(e) => setForm({ ...form, image_id: e.target.value })}
                       placeholder="https://example.com/image.jpg"
                     />
                   </div>
-                  {(imageFile || form.image) && (
+                  {(imageFile || form.image_id) && (
                     <div style={{ marginTop: "8px" }}>
                       <img
-                        src={imageFile ? URL.createObjectURL(imageFile) : form.image}
+                        src={imageFile ? URL.createObjectURL(imageFile) : form.image_id}
                         alt="Preview"
                         style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "4px" }}
                       />
@@ -339,7 +374,7 @@ export const ProductsManagementPage = () => {
                 </div>
 
                 <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
-                  <label className="admin-form-label">Thư viện ảnh (Gallery - Tối đa 10 ảnh)</label>
+                  <label className="admin-form-label">Image Gallery (Max 10 images)</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -357,20 +392,20 @@ export const ProductsManagementPage = () => {
                         <img key={i} src={URL.createObjectURL(file)} style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "4px" }} alt="" />
                       ))
                     ) : (
-                      form.gallery?.map((url, i) => (
+                      form.gallery_ids?.map((url, i) => (
                         <img key={i} src={url} style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "4px" }} alt="" />
                       ))
                     )}
                   </div>
                 </div>
                 <div className="admin-form-group">
-                  <label className="admin-form-label">Danh mục *</label>
+                  <label className="admin-form-label">Category *</label>
                   <select
                     className="admin-form-select"
                     value={form.categoryId}
                     onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
                   >
-                    <option value="">— Chọn danh mục —</option>
+                    <option value="">— Select Category —</option>
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
@@ -386,26 +421,26 @@ export const ProductsManagementPage = () => {
                       onChange={(e) => setForm({ ...form, isAvailable: e.target.checked })}
                     />
                     <label htmlFor="isAvailable" style={{ fontSize: 14, color: "var(--admin-text-secondary)", cursor: "pointer" }}>
-                      Còn hàng / Đang bán
+                      Is Available
                     </label>
                   </div>
                 </div>
                 <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
-                  <label className="admin-form-label">Mô tả</label>
+                  <label className="admin-form-label">Description</label>
                   <textarea
                     className="admin-form-textarea"
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    placeholder="Mô tả ngắn về sản phẩm..."
+                    placeholder="Short description of the product..."
                     rows={3}
                   />
                 </div>
               </div>
             </div>
             <div className="admin-modal__footer">
-              <button className="admin-btn admin-btn--secondary" onClick={() => setModalOpen(false)}>Hủy</button>
+              <button className="admin-btn admin-btn--secondary" onClick={() => setModalOpen(false)}>Cancel</button>
               <button className="admin-btn admin-btn--primary" onClick={handleSave} disabled={saving}>
-                {saving ? "Đang lưu..." : formMode === "create" ? "✓ Tạo sản phẩm" : "✓ Cập nhật"}
+                {saving ? "Saving..." : formMode === "create" ? "✓ Create Product" : "✓ Update Product"}
               </button>
             </div>
           </div>
@@ -417,18 +452,18 @@ export const ProductsManagementPage = () => {
         <div className="admin-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <span className="admin-modal__title">⚠️ Xác nhận xóa</span>
+              <span className="admin-modal__title">⚠️ Confirm Delete</span>
               <button className="admin-modal__close" onClick={() => setConfirmDelete(null)}>×</button>
             </div>
             <div className="admin-modal__body">
               <p className="admin-confirm-text">
-                Bạn có chắc muốn xóa sản phẩm <strong>"{confirmDelete.name}"</strong>? Hành động này không thể hoàn tác.
+                Are you sure you want to delete the product <strong>"{confirmDelete.name}"</strong>? This action cannot be undone.
               </p>
             </div>
             <div className="admin-modal__footer">
-              <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Hủy</button>
+              <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Cancel</button>
               <button className="admin-btn admin-btn--danger" onClick={handleDelete} disabled={deleting}>
-                {deleting ? "Đang xóa..." : "🗑️ Xóa"}
+                {deleting ? "Deleting..." : "🗑️ Delete"}
               </button>
             </div>
           </div>

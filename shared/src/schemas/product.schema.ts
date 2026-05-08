@@ -8,29 +8,18 @@ export const BaseProductSchema = z.object({
   id: z.string(),
   name: z.string().min(2).max(100),
   slug: z.string().min(2).max(100),
-  image: z.string().optional(),
   price: z.number().min(0),
-  gallery: z.array(z.string()).optional(),
+  image_id: z.string().optional(), // Cloudinary public_id
+  gallery_ids: z.array(z.string()).optional(), // Cloudinary public_ids
   description: z.string().max(250).optional(),
-  category: z.object({
-    id: z.string(),
-    name: z.string(),
-    slug: z.string(),
-  }),
+  categoryId: z.string(),
   isAvailable: z.boolean().default(true).optional(),
   stockQuantity: z.number().min(0).default(0),
-
-  ingredients: z.array(z.string()).optional(),
-
-  nutrition: z.array(z.object({
-    label: z.string(),
-    value: z.string()
-  })).optional(),
 
   ratingSummary: z.object({
     averageRating: z.number().default(0),
     totalReviews: z.number().default(0)
   }),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })

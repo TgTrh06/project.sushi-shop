@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useCategoryStore } from "@/stores/useCategoryStore";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { Icon } from "@/assets/svg";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
@@ -17,6 +18,9 @@ export default function ProductDetailPage() {
   const [activeImageId, setActiveImageId] = useState<string | undefined>(undefined);
   const [product, setProduct] = useState<Product | null>(null);
 
+  const getCategoryName = useCategoryStore((state) => state.getCategoryName);
+  const fetchCategories = useCategoryStore((state) => state.fetchCategories);
+
   // Lazy loading state
   const [allReviews, setAllReviews] = useState<Review[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +29,10 @@ export default function ProductDetailPage() {
 
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const fetchReviewsPage = useCallback(
     async (productId: string, page: number) => {
@@ -79,7 +87,7 @@ export default function ProductDetailPage() {
         await fetchReviewsPage(data.id, 1);
 
         // Fetch related products
-        const related = await productService.getProducts(1, 4, data.category.id);
+        const related = await productService.getProducts(1, 4, data.categoryId);
         setRelatedProducts(related.data.filter(p => p.slug !== slug));
       } catch (error) {
         console.error("Failed to fetch product details:", error);
@@ -143,7 +151,9 @@ export default function ProductDetailPage() {
 
           {/* Info */}
           <div className="product-detail__info">
-            <span className="product-detail__category">{product.category.name || "Japanese Dish"}</span>
+            <span className="product-detail__category">
+              {getCategoryName(product.categoryId) || "Japanese Dish"}
+            </span>
             <h1 className="product-detail__name">{product.name}</h1>
 
             <div className="product-detail__meta">

@@ -5,12 +5,10 @@ import { BaseProductSchema } from "@shared/schemas/product.schema";
 export const CreateProductSchema = BaseProductSchema.pick({
   name: true,
   price: true,
-  image: true,
-  gallery: true,
+  image_id: true,
+  gallery_ids: true,
   description: true,
-  ingredients: true,
-  nutrition: true,
-  category: true,
+  categoryId: true,
   isAvailable: true,
 });
 
@@ -25,7 +23,7 @@ export const UpdateProductSchema = BaseProductSchema.omit({
 export type ProductEntity = z.infer<typeof BaseProductSchema>
 
 // Database shape - Only use for Mongoose schema definition and database operations
-export type ProductDocument = Omit<ProductEntity, "id" | "category"> & {
+export type ProductDocument = Omit<ProductEntity, "id" | "categoryId"> & {
   categoryId: any;
 };
 

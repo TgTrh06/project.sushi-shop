@@ -19,19 +19,12 @@ export const productService = {
   async getProductBySlug(slug: string): Promise<Product> {
     const productResult = await api.get<ApiResponse<Product>>(`/products/${slug}`);
 
-    const reviewsResult = await api.get<ApiResponse<Review[]>>(`/reviews/${productResult.data.data.id}/paginated`);
+    await api.get<ApiResponse<Review[]>>(`/reviews/${productResult.data.data.id}/paginated`);
 
     const p = productResult.data.data;
-    const r = reviewsResult.data.data;
 
     return {
-      ...p,
-      gallery: p.gallery?.length ? p.gallery : [], // Use image as fallback for gallery
-      ingredients: p.ingredients?.length ? p.ingredients : ["Fresh Ingredients", "Japanese Style"],
-      nutrition: [
-        { label: "Calories", value: "300 kcal" },
-        { label: "Protein", value: "20g" }
-      ], // Mock nutrition if not in backend
+      ...p
     };
   }
 };

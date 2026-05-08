@@ -22,16 +22,8 @@ export default class ProductRepository {
       name: doc.name,
       slug: doc.slug,
       price: doc.price,
-      image: doc.image,
-      gallery: doc.gallery || [],
       description: doc.description,
-      ingredients: doc.ingredients || [],
-      nutrition: doc.nutrition || [],
-      category: {
-        id: doc.categoryId?._id?.toString() || doc.categoryId,
-        name: doc.categoryId?.name || "",
-        slug: doc.categoryId?.slug || ""
-      },
+      categoryId: doc.categoryId?._id?.toString() || doc.categoryId,
       isAvailable: doc.isAvailable,
       stockQuantity: doc.stockQuantity || 0,
       ratingSummary: {

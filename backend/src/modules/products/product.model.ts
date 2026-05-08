@@ -5,19 +5,9 @@ const ProductSchema = new Schema<ProductDocument>({
   name: { type: String, required: true },
   slug: { type: String, required: true },
   price: { type: Number, required: true },
-  image: { type: String, required: true },
-  gallery: { type: [String], default: [] },
+  image_id: { type: String, default: null }, // Cloudinary public_id for featured image
+  gallery_ids: { type: [String], default: [] }, // Cloudinary public_ids for gallery images
   description: { type: String },
-  ingredients: { type: [String], default: [] },
-  nutrition: {
-    type: [
-      {
-        label: { type: String, required: true },
-        value: { type: String, required: true }
-      }
-    ],
-    default: []
-  },
   ratingSummary: {
     averageRating: { type: Number, default: 0, min: 0, max: 5 },
     totalReviews: { type: Number, default: 0, min: 0 }
