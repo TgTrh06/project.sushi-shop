@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
 import type { ApiResponse } from "@/types/response.type";
+import type { PaginatedResult } from "@/types/paginated.type";
 import type {
   AdminUser,
   AdminCategory,
@@ -10,7 +11,6 @@ import type {
   CreateProductPayload,
   UpdateProductPayload,
   SystemStats,
-  PaginatedResult,
   BookingStatus,
 } from "./admin.types";
 
@@ -22,22 +22,48 @@ export const adminService = {
   },
 
   // ─── Uploads ───────────────────────────────────────────
-  async uploadImage(file: File): Promise<string> {
+  async uploadImage(file: File): Promise<{ url: string; public_id: string }> {
     const formData = new FormData();
     formData.append("image", file);
-    const res = await api.post<ApiResponse<{ url: string }>>("/upload/image", formData, {
+    const res = await api.post<ApiResponse<{ url: string; public_id: string }>>("/upload/image", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    return res.data.data.url;
+    return res.data.data;
   },
 
-  async uploadGallery(files: File[] | FileList): Promise<string[]> {
+  async uploadGallery(files: File[] | FileList): Promise<{ urls: string[]; public_ids: string[] }> {
     const formData = new FormData();
     Array.from(files).forEach((file) => formData.append("images", file));
-    const res = await api.post<ApiResponse<{ urls: string[] }>>("/upload/gallery", formData, {
+    const res = await api.post<ApiResponse<{ urls: string[]; public_ids: string[] }>>("/upload/gallery", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    return res.data.data.urls;
+    return res.data.data;
+  },
+
+  async uploadUserAvatar(file: File): Promise<{ url: string; public_id: string }> {
+    const formData = new FormData();
+    formData.append("avatar", file);
+    const res = await api.post<ApiResponse<{ url: string; public_id: string }>>("/upload/avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.data;
+  },
+
+  async uploadReviewPhotos(files: File[] | FileList): Promise<{ urls: string[]; public_ids: string[] }> {
+    const formData = new FormData();
+    Array.from(files).forEach((file) => formData.append("photos", file));
+    const res = await api.post<ApiResponse<{ urls: string[]; public_ids: string[] }>>("/upload/review-photos", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.data;
+  },
+
+  async deleteImage(public_id: string): Promise<void> {
+    await api.delete(`/upload/image/${public_id}`);
+  },
+
+  async deleteImages(public_ids: string[]): Promise<void> {
+    await api.post("/upload/delete-multiple", { public_ids });
   },
 
   // ─── Users ───────────────────────────────────────────

@@ -55,7 +55,7 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
     navigate(redirectOnLogout);
   };
 
-  const displayName = user ? (user.username || "Người dùng") : "Khách";
+  const displayName = user ? (user.username || "User") : "Guest";
 
   return (
     <div className="user-menu-container" ref={menuRef}>

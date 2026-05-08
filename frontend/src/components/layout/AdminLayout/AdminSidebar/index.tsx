@@ -26,10 +26,10 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: "/admin/dashboard",  icon: LayoutDashboard,  label: "Dashboard" },
-  { to: "/admin/products",   icon: UtensilsCrossed,  label: "Sản phẩm" },
-  { to: "/admin/categories", icon: Tag,              label: "Danh mục" },
-  { to: "/admin/users",      icon: Users,            label: "Người dùng" },
-  { to: "/admin/bookings",   icon: CalendarDays,     label: "Đặt bàn" },
+  { to: "/admin/products",   icon: UtensilsCrossed,  label: "Products" },
+  { to: "/admin/categories", icon: Tag,              label: "Categories" },
+  { to: "/admin/users",      icon: Users,            label: "Users" },
+  { to: "/admin/resevations",   icon: CalendarDays,     label: "Reservations" },
 ];
 
 export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
@@ -37,9 +37,10 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
     <aside className="admin-sidebar">
       {/* Brand */}
       <div className="admin-sidebar__brand">
-        <div className="admin-sidebar__brand-icon">🍱</div>
+        <div className="admin-sidebar__brand-icon">
+        </div>
         <div className="admin-sidebar__brand-text">
-          <span className="admin-sidebar__brand-title">Sushi Admin</span>
+          <span className="admin-sidebar__brand-title">ItsuSushi Admin</span>
           <span className="admin-sidebar__brand-sub">Management Panel</span>
         </div>
       </div>

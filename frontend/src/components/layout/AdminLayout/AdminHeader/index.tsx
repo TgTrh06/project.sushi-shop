@@ -7,7 +7,7 @@ const pageTitles: Record<string, string> = {
   "/admin/products": "Products",
   "/admin/categories": "Categories",
   "/admin/users": "Users",
-  "/admin/bookings": "Bookings",
+  "/admin/reservations": "Bookings",
 };
 
 export const AdminHeader = () => {

@@ -18,7 +18,7 @@ import { DashboardOverviewPage } from "@/pages/admin/DashboardOverviewPage";
 import { UsersManagementPage } from "@/pages/admin/UsersManagementPage";
 import { ProductsManagementPage } from "@/pages/admin/ProductsManagementPage";
 import { CategoriesManagementPage } from "@/pages/admin/CategoriesManagementPage";
-import { BookingsManagementPage } from "@/pages/admin/BookingsManagementPage";
+import { ReservationsManagementPage } from "@/pages/admin/ReservationsManagementPage";
 
 export const AppRoutes = () => {
   return (
@@ -51,7 +51,7 @@ export const AppRoutes = () => {
           <Route path="/admin/users" element={<UsersManagementPage />} />
           <Route path="/admin/products" element={<ProductsManagementPage />} />
           <Route path="/admin/categories" element={<CategoriesManagementPage />} />
-          <Route path="/admin/bookings" element={<BookingsManagementPage />} />
+          <Route path="/admin/resevations" element={<ReservationsManagementPage />} />
         </Route>
       </Route>
     </Routes>

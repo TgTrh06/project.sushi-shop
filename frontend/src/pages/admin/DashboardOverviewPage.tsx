@@ -288,7 +288,7 @@ export const DashboardOverviewPage = () => {
               {bookings.length} đặt bàn hiển thị
             </p>
           </div>
-          <a href="/admin/bookings" className="admin-btn admin-btn--secondary admin-btn--sm">
+          <a href="/admin/reservations" className="admin-btn admin-btn--secondary admin-btn--sm">
             Xem tất cả →
           </a>
         </div>

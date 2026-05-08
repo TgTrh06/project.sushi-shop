@@ -11,7 +11,7 @@ const statusLabel: Record<string, string> = {
   cancelled: "Đã hủy",
 };
 
-export const BookingsManagementPage = () => {
+export const ReservationsManagementPage = () => {
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
