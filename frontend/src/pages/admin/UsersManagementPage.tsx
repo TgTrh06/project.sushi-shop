@@ -1,6 +1,8 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { adminService } from "@/features/admin/admin.service";
-import type { AdminUser, PaginatedResult } from "@/features/admin/admin.types";
+import { getImageUrl } from "@/lib/cloudinary";
+import type { AdminUser } from "@/features/admin/admin.types";
+import type { PaginatedResult } from "@/types/paginated.type";
 import { showSuccess, showError } from "@/lib/toast";
 
 export const UsersManagementPage = () => {
@@ -17,7 +19,7 @@ export const UsersManagementPage = () => {
       const data = await adminService.getUsers(page, 10);
       setResult(data);
     } catch {
-      showError("Không thể tải danh sách người dùng.");
+      showError("Failed to fetch users.");
     } finally {
       setLoading(false);
     }
@@ -27,16 +29,26 @@ export const UsersManagementPage = () => {
     fetchUsers();
   }, [fetchUsers]);
 
+  // FILTER: useMemo to avoid filtering on every render, only when result.data or search changes
+  const filteredUsers = useMemo(() => {
+    if (!result?.data) return [];
+    return result.data.filter(
+      (u) =>
+        u.username.toLowerCase().includes(search.toLowerCase()) ||
+        u.email.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [result?.data, search]);
+
   const handleDelete = async () => {
     if (!confirmDelete) return;
     setDeleting(true);
     try {
       await adminService.deleteUser(confirmDelete.id);
-      showSuccess(`Đã xóa người dùng "${confirmDelete.username}".`);
+      showSuccess(`User "${confirmDelete.username}" deleted successfully.`);
       setConfirmDelete(null);
       fetchUsers();
     } catch {
-      showError("Không thể xóa người dùng.");
+      showError("Failed to delete user.");
     } finally {
       setDeleting(false);
     }
@@ -51,19 +63,13 @@ export const UsersManagementPage = () => {
     return <span className={`admin-badge ${map[role] ?? "admin-badge--gray"}`}>{role}</span>;
   };
 
-  const filtered = result?.data?.filter(
-    (u) =>
-      u.username.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
-  ) ?? [];
-
   return (
     <div>
       <div className="admin-page-header">
         <div>
-          <h2 className="admin-page-title">Quản lý Người dùng</h2>
+          <h2 className="admin-page-title">User Management</h2>
           <p className="admin-page-subtitle">
-            Tổng cộng {result?.total ?? 0} người dùng
+            Total users: {result?.total ?? 0}
           </p>
         </div>
       </div>
@@ -72,24 +78,24 @@ export const UsersManagementPage = () => {
         <div className="admin-toolbar">
           <input
             className="admin-search-input"
-            placeholder="🔍  Tìm theo tên hoặc email..."
+            placeholder="🔍  Search by username or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <button className="admin-btn admin-btn--secondary admin-btn--sm" onClick={fetchUsers}>
-            🔄 Làm mới
+            🔄 Refresh
           </button>
         </div>
 
         {loading ? (
           <div className="admin-loading">
             <div className="admin-loading__spinner" />
-            <span>Đang tải...</span>
+            <span>Loading...</span>
           </div>
-        ) : filtered.length === 0 ? (
+        ) : filteredUsers.length === 0 ? (
           <div className="admin-empty">
             <div className="admin-empty__icon">👥</div>
-            <p className="admin-empty__text">Không tìm thấy người dùng nào.</p>
+            <p className="admin-empty__text">No users found.</p>
           </div>
         ) : (
           <div className="admin-table-wrapper">
@@ -97,28 +103,45 @@ export const UsersManagementPage = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Tên người dùng</th>
+                  <th>Username</th>
                   <th>Email</th>
-                  <th>Vai trò</th>
-                  <th>Ngày tạo</th>
-                  <th>Hành động</th>
+                  <th>Role</th>
+                  <th>Created At</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((user, idx) => (
+                {filteredUsers.map((user, idx) => (
                   <tr key={user.id}>
                     <td style={{ color: "var(--admin-text-muted)", fontSize: 12 }}>
                       {(page - 1) * 10 + idx + 1}
                     </td>
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        {user.avatar_id ? (
+                          <img
+                            src={getImageUrl(user.avatar_id)}
+                            alt={user.username}
+                            style={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                              flexShrink: 0,
+                            }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                              e.currentTarget.nextElementSibling?.classList.remove("hidden");
+                            }}
+                          />
+                        ) : null}
                         <div
                           style={{
                             width: 32,
                             height: 32,
                             borderRadius: "50%",
                             background: "var(--admin-accent)",
-                            display: "flex",
+                            display: "flex",                          
                             alignItems: "center",
                             justifyContent: "center",
                             fontSize: 12,
@@ -126,6 +149,7 @@ export const UsersManagementPage = () => {
                             color: "white",
                             flexShrink: 0,
                           }}
+                          className="hidden"
                         >
                           {user.username.slice(0, 2).toUpperCase()}
                         </div>
@@ -142,9 +166,9 @@ export const UsersManagementPage = () => {
                         className="admin-btn admin-btn--danger admin-btn--sm"
                         onClick={() => setConfirmDelete(user)}
                         disabled={user.role === "admin"}
-                        title={user.role === "admin" ? "Không thể xóa admin" : "Xóa người dùng"}
+                        title={user.role === "admin" ? "Cannot delete admin" : "Delete user"}
                       >
-                        🗑️ Xóa
+                        🗑️ Delete
                       </button>
                     </td>
                   </tr>
@@ -183,25 +207,25 @@ export const UsersManagementPage = () => {
         <div className="admin-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <span className="admin-modal__title">⚠️ Xác nhận xóa</span>
+              <span className="admin-modal__title">⚠️ Confirm Delete</span>
               <button className="admin-modal__close" onClick={() => setConfirmDelete(null)}>×</button>
             </div>
             <div className="admin-modal__body">
               <p className="admin-confirm-text">
-                Bạn có chắc muốn xóa người dùng{" "}
-                <strong>"{confirmDelete.username}"</strong>? Hành động này không thể hoàn tác.
+                Are you sure you want to delete user{" "}
+                <strong>"{confirmDelete.username}"</strong>? This action cannot be undone.
               </p>
             </div>
             <div className="admin-modal__footer">
               <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>
-                Hủy
+                Cancel
               </button>
               <button
                 className="admin-btn admin-btn--danger"
                 onClick={handleDelete}
                 disabled={deleting}
               >
-                {deleting ? "Đang xóa..." : "🗑️ Xóa"}
+                {deleting ? "Deleting..." : "🗑️ Delete"}
               </button>
             </div>
           </div>

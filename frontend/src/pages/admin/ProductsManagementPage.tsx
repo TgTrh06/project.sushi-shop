@@ -242,7 +242,7 @@ export const ProductsManagementPage = () => {
                     </td>
                     <td>
                       <img
-                        src={getImageUrl(p.image_id, "w_80,h_80,c_fill")}
+                        src={getImageUrl(p.image_id)}
                         alt={p.name}
                         className="admin-img-preview"
                         onError={(e) => {
@@ -352,14 +352,6 @@ export const ProductsManagementPage = () => {
                           setImageFile(e.target.files[0]);
                         }
                       }}
-                    />
-                    <span>Hoặc URL:</span>
-                    <input
-                      className="admin-form-input"
-                      style={{ flex: 1 }}
-                      value={form.image_id || ""}
-                      onChange={(e) => setForm({ ...form, image_id: e.target.value })}
-                      placeholder="https://example.com/image.jpg"
                     />
                   </div>
                   {(imageFile || form.image_id) && (

@@ -62,14 +62,18 @@ export function getCustomUrl(public_id: string, transformations: string = ""): s
  * @returns Appropriate URL based on availability
  */
 export function getImageUrl(
-  url: string | undefined,
   public_id: string | undefined,
   transformation: (id: string) => string = getCardUrl
 ): string {
-  if (public_id) {
-    return transformation(public_id);
+  if (!public_id) {
+    return "https://placehold.co/300x300?text=No+Image";
   }
-  return url || "https://placehold.co/300x300?text=No+Image";
+
+  if (public_id.startsWith("http://") || public_id.startsWith("https://")) {
+    return public_id;
+  }
+
+  return transformation(public_id);
 }
 
 /**
