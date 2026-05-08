@@ -1,4 +1,15 @@
 import { NavLink } from "react-router-dom";
+import {
+  LayoutDashboard,
+  UtensilsCrossed,
+  Tag,
+  Users,
+  CalendarDays,
+  Home,
+  ChevronLeft,
+  ChevronRight,
+  type LucideIcon,
+} from "lucide-react";
 import "./AdminSidebar.css";
 
 interface AdminSidebarProps {
@@ -8,17 +19,17 @@ interface AdminSidebarProps {
 
 interface NavItem {
   to: string;
-  icon: string;
+  icon: LucideIcon;
   label: string;
   badge?: number;
 }
 
 const navItems: NavItem[] = [
-  { to: "/admin/dashboard", icon: "📊", label: "Dashboard" },
-  { to: "/admin/products", icon: "🍣", label: "Sản phẩm" },
-  { to: "/admin/categories", icon: "🗂️", label: "Danh mục" },
-  { to: "/admin/users", icon: "👥", label: "Người dùng" },
-  { to: "/admin/bookings", icon: "📅", label: "Đặt bàn" },
+  { to: "/admin/dashboard",  icon: LayoutDashboard,  label: "Dashboard" },
+  { to: "/admin/products",   icon: UtensilsCrossed,  label: "Sản phẩm" },
+  { to: "/admin/categories", icon: Tag,              label: "Danh mục" },
+  { to: "/admin/users",      icon: Users,            label: "Người dùng" },
+  { to: "/admin/bookings",   icon: CalendarDays,     label: "Đặt bàn" },
 ];
 
 export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
@@ -37,19 +48,21 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
       <nav className="admin-sidebar__nav">
         <span className="admin-sidebar__section-label">Menu</span>
 
-        {navItems.map((item) => (
+        {navItems.map(({ to, icon: Icon, label, badge }) => (
           <NavLink
-            key={item.to}
-            to={item.to}
+            key={to}
+            to={to}
             className={({ isActive }) =>
               `admin-sidebar__nav-item${isActive ? " active" : ""}`
             }
-            title={collapsed ? item.label : undefined}
+            title={collapsed ? label : undefined}
           >
-            <span className="admin-sidebar__nav-icon">{item.icon}</span>
-            <span className="admin-sidebar__nav-label">{item.label}</span>
-            {item.badge !== undefined && (
-              <span className="admin-sidebar__nav-badge">{item.badge}</span>
+            <span className="admin-sidebar__nav-icon">
+              <Icon size={18} strokeWidth={1.75} />
+            </span>
+            <span className="admin-sidebar__nav-label">{label}</span>
+            {badge !== undefined && (
+              <span className="admin-sidebar__nav-badge">{badge}</span>
             )}
           </NavLink>
         ))}
@@ -57,14 +70,16 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
         {/* Divider */}
         <div className="admin-sidebar__divider" />
 
-        <span className="admin-sidebar__section-label">Tài khoản</span>
+        <span className="admin-sidebar__section-label">Navigate</span>
         <NavLink
           to="/"
           className="admin-sidebar__nav-item"
           title={collapsed ? "Về trang chủ" : undefined}
         >
-          <span className="admin-sidebar__nav-icon">🏠</span>
-          <span className="admin-sidebar__nav-label">Trang chủ</span>
+          <span className="admin-sidebar__nav-icon">
+            <Home size={18} strokeWidth={1.75} />
+          </span>
+          <span className="admin-sidebar__nav-label">Home</span>
         </NavLink>
       </nav>
 
@@ -76,7 +91,10 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
           title={collapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
         >
           <span className="admin-sidebar__nav-icon">
-            {collapsed ? "→" : "←"}
+            {collapsed
+              ? <ChevronRight size={18} strokeWidth={1.75} />
+              : <ChevronLeft  size={18} strokeWidth={1.75} />
+            }
           </span>
           <span>{collapsed ? "" : "Thu gọn"}</span>
         </button>

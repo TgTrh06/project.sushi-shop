@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: var(--fs-body-lg);
   flex-shrink: 0;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .admin-sidebar__brand-title {
-  font-size: 15px;
+  font-size: var(--fs-body-sm);
   font-weight: 700;
   color: var(--admin-text-primary);
   white-space: nowrap;
@@ -56,7 +56,7 @@
 }
 
 .admin-sidebar__brand-sub {
-  font-size: 11px;
+  font-size: var(--fs-label-sm);
   color: var(--admin-text-subtle);
   white-space: nowrap;
 }
@@ -84,7 +84,7 @@
 }
 
 .admin-sidebar__section-label {
-  font-size: 10px;
+  font-size: var(--fs-label-sm);
   font-weight: 600;
   color: var(--admin-text-subtle);
   text-transform: uppercase;
@@ -102,7 +102,7 @@
   border-radius: var(--admin-radius-sm);
   text-decoration: none;
   color: var(--admin-text-secondary);
-  font-size: 14px;
+  font-size: var(--fs-body-xs);
   font-weight: 500;
   transition: all var(--admin-transition);
   white-space: nowrap;
@@ -137,10 +137,13 @@
 }
 
 .admin-sidebar__nav-icon {
-  font-size: 18px;
+  font-size: var(--fs-body-lg);
   flex-shrink: 0;
   width: 20px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .admin-sidebar__nav-label {
@@ -152,7 +155,7 @@
 .admin-sidebar__nav-badge {
   background: var(--admin-accent);
   color: white;
-  font-size: 10px;
+  font-size: var(--fs-label-sm);
   font-weight: 700;
   padding: 1px 6px;
   border-radius: 20px;
@@ -179,7 +182,7 @@
   padding: 10px 12px;
   border-radius: var(--admin-radius-sm);
   color: var(--admin-text-subtle);
-  font-size: 13px;
+  font-size: var(--fs-label);
   font-weight: 500;
   cursor: pointer;
   border: none;
