@@ -68,7 +68,8 @@
   color: var(--primary-color);
 }
 
-.navItemActive {
+.navItemActive,
+.navItemActive:hover {
   background: var(--primary-color);
   color: var(--raw-white) !important;
   font-weight: 700;

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { UserMenu } from "../UserMenu";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Icon } from "@/assets/svg";
+import { LogoIcon } from "@/components/ui/LogoIcon";
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -11,14 +12,6 @@ interface HeaderProps {
 export const Header = ({ onMenuClick }: HeaderProps) => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
-  const isMenuPage = location.pathname === "/menu" || location.pathname.startsWith("/product/");
-  const isReservationPage = location.pathname === "/reservation";
-  const isAboutPage = location.pathname === "/about";
-  const isAuthPage =
-    location.pathname === "/login" ||
-    location.pathname === "/register" ||
-    location.pathname === "/reset-password" ||
-    location.pathname === "/verify-email";
 
   const [hasScrolledPast, setHasScrolledPast] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
@@ -36,21 +29,19 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const headerClass     = hasScrolledPast   ? "header--sticky"      : "header--transparent";
-  const homeClass       = isHomePage        ? "is-home-page"        : "";
-  const aboutClass      = isAboutPage       ? "is-about-page"       : "";
-  const menuClass       = isMenuPage        ? "is-menu-page"        : "";
-  const reservationClass = isReservationPage ? "is-reservation-page" : "";
-  const authClass       = isAuthPage        ? "is-auth-page"        : "";
+  const headerClass = isHomePage 
+    ? (hasScrolledPast ? "header--sticky is-home-page" : "header--transparent is-home-page") 
+    : "header--sticky";
 
   return (
     <header
-      className={`header ${headerClass} ${homeClass} ${aboutClass} ${menuClass} ${reservationClass} ${authClass}`}
+      className={`header ${headerClass}`}
     >
       <nav className="header__nav">
-        <div className="header__logo">
+        <div className="header__logo" data-aos="fade-down">
           <Link to="/">
-            <h4 data-aos="fade-down">
+            <h4>
+              <LogoIcon size={32} primaryColor="var(--primary-color)" className="header__logo-icon"/>
               Itsu<span>Sushi</span>
             </h4>
           </Link>

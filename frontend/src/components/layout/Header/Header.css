@@ -17,52 +17,27 @@
   color: var(--secondary-color);
 }
 
-.header--transparent.is-menu-page .header__nav h4,
-.header--transparent.is-reservation-page .header__nav h4,
-.header--transparent.is-auth-page .header__nav h4 {
+.header--transparent .header__nav h4 {
   color: var(--primary-color);
 }
 
-.header--transparent.is-menu-page .header__nav h4 span,
-.header--transparent.is-reservation-page .header__nav h4 span,
-.header--transparent.is-auth-page .header__nav h4 span {
+.header--transparent .header__nav h4 span {
   color: var(--secondary-color);
 }
 
 .header--sticky.is-home-page .header__nav h4,
-.header--sticky.is-menu-page .header__nav h4,
-.header--sticky.is-reservation-page .header__nav h4,
-.header--sticky.is-about-page .header__nav h4,
-.header--sticky.is-auth-page .header__nav h4 {
+.header--sticky .header__nav h4 {
   color: var(--primary-color);
 }
 
 .header--sticky.is-home-page .header__nav h4 span,
-.header--sticky.is-menu-page .header__nav h4 span,
-.header--sticky.is-reservation-page .header__nav h4 span,
-.header--sticky.is-about-page .header__nav h4 span,
-.header--sticky.is-auth-page .header__nav h4 span {
+.header--sticky .header__nav h4 span {
   color: var(--secondary-color);
 }
 
-.header--transparent.is-home-page .header__nav h4 {
-  color: #fff;
-}
-
-.header--transparent.is-about-page .header__nav h4 {
-  color: var(--primary-color);
-}
-
-.header--transparent.is-about-page .header__nav h4 span {
-  color: #fff;
-}
-
-.header--transparent.is-about-page .header__menu li a {
-  color: #fff;
-}
-
-.header--transparent.is-about-page .header__menu li a.active {
-  color: var(--primary-color);
+.header--transparent.is-home-page .header__nav h4,
+.header--transparent.is-home-page .header__nav h4 span {
+  color: var(--raw-white);
 }
 
 .header--transparent .header__menu li a:hover {
@@ -71,7 +46,7 @@
 }
 
 .header--sticky {
-  background-color: var(--color-creamson);
+  background-color: var(--color-white);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px) saturate(180%);
   -webkit-backdrop-filter: blur(10px) saturate(180%);
@@ -125,7 +100,7 @@
 }
 
 .header__logo h4 {
-  padding: 5px 30px 5px 30px;
+  padding: 5px 15px;
 
   font-weight: 800;
   font-size: 24px;
@@ -133,7 +108,16 @@
   font-family: var(--playfair-display);
   color: #fff;
   border-radius: 50px;
-  opacity: 0.8;
+
+  /* Cấu hình quan trọng để hết lệch */
+  display: flex;
+  align-items: center; /* Căn giữa icon và chữ theo trục dọc */
+  line-height: 1.2;    /* Tăng lên để chữ có không gian thở */
+  gap: 2px;
+}
+
+.header__logo-icon {
+  flex-shrink: 0;
 }
 
 .header__menu,

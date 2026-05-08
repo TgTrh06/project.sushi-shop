@@ -1,5 +1,5 @@
 // Logo
-import logo from "./src/logo.png";
+import logo from "./src/shark-svgrepo-com.png";
 
 // Backgrounds
 import aboutBg1 from "./src/about_bg1.png";
