@@ -25,7 +25,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // API that don't require token refresh - Prevent infinite loop of refresh attempts
+    // Skip refresh for auth endpoints to prevent infinite loops
     if (
       originalRequest.url.includes("/auth/login") ||
       originalRequest.url.includes("/auth/register") ||
@@ -34,24 +34,26 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    originalRequest._retryCount = originalRequest._retryCount || 0;
-
-    // Check if error is due to unauthorized access and we haven't already tried refreshing
-    if (error.response?.status === 401 && originalRequest._retryCount < 4) {
-      originalRequest._retryCount += 1;
+    // Only attempt refresh once per request
+    if (error.response?.status === 401 && !originalRequest._retried) {
+      originalRequest._retried = true;
 
       try {
-        // Attempt to refresh token
-        const response = await api.post("/auth/refresh", { withCredentials: true });
-        const newAccessToken = response.data.accessToken;
+        const response = await api.post("/auth/refresh");
+        const newAccessToken = response.data.data?.accessToken ?? response.data.accessToken;
 
-        useAuthStore.getState().setAccessToken(newAccessToken); // Update access token in store
-      } catch (refreshError) {
-        return Promise.reject(refreshError);
+        if (newAccessToken) {
+          useAuthStore.getState().setAccessToken(newAccessToken);
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return api(originalRequest); // retry original request with new token
+        }
+      } catch {
+        // Refresh failed — clear auth state and reject
+        useAuthStore.getState().logout?.();
       }
     }
-    return Promise.reject(error);
 
+    return Promise.reject(error);
   },
 );
 
