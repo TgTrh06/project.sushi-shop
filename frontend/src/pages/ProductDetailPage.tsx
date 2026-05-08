@@ -4,6 +4,7 @@ import { ProductCard } from "@/components/ui/ProductCard";
 import { Icon } from "@/assets/svg";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Loader } from "@/components/ui/Loader";
+import { getImageUrl, getThumbnailUrl, getFullUrl } from "@/lib/cloudinary";
 import { productService } from "@/features/products/product.service";
 import { reviewService } from "@/features/reviews/review.service";
 import { ReviewForm } from "@/features/reviews/ReviewForm";
@@ -13,8 +14,7 @@ import type { Product, Review } from "@/features/products/product.types";
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { user: currentUser } = useAuthStore();
-  const [activeImage, setActiveImage] = useState<string | undefined>(undefined);
-  const [activeTab, setActiveTab] = useState<"ingredients" | "nutrition" | "policy">("ingredients");
+  const [activeImageId, setActiveImageId] = useState<string | undefined>(undefined);
   const [product, setProduct] = useState<Product | null>(null);
 
   // Lazy loading state
@@ -73,7 +73,7 @@ export default function ProductDetailPage() {
       try {
         const data = await productService.getProductBySlug(slug);
         setProduct(data);
-        setActiveImage(data.image);
+        setActiveImageId(data.image_id || "");
 
         // Fetch first page of reviews
         await fetchReviewsPage(data.id, 1);
@@ -119,19 +119,24 @@ export default function ProductDetailPage() {
           {/* Gallery */}
           <div className="product-detail__gallery">
             <div className="product-detail__main-image">
-              <img src={activeImage} alt={product.name} />
+              <img src={activeImageId ? getFullUrl(activeImageId) : "https://placehold.co/800x600?text=Sushi"} alt={product.name} />
             </div>
-            {(product.gallery?.length ?? 0) > 0 && (
+            {(product.gallery_ids?.length ?? 0) > 0 && (
               <div className="product-detail__thumbnails">
-                {product.gallery!.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className={`thumbnail ${activeImage === img ? "active" : ""}`}
-                    onClick={() => setActiveImage(img)}
-                  >
-                    <img src={img} alt={`${product.name} thumbnail ${idx}`} />
-                  </div>
-                ))}
+                {product.gallery_ids!.map((galleryId, idx) => {
+                  const img = product.gallery_ids?.[idx];
+                  return (
+                    <div
+                      key={idx}
+                      className={`thumbnail ${activeImageId === galleryId ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveImageId(galleryId);
+                      }}
+                    >
+                      <img src={galleryId ? getThumbnailUrl(galleryId) : img} alt={`${product.name} thumbnail ${idx}`} />
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -169,46 +174,6 @@ export default function ProductDetailPage() {
           </div>
         </section>
 
-        {/* Tabs */}
-        <section className="product-detail__tabs">
-          <div className="tab-headers">
-            <button className={activeTab === "ingredients" ? "active" : ""} onClick={() => setActiveTab("ingredients")}>Ingredients</button>
-            <button className={activeTab === "nutrition" ? "active" : ""} onClick={() => setActiveTab("nutrition")}>Nutrition Facts</button>
-            <button className={activeTab === "policy" ? "active" : ""} onClick={() => setActiveTab("policy")}>Dining Policy</button>
-          </div>
-          <div className="tab-content">
-            {activeTab === "ingredients" && (
-              <ul className="ingredients-list">
-                {product.ingredients?.length ? (
-                  product.ingredients.map((ing, i) => <li key={i}>{ing}</li>)
-                ) : (
-                  <li style={{ color: "var(--text-muted)", listStyle: "none" }}>No ingredient information available.</li>
-                )}
-              </ul>
-            )}
-            {activeTab === "nutrition" && (
-              <div className="nutrition-grid">
-                {product.nutrition?.length ? (
-                  product.nutrition.map((item, i) => (
-                    <div key={i} className="nutrition-item">
-                      <span className="label">{item.label}</span>
-                      <span className="value">{item.value}</span>
-                    </div>
-                  ))
-                ) : (
-                  <p style={{ color: "var(--text-muted)" }}>No nutrition information available.</p>
-                )}
-              </div>
-            )}
-            {activeTab === "policy" && (
-              <p className="policy-text">
-                This item is available for dine-in only to ensure optimal freshness.
-                Please note that ingredients may vary based on seasonal availability.
-              </p>
-            )}
-          </div>
-        </section>
-
         {/* Reviews */}
         <section className="product-detail__reviews">
           <h2 className="section-title">Guest Experience</h2>
@@ -238,6 +203,18 @@ export default function ProductDetailPage() {
                       ))}
                     </div>
                     <p className="review-comment">{review.comment}</p>
+                    {review.photos && review.photos.length > 0 && (
+                      <div className="review-photos" style={{ display: "flex", gap: "8px", marginTop: "12px", flexWrap: "wrap" }}>
+                        {review.photos.map((photo, photoIdx) => (
+                          <img
+                            key={photoIdx}
+                            src={getImageUrl(photo, review.photo_ids?.[photoIdx])}
+                            alt={`Review photo ${photoIdx + 1}`}
+                            style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "4px" }}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
 

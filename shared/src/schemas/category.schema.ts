@@ -9,6 +9,6 @@ export const BaseCategorySchema = z.object({
   name: z.string().min(2).max(100),
   slug: z.string().min(2).max(100),
   description: z.string().max(250).optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });

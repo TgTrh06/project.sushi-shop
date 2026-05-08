@@ -1,5 +1,8 @@
+import { z } from "zod";
 import type { Role } from "@shared/schemas/auth.schema";
+import type { BaseProductSchema } from "@shared/schemas/product.schema";
 import type { SystemStats, CategoryBreakdown } from "@shared/schemas/stats.schema";
+import type { BaseCategorySchema } from "@shared/schemas/category.schema";
 
 // Re-export shared stats types for convenience
 export type { SystemStats, CategoryBreakdown };
@@ -10,18 +13,12 @@ export interface AdminUser {
   username: string;
   email: string;
   role: Role;
+  avatar_id?: string;
   createdAt?: string;
 }
 
 // ─── Category ──────────────────────────────────────────
-export interface AdminCategory {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+export type AdminCategory = z.infer<typeof BaseCategorySchema>;
 
 export interface CreateCategoryPayload {
   name: string;
@@ -34,33 +31,11 @@ export interface UpdateCategoryPayload {
 }
 
 // ─── Product ───────────────────────────────────────────
-export interface AdminProduct {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  image?: string;
-  gallery?: string[];
-  description?: string;
-  categoryId: string;
-  isAvailable: boolean;
-  stockQuantity: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
+export type AdminProduct = z.infer<typeof BaseProductSchema>;
 
-export interface CreateProductPayload {
-  name: string;
-  price: number;
-  image?: string;
-  gallery?: string[];
-  description?: string;
-  categoryId: string;
-  isAvailable?: boolean;
-  stockQuantity: number;
-}
+export type CreateProductPayload = Omit<AdminProduct, "id" | "slug" | "createdAt" | "updatedAt"| "ratingSummary">;
 
-export interface UpdateProductPayload extends Partial<CreateProductPayload> {}
+export type UpdateProductPayload = Partial<CreateProductPayload>;
 
 // ─── Booking ───────────────────────────────────────────
 export type BookingStatus = "pending" | "confirmed" | "cancelled";
@@ -80,12 +55,3 @@ export interface AdminBooking {
 
 // ─── Dashboard Stats (Legacy compat alias) ─────────────
 export type DashboardStats = SystemStats;
-
-// ─── Pagination ────────────────────────────────────────
-export interface PaginatedResult<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}

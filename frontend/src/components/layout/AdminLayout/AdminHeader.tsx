@@ -1,12 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const pageTitles: Record<string, string> = {
   "/admin/dashboard": "Dashboard",
-  "/admin/products": "Quản lý Sản phẩm",
-  "/admin/categories": "Quản lý Danh mục",
-  "/admin/users": "Quản lý Người dùng",
-  "/admin/bookings": "Quản lý Đặt bàn",
+  "/admin/products": "Products",
+  "/admin/categories": "Categories",
+  "/admin/users": "Users",
+  "/admin/bookings": "Bookings",
 };
 
 export const AdminHeader = () => {
@@ -39,6 +40,7 @@ export const AdminHeader = () => {
       </div>
 
       <div className="admin-header__right">
+        <ThemeToggle />
         <div className="admin-header__user">
           <div className="admin-header__avatar">{initials}</div>
           <div className="admin-header__user-info">
@@ -55,7 +57,7 @@ export const AdminHeader = () => {
           id="admin-logout-btn"
         >
           <span>⏻</span>
-          <span>Đăng xuất</span>
+          <span>Logout</span>
         </button>
       </div>
     </header>
