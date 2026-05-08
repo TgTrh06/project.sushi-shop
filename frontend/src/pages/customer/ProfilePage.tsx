@@ -2,13 +2,9 @@ import React, { useState } from "react";
 import {
   User,
   IdCard,
-  Key,
   Shield,
   Copy,
   ChevronRight,
-  Trash2,
-  ExternalLink,
-  Smartphone
 } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Link } from "react-router-dom";
