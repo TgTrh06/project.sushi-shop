@@ -28,7 +28,7 @@ export const AppRoutes = () => {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/menu" element={<MenuPage />} />
       <Route path="/reservation" element={<ReservePage />} />
-      <Route path="/product/:id" element={<ProductDetailPage />} />
+      <Route path="/product/:slug" element={<ProductDetailPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/unauthorized" element={<h2 style={{ textAlign: "center", marginTop: 80, color: "#94a3b8" }}>🚫 Bạn không có quyền truy cập trang này!</h2>} />

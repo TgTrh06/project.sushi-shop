@@ -4,7 +4,7 @@
  */
 
 const CLOUDINARY_BASE_URL = "https://res.cloudinary.com";
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "itsu-sushi";
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
 /**
  * Get a thumbnail-sized transformation URL (small, optimized)

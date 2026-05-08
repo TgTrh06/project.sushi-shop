@@ -13,8 +13,8 @@ export const reviewService = {
     page: number,
     limit: number = 5
   ): Promise<PaginatedReviews> {
-    const res = await api.get<ApiResponse<PaginatedReviews>>(`/reviews/paginated`, {
-      params: { productId, page, limit }
+    const res = await api.get<ApiResponse<PaginatedReviews>>(`/reviews/${productId}/paginated`, {
+      params: { page, limit }
     });
     return res.data.data;
   },
