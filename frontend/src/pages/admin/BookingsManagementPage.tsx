@@ -5,15 +5,6 @@ import { showSuccess, showError } from "@/lib/toast";
 
 const STATUS_OPTIONS: BookingStatus[] = ["pending", "confirmed", "cancelled"];
 
-const statusBadgeClass = (status: string) => {
-  const map: Record<string, string> = {
-    pending: "admin-badge--amber",
-    confirmed: "admin-badge--green",
-    cancelled: "admin-badge--gray",
-  };
-  return map[status] ?? "admin-badge--gray";
-};
-
 const statusLabel: Record<string, string> = {
   pending: "Chờ xác nhận",
   confirmed: "Đã xác nhận",

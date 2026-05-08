@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { adminService } from "@/features/admin/admin.service";
+import type { PaginatedResult } from "@/types/paginated.type";
 import type {
   AdminCategory,
   CreateCategoryPayload,
   UpdateCategoryPayload,
-  PaginatedResult,
 } from "@/features/admin/admin.types";
 import { showSuccess, showError } from "@/lib/toast";
 
@@ -63,22 +63,22 @@ export const CategoriesManagementPage = () => {
 
   const handleSave = async () => {
     if (!form.name.trim()) {
-      showError("Tên danh mục không được để trống.");
+      showError("Category name is required.");
       return;
     }
     setSaving(true);
     try {
       if (formMode === "create") {
         await adminService.createCategory(form);
-        showSuccess("Đã tạo danh mục thành công.");
+        showSuccess("Category created successfully.");
       } else if (editTarget) {
         await adminService.updateCategory(editTarget.id, form as UpdateCategoryPayload);
-        showSuccess("Đã cập nhật danh mục.");
+        showSuccess("Category updated successfully.");
       }
       setModalOpen(false);
       fetchCategories();
     } catch {
-      showError("Lỗi khi lưu danh mục.");
+      showError("Error occurred while saving the category.");
     } finally {
       setSaving(false);
     }
@@ -89,11 +89,11 @@ export const CategoriesManagementPage = () => {
     setDeleting(true);
     try {
       await adminService.deleteCategory(confirmDelete.id);
-      showSuccess(`Đã xóa danh mục "${confirmDelete.name}".`);
+      showSuccess(`Category deleted successfully: "${confirmDelete.name}".`);
       setConfirmDelete(null);
       fetchCategories();
     } catch {
-      showError("Không thể xóa danh mục.");
+      showError("Error occurred while deleting the category.");
     } finally {
       setDeleting(false);
     }
@@ -107,11 +107,11 @@ export const CategoriesManagementPage = () => {
     <div>
       <div className="admin-page-header">
         <div>
-          <h2 className="admin-page-title">Quản lý Danh mục</h2>
-          <p className="admin-page-subtitle">Tổng cộng {result?.total ?? 0} danh mục</p>
+          <h2 className="admin-page-title">Categories Management</h2>
+          <p className="admin-page-subtitle">Total of {result?.total ?? 0} categories</p>
         </div>
         <button className="admin-btn admin-btn--primary" onClick={openCreate} id="create-category-btn">
-          + Thêm danh mục
+          Add Category
         </button>
       </div>
 
@@ -119,24 +119,24 @@ export const CategoriesManagementPage = () => {
         <div className="admin-toolbar">
           <input
             className="admin-search-input"
-            placeholder="🔍  Tìm theo tên danh mục..."
+            placeholder="🔍 Search by category name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <button className="admin-btn admin-btn--secondary admin-btn--sm" onClick={fetchCategories}>
-            🔄 Làm mới
+            🔄 Refresh
           </button>
         </div>
 
         {loading ? (
           <div className="admin-loading">
             <div className="admin-loading__spinner" />
-            <span>Đang tải...</span>
+            <span>Loading...</span>
           </div>
         ) : filtered.length === 0 ? (
           <div className="admin-empty">
             <div className="admin-empty__icon">🗂️</div>
-            <p className="admin-empty__text">Không có danh mục nào.</p>
+            <p className="admin-empty__text">No categories found.</p>
           </div>
         ) : (
           <div className="admin-table-wrapper">
@@ -144,11 +144,11 @@ export const CategoriesManagementPage = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Tên danh mục</th>
+                  <th>Category Name</th>
                   <th>Slug</th>
-                  <th>Mô tả</th>
-                  <th>Ngày tạo</th>
-                  <th>Hành động</th>
+                  <th>Description</th>
+                  <th>Created At</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -197,13 +197,13 @@ export const CategoriesManagementPage = () => {
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
               <span className="admin-modal__title">
-                {formMode === "create" ? "➕ Thêm danh mục mới" : "✏️ Chỉnh sửa danh mục"}
+                {formMode === "create" ? "➕ Add New Category" : "✏️ Edit Category"}
               </span>
               <button className="admin-modal__close" onClick={() => setModalOpen(false)}>×</button>
             </div>
             <div className="admin-modal__body">
               <div className="admin-form-group">
-                <label className="admin-form-label">Tên danh mục *</label>
+                <label className="admin-form-label">Category Name *</label>
                 <input
                   className="admin-form-input"
                   value={form.name}
@@ -213,20 +213,20 @@ export const CategoriesManagementPage = () => {
                 />
               </div>
               <div className="admin-form-group">
-                <label className="admin-form-label">Mô tả</label>
+                <label className="admin-form-label">Description</label>
                 <textarea
                   className="admin-form-textarea"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Mô tả ngắn về danh mục..."
+                  placeholder="Short description of the category..."
                   rows={3}
                 />
               </div>
             </div>
             <div className="admin-modal__footer">
-              <button className="admin-btn admin-btn--secondary" onClick={() => setModalOpen(false)}>Hủy</button>
+              <button className="admin-btn admin-btn--secondary" onClick={() => setModalOpen(false)}>Cancel</button>
               <button className="admin-btn admin-btn--primary" onClick={handleSave} disabled={saving}>
-                {saving ? "Đang lưu..." : formMode === "create" ? "✓ Tạo danh mục" : "✓ Cập nhật"}
+                {saving ? "Saving..." : formMode === "create" ? "Create Category" : "Update Category"}
               </button>
             </div>
           </div>
@@ -238,18 +238,18 @@ export const CategoriesManagementPage = () => {
         <div className="admin-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <span className="admin-modal__title">⚠️ Xác nhận xóa</span>
+              <span className="admin-modal__title">⚠️ Confirm Delete</span>
               <button className="admin-modal__close" onClick={() => setConfirmDelete(null)}>×</button>
             </div>
             <div className="admin-modal__body">
               <p className="admin-confirm-text">
-                Bạn có chắc muốn xóa danh mục <strong>"{confirmDelete.name}"</strong>? Thao tác này có thể ảnh hưởng đến các sản phẩm liên quan.
+                Are you sure you want to delete the category <strong>"{confirmDelete.name}"</strong>? This action may affect related products.
               </p>
             </div>
             <div className="admin-modal__footer">
-              <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Hủy</button>
+              <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Cancel</button>
               <button className="admin-btn admin-btn--danger" onClick={handleDelete} disabled={deleting}>
-                {deleting ? "Đang xóa..." : "🗑️ Xóa"}
+                {deleting ? "Deleting..." : "🗑️ Delete"}
               </button>
             </div>
           </div>
