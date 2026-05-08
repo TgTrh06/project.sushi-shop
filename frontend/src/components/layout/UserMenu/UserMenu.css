@@ -12,7 +12,7 @@
   align-items: center;
   gap: 10px;
   padding: 6px 14px 6px 6px;
-  border-radius: 8px;
+  border-radius: 24px;
   border: 1.5px solid var(--primary-color);
   background-color: transparent;
   cursor: pointer;
@@ -249,10 +249,11 @@
   color: var(--secondary-color);
 }
 
-.lang-btn--active {
+.lang-btn--active,
+[data-theme="light"] .lang-btn--active {
   border-color: var(--primary-color);
-  background-color: rgba(var(--primary-color-rgb, 99, 102, 241), 0.12);
-  color: var(--secondary-color);
+  background-color: var(--primary-color);
+  color: var(--raw-white);
 }
 
 /* ── Theme row ── */
@@ -293,10 +294,12 @@
 
 .theme-btn--active {
   border-color: var(--primary-color);
-  background-color: rgba(99, 102, 241, 0.15);
-  color: var(--secondary-color);
+  background-color: var(--primary-color);
+  color: var(--raw-white);
 }
 
 [data-theme="light"] .theme-btn--active {
-  background-color: rgba(99, 102, 241, 0.1);
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: var(--raw-white);
 }
