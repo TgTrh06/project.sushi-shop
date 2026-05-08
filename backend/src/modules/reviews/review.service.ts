@@ -1,6 +1,7 @@
 import ReviewRepository from "./review.repository";
 import { CreateReviewDTO, ReviewEntity } from "./review.types";
 import { NotFoundError, BadRequestError } from "../../utils/common/error.util";
+import * as cloudinaryService from "@/modules/upload/cloudinary.service";
 
 export default class ReviewService {
   constructor(private readonly reviewRepo = new ReviewRepository()) {}
@@ -44,8 +45,21 @@ export default class ReviewService {
 
   async deleteReview(id: string, userId: string, isAdmin: boolean): Promise<ReviewEntity> {
     // Check ownership or admin status before deleting (logic simplified for brevity)
-    const review = await this.reviewRepo.delete(id);
+    const review = await this.reviewRepo.findById(id);
     if (!review) throw new NotFoundError("Review not found.");
-    return review;
+
+    // Clean up Cloudinary photos before deletion
+    if (review.photo_ids && review.photo_ids.length > 0) {
+      try {
+        await cloudinaryService.deleteMultiple(review.photo_ids);
+      } catch (error) {
+        console.error("Failed to delete review photos from Cloudinary:", error);
+        // Continue with deletion even if Cloudinary cleanup fails
+      }
+    }
+
+    const deletedReview = await this.reviewRepo.delete(id);
+    if (!deletedReview) throw new NotFoundError("Review not found.");
+    return deletedReview;
   }
 }
