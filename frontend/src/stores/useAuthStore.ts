@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import type { User } from "../features/users/user.types";
-import { authService } from "../features/auth/auth.service";
+import type { User } from "@/features/users/user.types";
+import { authService } from "@/features/auth/auth.service";
 import {
   type LoginFormInput,
   type RegisterFormInput,
