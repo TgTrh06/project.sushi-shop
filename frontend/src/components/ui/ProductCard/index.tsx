@@ -2,6 +2,7 @@ import "./ProductCard.css";
 import { Icon } from "@/assets/svg";
 import { Link } from "react-router-dom";
 import { WishListButton } from "@/components/ui/WishListButton";
+import { getImageUrl } from "@/lib/cloudinary";
 import type { Product } from "@/features/products/product.types";
 
 interface ProductCardProps {
@@ -9,15 +10,21 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const mainImageId = product.image_id || product.gallery_ids?.[0];
+
   return (
     <article className="product-card">
       <Link to={`/product/${product.slug}`} className="product-card__link">
         <div className="product-card__image-wrapper">
           <img
             className="product-card__image"
-            src={product.image || "https://placehold.co/600x400?text=Sushi"}
+            src={getImageUrl(mainImageId)}
             alt={product.name}
             loading="lazy"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src =
+                "https://placehold.co/40x40/1e293b/94a3b8?text=🍣";
+            }}
           />
         </div>
 
@@ -30,7 +37,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               <span>{product.ratingSummary?.averageRating || 5.0}</span>
             </div>
 
-            <p className="product-card__price">${product.price}.00</p>
+            <p className="product-card__price">
+              {product.price.toLocaleString("vi-VN")}đ
+            </p>
           </div>
         </div>
       </Link>

@@ -70,15 +70,6 @@
   opacity: 0.9;
 }
 
-.header--transparent .header__menu div.header__auth-btn a {
-  color: var(--transparent-button-text-color);
-}
-
-.header--transparent .header__menu div.header__auth-btn:hover a {
-  color: var(--color-creamson);
-  opacity: 0.9;
-}
-
 .header--sticky {
   background-color: var(--color-creamson);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -87,43 +78,6 @@
   height: var(--navbar-sticky-height);
   /* Reduced padding/height for sticky state */
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.header--transparent .header__menu div.header__auth-btn,
-.header--sticky .header__menu div.header__auth-btn {
-  background-color: var(--primary-color);
-  border: 2px solid var(--primary-color);
-  padding: 1px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.header--transparent .header__menu div.header__auth-btn a {
-  color: #fff;
-}
-
-.header--transparent .header__menu div.header__auth-btn:hover a,
-[data-theme="dark"] .header--sticky .header__menu div.header__auth-btn:hover a {
-  color: var(--primary-color);
-}
-
-.header--transparent .header__menu div.header__auth-btn:hover,
-[data-theme="dark"] .header--sticky .header__menu div.header__auth-btn:hover {
-  background-color: transparent;
-  border-color: var(--primary-color);
-}
-
-.header--sticky .header__menu div.header__auth-btn:hover,
-[data-theme="dark"] .header--sticky .header__menu div.header__auth-btn:hover {
-  background-color: var(--color-creamson);
-  border-color: var(--primary-color);
-}
-
-.header--sticky .header__menu div.header__auth-btn:hover a,
-[data-theme="dark"] .header--sticky .header__menu div.header__auth-btn:hover a {
-  color: var(--primary-color);
 }
 
 .header--sticky .header__menu li a {
@@ -167,7 +121,7 @@
   display: flex;
 
   position: relative;
-  padding: 20px;
+  padding: 20px 0;
 }
 
 .header__logo h4 {
@@ -226,21 +180,6 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
-}
-
-.header__menu div.header__auth-btn {
-  border-radius: 10px;
-  border: 2px solid var(--primary-color);
-  padding: 2px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.header__menu div.header__auth-btn a {
-  font-weight: 600;
-  color: var(--color-creamson);
 }
 
 .header__menu li.header__action {

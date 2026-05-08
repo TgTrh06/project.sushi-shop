@@ -24,13 +24,13 @@
 }
 
 .admin-header__title {
-  font-size: 18px;
+  font-size: var(--fs-body-lg);
   font-weight: 600;
   color: var(--admin-text-primary);
 }
 
 .admin-header__breadcrumb {
-  font-size: 13px;
+  font-size: var(--fs-label);
   color: var(--admin-text-subtle);
   display: flex;
   align-items: center;
@@ -42,63 +42,4 @@
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-/* ── User ── */
-.admin-header__user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.admin-header__avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--admin-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
-  color: white;
-  flex-shrink: 0;
-}
-
-.admin-header__user-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.admin-header__username {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--admin-text-primary);
-  line-height: 1.2;
-}
-
-.admin-header__role {
-  font-size: 11px;
-  color: var(--admin-text-subtle);
-}
-
-/* ── Logout ── */
-.admin-header__logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: var(--admin-radius-sm);
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--admin-danger);
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  cursor: pointer;
-  transition: all var(--admin-transition);
-}
-
-.admin-header__logout-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: var(--admin-danger);
 }
