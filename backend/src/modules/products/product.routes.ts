@@ -2,15 +2,14 @@ import { productController } from "@/container/product.container";
 import { verifyAdmin, verifyAuth } from "@/middleware/auth.middleware";
 import { zodValidator } from "@/middleware/validate.middleware";
 import { Router } from "express";
-import { CreateProductSchema } from "./product.types";
-import { UpdateCategorySchema } from "../categories/category.types";
+import { CreateProductSchema, UpdateProductSchema } from "./product.types";
 
 const router = Router();
 
 // GENERAL ROUTES
 router.get("/", productController.getAll);
-router.get("/:slug", productController.getOneBySlug);
 router.get("/category/:slug", productController.getListByCategory);
+router.get("/:slug", productController.getOneBySlug);
 
 // ADMIN ROUTES
 router.post(
@@ -24,7 +23,7 @@ router.put(
   "/:id",
   verifyAuth,
   verifyAdmin,
-  zodValidator(UpdateCategorySchema),
+  zodValidator(UpdateProductSchema),
   productController.update,
 );
 router.delete("/:id", verifyAuth, verifyAdmin, productController.delete);

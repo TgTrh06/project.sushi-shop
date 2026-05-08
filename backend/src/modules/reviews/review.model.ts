@@ -10,6 +10,7 @@ const ReviewSchema = new Schema<ReviewDocument>({
   },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, required: true, maxlength: 1000 },
+  photo_ids: { type: [String], default: [] }, // Cloudinary public_ids for photos
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

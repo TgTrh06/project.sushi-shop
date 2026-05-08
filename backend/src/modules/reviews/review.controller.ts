@@ -24,13 +24,13 @@ export default class ReviewController {
     }
   };
 
-  getByProductPaginated = async (req: Request<GetByIdParams, any, PaginationParams>, res: Response, next: NextFunction) => {
+  getByProductPaginated = async (req: Request<GetByIdParams, any, {}, PaginationParams>, res: Response, next: NextFunction) => {
     try {
       const { id: productId } = req.params;
       const { page = "1", limit = "5" } = req.query;
 
       if (!productId || typeof productId !== "string") {
-        return new BadRequestError("productId query parameter is required.");
+        throw new BadRequestError("productId path parameter is required.");
       }
 
       const pageNum = parseInt(page as string, 10);
