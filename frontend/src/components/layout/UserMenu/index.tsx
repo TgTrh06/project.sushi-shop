@@ -195,13 +195,13 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
               {/* Language */}
               <div className="user-dropdown__section-label">Language</div>
               <div className="user-dropdown__lang-row">
-                <button className="lang-btn lang-btn--active">
-                  <Globe size={14} strokeWidth={2} />
-                  <span>English</span>
-                </button>
                 <button className="lang-btn">
                   <Globe size={14} strokeWidth={2} />
                   <span>Vietnamese</span>
+                </button>
+                <button className="lang-btn lang-btn--active">
+                  <Globe size={14} strokeWidth={2} />
+                  <span>English</span>
                 </button>
               </div>
 
