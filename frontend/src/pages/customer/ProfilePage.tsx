@@ -4,10 +4,9 @@ import {
   IdCard,
   Shield,
   Copy,
-  ChevronRight,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Link } from "react-router-dom";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
 
 type TabType = "overview" | "personal" | "security";
 
@@ -35,16 +34,6 @@ const ProfilePage: React.FC = () => {
     navigator.clipboard.writeText(profileData.id);
     // Optional: show a toast notification
   };
-
-  const renderBreadcrumb = () => (
-    <div className="breadcrumb">
-      <div className="breadcrumbPill">
-        <Link to="/" className="breadcrumbItem">Home</Link>
-        <ChevronRight size={14} className="breadcrumbSeparator" />
-        <span className="breadcrumbActive">Profile</span>
-      </div>
-    </div>
-  );
 
   const renderSidebar = () => (
     <aside className="sidebar">
@@ -77,6 +66,12 @@ const ProfilePage: React.FC = () => {
   const renderPersonalInfo = () => (
     <div className="card">
       <h3 className="sectionTitle">Personal Information</h3>
+
+      <div className="idBadge" onClick={handleCopyId} title="Click to copy ID">
+        <span>ID: {profileData.id}</span>
+        <Copy size={14} />
+      </div>
+
       <div className="fieldRow">
         <div className="fieldLabel">Username</div>
         <div className="fieldValue">{profileData.username}</div>
@@ -111,19 +106,6 @@ const ProfilePage: React.FC = () => {
     </div>
   );
 
-  const renderDangerZone = () => (
-    <div className="card dangerZone">
-      <h3 className="sectionTitle dangerTitle">Danger Zone</h3>
-      <div className="warningBox">
-        Deleting your account is permanent and cannot be undone. All your order history and rewards will be lost.
-      </div>
-      <div className="fieldRow">
-        <div className="fieldLabel">Delete Account</div>
-        <button className="dangerLink">Request to Delete</button>
-      </div>
-    </div>
-  );
-
   const renderContent = () => {
     switch (activeTab) {
       case "personal":
@@ -135,30 +117,24 @@ const ProfilePage: React.FC = () => {
           <>
             {renderPersonalInfo()}
             {renderSecurity()}
-            {renderDangerZone()}
           </>
         );
     }
   };
 
   return (
-    <div className="profileContainer">
-      {renderBreadcrumb()}
+    <div className="page-container profile-page">
+      {/* Breadcrumb */}
+      <Breadcrumb items={[{ label: "Profile" }]} />
 
-      <div className="layout">
-        {renderSidebar()}
+      <div className="profile-page-content">
+        <div className="layout">
+          {renderSidebar()}
 
-        <main className="contentArea">
-          <header className="header">
-            <h1 className="title">Account Center</h1>
-            <div className="idBadge" onClick={handleCopyId} title="Click to copy ID">
-              <span>ID: {profileData.id}</span>
-              <Copy size={14} />
-            </div>
-          </header>
-
-          {renderContent()}
-        </main>
+          <main className="contentArea">
+            {renderContent()}
+          </main>
+        </div>
       </div>
     </div>
   );

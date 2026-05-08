@@ -1,69 +1,21 @@
-/* Header */
-.profile-hero {
-  text-align: center;
-  /* padding: 80px 0 60px; */
-  padding: 160px 0px 120px;
+/* =========================================================
+   PROFILE PAGE
+   ========================================================= */
+
+.profile-page {
+  min-height: calc(100vh - var(--navbar-height));
+  padding-top: var(--navbar-height);
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: var(--color-creamson);
+  transition: background-color 0.3s ease;
 }
 
-.profile-hero-title {
-  font-family: var(--playfair-display);
-  font-size: 64px;
-  font-weight: 800;
-  color: var(--secondary-color);
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
-}
-
-.profile-hero-subtitle {
-  font-family: var(--plus-jakarta-sans);
-  font-size: 18px;
-  color: var(--primary-color);
-  opacity: 0.8;
-}
-
-.profileContainer {
+/* ── Page content wrapper ── */
+.profile-page-content {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 40px 20px;
-  font-family: var(--plus-jakarta-sans);
-  color: var(--secondary-color);
-}
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 32px;
-  font-size: 14px;
-}
-
-.breadcrumbPill {
-  background: var(--color-white);
-  padding: 6px 16px;
-  border-radius: 100px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.breadcrumbSeparator {
-  opacity: 0.4;
-}
-
-.breadcrumbItem {
-  color: var(--black-500);
-  transition: color 0.2s;
-}
-
-.breadcrumbItem:hover {
-  color: var(--primary-color);
-}
-
-.breadcrumbActive {
-  color: var(--secondary-color);
-  font-weight: 600;
+  padding: 0 20px 80px;
 }
 
 .layout {
@@ -73,7 +25,10 @@
   align-items: start;
 }
 
-/* Sidebar Styles */
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
 .sidebar {
   background: var(--color-white);
   border-radius: 20px;
@@ -113,7 +68,10 @@
   box-shadow: 0 4px 12px rgba(177, 69, 74, 0.2);
 }
 
-/* Content Area Styles */
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+
 .contentArea {
   display: flex;
   flex-direction: column;
@@ -198,6 +156,8 @@
   cursor: pointer;
   text-decoration: none;
   transition: opacity 0.2s;
+  background: none;
+  border: none;
 }
 
 .manageLink:hover {
@@ -205,32 +165,10 @@
   text-decoration: underline;
 }
 
-/* Danger Zone */
-.dangerZone {
-  margin-top: 16px;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  background: rgba(239, 68, 68, 0.02);
-}
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
-.dangerTitle {
-  color: #ef4444;
-}
-
-.dangerLink {
-  color: #ef4444;
-}
-
-.warningBox {
-  background: rgba(239, 68, 68, 0.05);
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #b91c1c;
-  line-height: 1.6;
-}
-
-/* Responsive Styles */
 @media (max-width: 1024px) {
   .layout {
     grid-template-columns: 1fr;
@@ -282,10 +220,12 @@
   }
 }
 
-/* Dark mode specific overrides if needed (though variables handle most) */
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
 [data-theme="dark"] .sidebar,
 [data-theme="dark"] .card,
-[data-theme="dark"] .breadcrumbPill,
 [data-theme="dark"] .idBadge {
   border-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
