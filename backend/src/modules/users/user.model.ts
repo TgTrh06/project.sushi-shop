@@ -8,6 +8,7 @@ export interface UserEntity {
   email: string;
   hashedPassword: string;
   role: Role;
+  avatar_id?: string; // Cloudinary public_id
   createdAt: Date;
 }
 
@@ -29,6 +30,7 @@ const UserSchema = new Schema<UserDocument>({
     enum: Object.values(Role), 
     default: Role.CUSTOMER 
   },
+  avatar_id: { type: String, default: null }, // Cloudinary public_id
   createdAt: { type: Date, default: Date.now },
 });
 

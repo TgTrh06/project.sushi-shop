@@ -16,6 +16,7 @@ export default class UserRepository {
       id: doc._id.toString(),
       username: doc.username,
       email: doc.email,
+      avatar_id: doc.avatar_id,
       // Only map password if exist in doc (use +hashedPassword)
       ...(doc.hashedPassword && { hashedPassword: doc.hashedPassword }),
       role: doc.role,

@@ -4,6 +4,7 @@ import { UpdateUserFormValues } from "@shared/schemas/auth.schema";
 import { BadRequestError, NotFoundError } from "@/utils/common/error.util";
 import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.util";
 import { hashPassword } from "@/utils/security/bcrypt.util";
+import * as cloudinaryService from "@/modules/upload/cloudinary.service";
 
 function sanitizeUser(user: UserEntity): SafeUser {
   const { hashedPassword, ...safeUser } = user;
@@ -32,6 +33,16 @@ export default class UserService {
       // Hash the new password before saving
       updateData.hashedPassword = await hashPassword(dto.password);
       delete updateData.password; // Remove plain password from update data
+    }
+
+    // Handle avatar cleanup if avatar_id is being updated
+    if (updateData.avatar_id && updateData.avatar_id !== existingUser.avatar_id && existingUser.avatar_id) {
+      try {
+        await cloudinaryService.deleteImage(existingUser.avatar_id);
+      } catch (error) {
+        console.error("Failed to delete old avatar from Cloudinary:", error);
+        // Continue with update even if Cloudinary cleanup fails
+      }
     }
     
     const updatedUser = await this.userRepo.update(id, updateData);
@@ -75,6 +86,16 @@ export default class UserService {
 
     if (existingUser.role === "admin") {
       throw new BadRequestError("Cannot delete other admin users");
+    }
+
+    // Clean up Cloudinary avatar before deletion
+    if (existingUser.avatar_id) {
+      try {
+        await cloudinaryService.deleteImage(existingUser.avatar_id);
+      } catch (error) {
+        console.error("Failed to delete user avatar from Cloudinary:", error);
+        // Continue with deletion even if Cloudinary cleanup fails
+      }
     }
 
     await this.userRepo.delete(targetId);

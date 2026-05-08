@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { uploadController } from "./upload.controller";
-import { uploadCloudinaryMiddleware } from "@/middleware/upload.cloudinary.middleware";
+import { uploadCloudinaryMiddleware } from "@/middleware/upload.middleware";
 import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
 
 const router = Router();
