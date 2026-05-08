@@ -9,6 +9,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Loader } from "@/components/ui/Loader";
+import { ScrollToTopButton } from "@/components/ui/ScrollToTopButton";
 import { useState } from "react";
 
 // Wrapper to conditionally render Navbar/Footer for non-admin routes
@@ -38,6 +39,7 @@ const AppShell = () => {
       )}
 
       {!isAdminRoute && !isAuthRoute && <Footer />}
+      {!isAdminRoute && !isAuthRoute && <ScrollToTopButton />}
     </>
   );
 };
@@ -69,6 +71,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Toaster position="top-right" reverseOrder={false} />
       {/* Loading screen while checking auth status */}
       {!isInitialized ? <Loader /> : <AppShell />}

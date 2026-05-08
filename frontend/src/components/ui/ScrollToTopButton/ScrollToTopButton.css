@@ -1,0 +1,45 @@
+.scroll-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  background-color: var(--primary-color);
+  color: var(--raw-white);
+
+  box-shadow: 0 4px 16px rgba(153, 0, 17, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+
+  animation: fade-in-up 0.25s ease forwards;
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(153, 0, 17, 0.45);
+}
+
+.scroll-to-top:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(153, 0, 17, 0.3);
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
