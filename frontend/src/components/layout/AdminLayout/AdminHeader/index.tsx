@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import "./AdminHeader.css";
 
 const pageTitles: Record<string, string> = {
   "/admin/dashboard": "Dashboard",

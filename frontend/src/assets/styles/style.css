@@ -21,11 +21,19 @@
   --raw-white: #fcf6f5;
   --raw-beige: #FFF8E6;
 
-  --black-200: #020202;
-  --black-300: #333333;
-  --black-400: #1f1e31;
-  --black-500: #555555;
-  --gray-100: #888888;
+  /* Renamed from black-200/300/400/500/gray-100 for clarity */
+  --text-ink: #020202;         /* was --black-200: near-black, body text */
+  --text-dark: #333333;        /* was --black-300: dark gray, headings */
+  --text-deep: #1f1e31;        /* was --black-400: deep navy-black */
+  --text-muted: #555555;       /* was --black-500: medium gray, secondary text */
+  --text-subtle: #888888;      /* was --gray-100: light gray, placeholders/captions */
+
+  /* Legacy aliases — kept for backward compatibility */
+  --black-200: var(--text-ink);
+  --black-300: var(--text-dark);
+  --black-400: var(--text-deep);
+  --black-500: var(--text-muted);
+  --gray-100: var(--text-subtle);
 
   --color-white: #fff;
   --color-creamson: var(--raw-white);
@@ -45,10 +53,16 @@
   --color-creamson: #282a30;
   --color-white: #25262b;
 
-  --black-500: #c1c2c5;
-  --black-400: #2c2e33;
-  --black-300: #e9ecef;
-  --black-200: #ffffff;
+  --text-muted: #c1c2c5;       /* was --black-500 */
+  --text-deep: #2c2e33;        /* was --black-400 */
+  --text-dark: #e9ecef;        /* was --black-300 */
+  --text-ink: #ffffff;         /* was --black-200 */
+
+  /* Legacy aliases in dark mode */
+  --black-500: var(--text-muted);
+  --black-400: var(--text-deep);
+  --black-300: var(--text-dark);
+  --black-200: var(--text-ink);
 
   --transparent-button-text-color: #f1f3f5;
   --sticky-button-text-color: #f1f3f5;

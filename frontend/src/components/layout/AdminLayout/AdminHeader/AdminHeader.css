@@ -1,0 +1,104 @@
+/* =========================================================
+   ADMIN HEADER
+   ========================================================= */
+
+.admin-header {
+  background: var(--admin-header-bg);
+  border-bottom: 1px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: var(--admin-header-height);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 0 var(--admin-border);
+}
+
+/* ── Left ── */
+.admin-header__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-header__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+}
+
+.admin-header__breadcrumb {
+  font-size: 13px;
+  color: var(--admin-text-subtle);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Right ── */
+.admin-header__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── User ── */
+.admin-header__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-header__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--admin-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.admin-header__user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header__username {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  line-height: 1.2;
+}
+
+.admin-header__role {
+  font-size: 11px;
+  color: var(--admin-text-subtle);
+}
+
+/* ── Logout ── */
+.admin-header__logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--admin-radius-sm);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--admin-danger);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  cursor: pointer;
+  transition: all var(--admin-transition);
+}
+
+.admin-header__logout-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--admin-danger);
+}

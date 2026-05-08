@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useAuthStore } from "@/stores/useAuthStore";
+import "./AdminSidebar.css";
 
 interface AdminSidebarProps {
   collapsed: boolean;
@@ -22,8 +22,6 @@ const navItems: NavItem[] = [
 ];
 
 export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
-  const user = useAuthStore((s) => s.user);
-
   return (
     <aside className="admin-sidebar">
       {/* Brand */}
@@ -57,7 +55,7 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
         ))}
 
         {/* Divider */}
-        <div style={{ paddingTop: 16, borderTop: "1px solid var(--admin-border)", marginTop: 12 }} />
+        <div className="admin-sidebar__divider" />
 
         <span className="admin-sidebar__section-label">Tài khoản</span>
         <NavLink
