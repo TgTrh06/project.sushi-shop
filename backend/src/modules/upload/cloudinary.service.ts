@@ -1,4 +1,4 @@
-import { cloudinary } from "../../config/cloudinary.config";
+import { cloudinary } from "@/config/cloudinary.config";
 import { UploadApiResponse, UploadApiErrorResponse } from "cloudinary";
 
 interface CloudinaryUploadResult {
