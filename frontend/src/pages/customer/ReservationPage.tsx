@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { ReserveSeatMap } from "@/components/ui/Reserve/ReserveSeatMap";
 import { TimeSlotPicker } from "@/components/ui/Reserve/TimeSlotPicker";
 import { SeatMapSkeleton } from "@/components/ui/Reserve/SeatMapSkeleton";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { useAuthStore } from "@/stores/useAuthStore";
 import api from "@/lib/axios";
 
@@ -132,19 +133,14 @@ export default function ReservePage() {
 
   return (
     <div className="page-container reserve-page-container">
-      {/* Header Section */}
-      <section className="reserve-hero">
-        <div className="container-content">
-          <h1 className="reserve-hero-title">Reservation</h1>
-          <p className="reserve-hero-subtitle">Secure your exclusive Omakase session. Guests are invited to browse availability before signing in.</p>
-        </div>
-      </section>
+      {/* Breadcrumb */}
+      <Breadcrumb items={[{ label: "Reservation" }]} />
 
       <div className="reserve-page-content">
         {/* Left Side: Seat Map & Slots */}
         <div className="reserve-map-section">
           <div className="reserve-map-header">
-            <h1 className="reserve-title">Tasting Menu Reservation</h1>
+            <h1 className="reserve-title">Reservation</h1>
             <p className="reserve-subtitle">
               Secure your exclusive Omakase session. Guests are invited to browse availability before signing in.
             </p>
