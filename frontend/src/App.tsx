@@ -2,12 +2,12 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import { BrowserRouter, useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
 import { AppRoutes } from "@/routes/AppRoutes";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { ToastProvider } from "./components/ui/ToastProvider";
 import { Loader } from "@/components/ui/Loader";
 import { ScrollToTopButton } from "@/components/ui/ScrollToTopButton";
 import { useState } from "react";
@@ -72,7 +72,9 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Toaster position="top-right" reverseOrder={false} />
+
+      <ToastProvider />
+      
       {/* Loading screen while checking auth status */}
       {!isInitialized ? <Loader /> : <AppShell />}
     </BrowserRouter>
