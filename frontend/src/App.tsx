@@ -67,16 +67,11 @@ function App() {
     initialize();
   }, [initialize]);
 
-  // Loading screen while checking auth status
-  if (!isInitialized) {
-    return <Loader />;
-  }
-
   return (
     <BrowserRouter>
-      <ScrollToTop />
       <Toaster position="top-right" reverseOrder={false} />
-      <AppShell />
+      {/* Loading screen while checking auth status */}
+      {!isInitialized ? <Loader /> : <AppShell />}
     </BrowserRouter>
   );
 }
