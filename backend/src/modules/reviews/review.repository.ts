@@ -17,6 +17,7 @@ export default class ReviewRepository {
       user: {
         id: doc.userId?._id?.toString() || doc.userId?.toString() || "",
         name: doc.userId?.username || "",
+        email: doc.userId?.email || "",
         avatar: doc.userId?.avatar,
       },
       rating: doc.rating,
@@ -25,6 +26,78 @@ export default class ReviewRepository {
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
+  }
+
+  async findAllPaginated(
+    skip: number,
+    limit: number,
+    email?: string,
+    date?: string,
+    sortOrder: "asc" | "desc" = "desc"
+  ): Promise<{ docs: ReviewEntity[]; total: number }> {
+    // Build match stage — we need to join with users to filter by email
+    const pipeline: any[] = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      { $unwind: { path: "$userInfo", preserveNullAndEmptyArrays: false } },
+    ];
+
+    const matchConditions: any = {};
+
+    if (email) {
+      matchConditions["userInfo.email"] = { $regex: email, $options: "i" };
+    }
+
+    if (date) {
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+      matchConditions["createdAt"] = { $gte: start, $lte: end };
+    }
+
+    if (Object.keys(matchConditions).length > 0) {
+      pipeline.push({ $match: matchConditions });
+    }
+
+    const countPipeline = [...pipeline, { $count: "total" }];
+    const dataPipeline = [
+      ...pipeline,
+      { $sort: { createdAt: sortOrder === "asc" ? 1 : -1 } },
+      { $skip: skip },
+      { $limit: limit },
+    ];
+
+    const [countResult, docs] = await Promise.all([
+      this.model.aggregate(countPipeline),
+      this.model.aggregate(dataPipeline),
+    ]);
+
+    const total = countResult[0]?.total ?? 0;
+
+    const mapped: ReviewEntity[] = docs.map((doc: any) => ({
+      id: doc._id.toString(),
+      productId: doc.productId?.toString() || "",
+      user: {
+        id: doc.userInfo?._id?.toString() || "",
+        name: doc.userInfo?.username || "",
+        email: doc.userInfo?.email || "",
+        avatar: doc.userInfo?.avatar,
+      },
+      rating: doc.rating,
+      comment: doc.comment,
+      photo_ids: doc.photo_ids || [],
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    }));
+
+    return { docs: mapped, total };
   }
 
   async create(dto: CreateReviewDTO): Promise<ReviewEntity> {

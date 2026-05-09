@@ -57,7 +57,7 @@ ReviewSchema.post("save", async function (this: any) {
 // 2. Trước khi Delete/Update
 ReviewSchema.post("findOneAndDelete", async function (doc: any) {
   if (doc) {
-    await (doc.constructor as any).calcAverageRatings(doc.productId);
+    await (ReviewModel as any).calcAverageRatings(doc.productId);
   }
 });
 

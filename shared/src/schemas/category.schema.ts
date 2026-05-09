@@ -12,3 +12,12 @@ export const BaseCategorySchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
+
+export const CreateCategorySchema = BaseCategorySchema.omit({
+  id: true,
+  slug: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const UpdateCategorySchema = CreateCategorySchema.partial();

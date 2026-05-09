@@ -6,6 +6,7 @@ import type {
   AdminCategory,
   AdminProduct,
   AdminBooking,
+  AdminReview,
   CreateCategoryPayload,
   UpdateCategoryPayload,
   CreateProductPayload,
@@ -135,5 +136,23 @@ export const adminService = {
 
   async deleteBooking(id: string): Promise<void> {
     await api.delete(`/bookings/${id}`);
+  },
+
+  // ─── Reviews ──────────────────────────────────────────
+  async getReviews(
+    page = 1,
+    limit = 10,
+    email?: string,
+    date?: string,
+    sortOrder: "asc" | "desc" = "desc"
+  ): Promise<{ reviews: AdminReview[]; total: number; page: number; totalPages: number }> {
+    const res = await api.get<ApiResponse<{ reviews: AdminReview[]; total: number; page: number; totalPages: number }>>("/reviews", {
+      params: { page, limit, email, date, sortOrder },
+    });
+    return res.data.data;
+  },
+
+  async deleteReview(id: string): Promise<void> {
+    await api.delete(`/reviews/${id}`);
   },
 };

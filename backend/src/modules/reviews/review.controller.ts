@@ -9,6 +9,21 @@ import { PaginationParams } from "@/utils/common/pagination.util";
 export default class ReviewController {
   constructor(private readonly reviewService: ReviewService) { }
 
+  getAllReviews = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const page = parseInt((req.query.page as string) || "1", 10);
+      const limit = parseInt((req.query.limit as string) || "10", 10);
+      const email = (req.query.email as string) || undefined;
+      const date = (req.query.date as string) || undefined;
+      const sortOrder = ((req.query.sortOrder as string) || "desc") as "asc" | "desc";
+
+      const result = await this.reviewService.getAllReviewsPaginated(page, limit, email, date, sortOrder);
+      return ResponseHandler.success(res, result, "Reviews retrieved successfully.");
+    } catch (error) {
+      next(error);
+    }
+  };
+
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user!.id;

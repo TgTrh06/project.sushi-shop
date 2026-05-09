@@ -10,6 +10,7 @@ export const BaseReviewSchema = z.object({
   user: z.object({
     id: z.string(),
     name: z.string(),
+    email: z.string().email(),
     avatar: z.string().optional(),
   }),
   rating: z.number().min(1).max(5),

@@ -11,6 +11,27 @@ export default class ReviewService {
     return this.reviewRepo.create(dto);
   }
 
+  async getAllReviewsPaginated(
+    page: number,
+    limit: number,
+    email?: string,
+    date?: string,
+    sortOrder: "asc" | "desc" = "desc"
+  ): Promise<{ reviews: ReviewEntity[]; total: number; page: number; totalPages: number }> {
+    if (page < 1) throw new BadRequestError("Page must be at least 1.");
+    if (limit < 1 || limit > 100) throw new BadRequestError("Limit must be between 1 and 100.");
+
+    const skip = (page - 1) * limit;
+    const { docs, total } = await this.reviewRepo.findAllPaginated(skip, limit, email, date, sortOrder);
+
+    return {
+      reviews: docs,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   async getProductReviews(productId: string): Promise<ReviewEntity[]> {
     return this.reviewRepo.findByProductId(productId);
   }
