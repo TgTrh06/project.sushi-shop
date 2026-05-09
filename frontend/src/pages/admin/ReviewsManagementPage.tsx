@@ -206,7 +206,7 @@ export const ReviewsManagementPage = () => {
                     <td>
                       <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
                         <button
-                          className="admin-btn admin-btn--secondary admin-btn--sm"
+                          className="admin-btn admin-btn--info admin-btn--sm"
                           onClick={() => setDetailReview(r)}
                           title="View detail"
                         >

@@ -19,6 +19,7 @@ import { UsersManagementPage } from "@/pages/admin/UsersManagementPage";
 import { ProductsManagementPage } from "@/pages/admin/ProductsManagementPage";
 import { CategoriesManagementPage } from "@/pages/admin/CategoriesManagementPage";
 import { ReservationsManagementPage } from "@/pages/admin/ReservationsManagementPage";
+import { ReviewsManagementPage } from "@/pages/admin/ReviewsManagementPage";
 
 export const AppRoutes = () => {
   return (
@@ -52,6 +53,7 @@ export const AppRoutes = () => {
           <Route path="/admin/products" element={<ProductsManagementPage />} />
           <Route path="/admin/categories" element={<CategoriesManagementPage />} />
           <Route path="/admin/resevations" element={<ReservationsManagementPage />} />
+          <Route path="/admin/reviews" element={<ReviewsManagementPage />} />
         </Route>
       </Route>
     </Routes>

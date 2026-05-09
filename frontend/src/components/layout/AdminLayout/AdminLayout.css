@@ -255,6 +255,20 @@
 }
 .admin-btn--danger:hover { background: rgba(239, 68, 68, 0.2); }
 
+.admin-btn--warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--admin-warning);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+.admin-btn--warning:hover { background: rgba(245, 158, 11, 0.2); }
+
+.admin-btn--info {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--admin-info);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.admin-btn--info:hover { background: rgba(59, 130, 246, 0.2); }
+
 .admin-btn--sm {
   padding: 6px 12px;
   font-size: var(--fs-label-sm);
