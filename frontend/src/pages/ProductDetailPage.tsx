@@ -35,6 +35,46 @@ export default function ProductDetailPage() {
   const getCategoryName = useCategoryStore((state) => state.getCategoryName);
   const fetchCategories = useCategoryStore((state) => state.fetchCategories);
 
+  // Helper function to fetch related products with fallback
+  const fetchRelatedProducts = async (
+    currentProduct: Product,
+    categoryName: string
+  ): Promise<Product[]> => {
+    try {
+      // Stage 1: Fetch products from the same category
+      const categoryProducts = await productService.getProducts(1, 4, categoryName);
+      
+      // Filter out the current product
+      const filteredCategoryProducts = categoryProducts.data.filter(
+        (p) => p.slug !== currentProduct.slug
+      );
+      
+      // Stage 2: If we have fewer than 4, fetch random products to fill
+      if (filteredCategoryProducts.length < 4) {
+        const needed = 4 - filteredCategoryProducts.length;
+        const randomProducts = await productService.getProducts(1, needed + 5);
+        
+        // Filter out current product and already included products
+        const existingIds = new Set([
+          currentProduct.id,
+          ...filteredCategoryProducts.map(p => p.id)
+        ]);
+        
+        const additionalProducts = randomProducts.data
+          .filter(p => !existingIds.has(p.id))
+          .slice(0, needed);
+        
+        return [...filteredCategoryProducts, ...additionalProducts];
+      }
+      
+      // Return up to 4 category products
+      return filteredCategoryProducts.slice(0, 4);
+    } catch (error) {
+      console.error("Failed to fetch related products:", error);
+      return [];
+    }
+  };
+
   // Initialize categories on mount
   useEffect(() => {
     fetchCategories();
@@ -124,11 +164,16 @@ export default function ProductDetailPage() {
         try {
           const categoryName = getCategoryName(productData.categoryId);
           if (categoryName && categoryName !== "Japanese Dish") {
-            const related = await productService.getProducts(1, 4, categoryName);
-            setRelatedProducts(related.data.filter((p) => p.slug !== slug));
+            const related = await fetchRelatedProducts(productData, categoryName);
+            setRelatedProducts(related);
+          } else {
+            // Fetch random products if no specific category
+            const random = await productService.getProducts(1, 4);
+            setRelatedProducts(random.data.filter((p) => p.slug !== slug));
           }
         } catch (relatedError) {
           console.error("Failed to fetch related products:", relatedError);
+          setRelatedProducts([]);
         }
       } catch (err) {
         console.error("Failed to fetch product details:", err);
@@ -175,55 +220,94 @@ export default function ProductDetailPage() {
       <div className="product-detail-content">
         {/* Main Content (Left) */}
         <div className="product-detail-main">
-          {/* Gallery Card */}
-          <div className="product-card">
-            <div className="product-gallery">
-              <div className="product-gallery__main">
-                <img
-                  src={
-                    activeImageId
-                      ? getFullUrl(activeImageId)
-                      : "https://placehold.co/800x600?text=Sushi"
-                  }
-                  alt={product.name}
-                />
-              </div>
-              {product.gallery_ids && product.gallery_ids.length > 0 && (
-                <div className="product-gallery__thumbnails">
-                  {product.image_id && (
-                    <div
-                      className={`thumbnail ${
-                        activeImageId === product.image_id ? "active" : ""
-                      }`}
-                      onClick={() => setActiveImageId(product.image_id!)}
-                    >
-                      <img
-                        src={getThumbnailUrl(product.image_id)}
-                        alt={`${product.name} main`}
-                      />
-                    </div>
-                  )}
-                  {product.gallery_ids.map((galleryId, idx) => (
-                    <div
-                      key={idx}
-                      className={`thumbnail ${
-                        activeImageId === galleryId ? "active" : ""
-                      }`}
-                      onClick={() => setActiveImageId(galleryId)}
-                    >
-                      <img
-                        src={getThumbnailUrl(galleryId)}
-                        alt={`${product.name} gallery ${idx + 1}`}
-                      />
-                    </div>
-                  ))}
+          {/* Gallery Card with embedded Product Info */}
+          <div className="detail-card">
+            <div className="product-gallery-wrapper">
+              {/* Gallery Section - 60% */}
+              <div className="product-gallery">
+                <div className="product-gallery__main">
+                  <img
+                    src={
+                      activeImageId
+                        ? getFullUrl(activeImageId)
+                        : "https://placehold.co/800x600?text=Sushi"
+                    }
+                    alt={product.name}
+                  />
                 </div>
-              )}
+                {product.gallery_ids && product.gallery_ids.length > 0 && (
+                  <div className="product-gallery__thumbnails">
+                    {product.image_id && (
+                      <div
+                        className={`thumbnail ${
+                          activeImageId === product.image_id ? "active" : ""
+                        }`}
+                        onClick={() => setActiveImageId(product.image_id!)}
+                      >
+                        <img
+                          src={getThumbnailUrl(product.image_id)}
+                          alt={`${product.name} main`}
+                        />
+                      </div>
+                    )}
+                    {product.gallery_ids.map((galleryId, idx) => (
+                      <div
+                        key={idx}
+                        className={`thumbnail ${
+                          activeImageId === galleryId ? "active" : ""
+                        }`}
+                        onClick={() => setActiveImageId(galleryId)}
+                      >
+                        <img
+                          src={getThumbnailUrl(galleryId)}
+                          alt={`${product.name} gallery ${idx + 1}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Product Info Section - 40% */}
+              <div className="product-info-card">
+                <span className="product-category">
+                  {getCategoryName(product.categoryId) || "Japanese Dish"}
+                </span>
+                <h1 className="product-name">{product.name}</h1>
+
+                <div className="product-rating">
+                  {[...Array(5)].map((_, i) => (
+                    <img
+                      key={i}
+                      src={Icon.star}
+                      alt="star"
+                      className={
+                        i < Math.floor(product.ratingSummary.averageRating)
+                          ? "star--filled"
+                          : "star--empty"
+                      }
+                    />
+                  ))}
+                  <span className="rating-value">
+                    ({product.ratingSummary.averageRating.toFixed(1)})
+                  </span>
+                  {product.ratingSummary.totalReviews > 0 && (
+                    <span className="reviews-count">
+                      {product.ratingSummary.totalReviews}{" "}
+                      {product.ratingSummary.totalReviews === 1 ? "review" : "reviews"}
+                    </span>
+                  )}
+                </div>
+
+                <p className="product-price">${product.price}.00</p>
+
+                <button className="btn-wishlist">Add to Wishlist</button>
+              </div>
             </div>
           </div>
 
           {/* Reviews Card */}
-          <div className="product-card">
+          <div className="detail-card">
             <h2 className="product-card-title">Guest Experience</h2>
 
             {currentUser ? (
@@ -299,60 +383,20 @@ export default function ProductDetailPage() {
               )}
             </div>
           </div>
-
-          {/* Related Products Card */}
-          {relatedProducts.length > 0 && (
-            <div className="product-card">
-              <h2 className="product-card-title">You Might Also Like</h2>
-              <div className="related-grid">
-                {relatedProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Sidebar (Right) */}
         <aside className="product-sidebar">
-          <div className="product-info-card">
-            <span className="product-category">
-              {getCategoryName(product.categoryId) || "Japanese Dish"}
-            </span>
-            <h1 className="product-name">{product.name}</h1>
-
-            <div className="product-rating">
-              {[...Array(5)].map((_, i) => (
-                <img
-                  key={i}
-                  src={Icon.star}
-                  alt="star"
-                  className={
-                    i < Math.floor(product.ratingSummary.averageRating)
-                      ? "star--filled"
-                      : "star--empty"
-                  }
-                />
-              ))}
-              <span className="rating-value">
-                ({product.ratingSummary.averageRating.toFixed(1)})
-              </span>
-              {product.ratingSummary.totalReviews > 0 && (
-                <span className="reviews-count">
-                  {product.ratingSummary.totalReviews}{" "}
-                  {product.ratingSummary.totalReviews === 1 ? "review" : "reviews"}
-                </span>
-              )}
+          {relatedProducts.length > 0 && (
+            <div className="detail-card">
+              <h2 className="product-card-title">You Might Also Like</h2>
+              <div className="related-list">
+                {relatedProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} vertical />
+                ))}
+              </div>
             </div>
-
-            <p className="product-price">${product.price}.00</p>
-
-            <div className="product-divider" />
-
-            <p className="product-description">{product.description}</p>
-
-            <button className="btn-wishlist">Add to Wishlist</button>
-          </div>
+          )}
         </aside>
       </div>
     </div>
