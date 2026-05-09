@@ -21,6 +21,16 @@
   --raw-white: #fcf6f5;
   --raw-beige: #FFF8E6;
 
+  /* Toast notification colors */
+  --toast-success: #10b981;      /* Green */
+  --toast-error: #ef4444;        /* Red */
+  --toast-warning: #f59e0b;      /* Amber */
+  --toast-info: #3b82f6;         /* Blue */
+
+  /* Text colors for toast */
+  --toast-text-dark: #121212;
+  --toast-text-light: #fcf6f5;
+
   /* Renamed from black-200/300/400/500/gray-100 for clarity */
   --text-ink: #020202;         /* was --black-200: near-black, body text */
   --text-dark: #333333;        /* was --black-300: dark gray, headings */
@@ -81,6 +91,15 @@
 
   --transparent-button-text-color: #f1f3f5;
   --sticky-button-text-color: #f1f3f5;
+
+  /* Toast notification colors for dark mode */
+  --toast-success: #10b981;
+  --toast-error: #ef4444;
+  --toast-warning: #f59e0b;
+  --toast-info: #3b82f6;
+
+  --toast-text-dark: #fcf6f5;
+  --toast-text-light: #121212;
   /* High-end Slate-950 equivalent */
 }
 

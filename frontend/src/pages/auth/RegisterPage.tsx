@@ -5,6 +5,7 @@ import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from 
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Images } from "@/assets/image";
 
 export const RegisterPage = () => {
@@ -16,6 +17,8 @@ export const RegisterPage = () => {
     register,
     handleSubmit,
     setError,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<RegisterFormInput, unknown, RegisterFormValues>({
     resolver: zodResolver(RegisterSchema),
@@ -28,6 +31,9 @@ export const RegisterPage = () => {
       role: "customer", // default role is customer, users cannot choose role during registration
     },
   });
+
+  const passwordValue = watch("password");
+  const confirmPasswordValue = watch("confirmPassword");
 
   const onSubmit = async (data: RegisterFormInput) => {
     try {
@@ -51,7 +57,7 @@ export const RegisterPage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Name */}
           <div className="auth__form-group">
-            <label className="auth__label">Full Name</label>
+            <label className="auth__label">Your Name</label>
             <input
               {...register("username")}
               type="text"
@@ -84,13 +90,13 @@ export const RegisterPage = () => {
           {/* Password */}
           <div className="auth__form-group">
             <label className="auth__label">Password</label>
-            <input
-              {...register("password")}
-              type="password"
-              autoComplete="new-password"
-              disabled={loading}
+            <PasswordInput
+              value={passwordValue}
+              onChange={(value) => setValue("password", value)}
               placeholder="Min. 6 characters"
-              className={`auth__input ${errors.password ? "auth__input--error" : ""}`}
+              disabled={loading}
+              error={!!errors.password}
+              autoComplete="new-password"
             />
             {errors.password && (
               <span className="auth__error">{errors.password.message}</span>
@@ -100,13 +106,13 @@ export const RegisterPage = () => {
           {/* Confirm Password */}
           <div className="auth__form-group">
             <label className="auth__label">Confirm Password</label>
-            <input
-              {...register("confirmPassword")}
-              type="password"
-              autoComplete="new-password"
-              disabled={loading}
+            <PasswordInput
+              value={confirmPasswordValue}
+              onChange={(value) => setValue("confirmPassword", value)}
               placeholder="Re-enter your password"
-              className={`auth__input ${errors.confirmPassword ? "auth__input--error" : ""}`}
+              disabled={loading}
+              error={!!errors.confirmPassword}
+              autoComplete="new-password"
             />
             {errors.confirmPassword && (
               <span className="auth__error">{errors.confirmPassword.message}</span>

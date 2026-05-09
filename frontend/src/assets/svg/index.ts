@@ -10,7 +10,9 @@ import arrowUpRight from "./src/arrow-up-right.svg";
 import arrowLeft from "./src/arrow-left.svg";
 import arrowRight from "./src/arrow-right.svg";
 import arrowHorizontal from "./src/arrow-horizontal.svg";
-import arrowVertical from "./src/arrow-vertical.svg"; 
+import arrowVertical from "./src/arrow-vertical.svg";
+import eyeOpen from "./src/eye-open.svg";
+import eyeClosed from "./src/eye-closed.svg";
 
 export const Icon = {
   search: searchIcon,
@@ -26,4 +28,6 @@ export const Icon = {
   arrowVertical: arrowVertical,
   arrowHorizontal: arrowHorizontal,
   arrowUpRight: arrowUpRight,
+  eyeOpen: eyeOpen,
+  eyeClosed: eyeClosed,
 };

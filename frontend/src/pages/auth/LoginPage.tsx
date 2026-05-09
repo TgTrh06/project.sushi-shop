@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { LoginSchema, type LoginFormInput, type LoginFormValues } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Images } from "@/assets/image";
 
 export const LoginPage = () => {
@@ -16,11 +17,15 @@ export const LoginPage = () => {
     register,
     handleSubmit,
     setError,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormInput, unknown, LoginFormValues>({
     resolver: zodResolver(LoginSchema),
     mode: "onSubmit",
   });
+
+  const passwordValue = watch("password");
 
   const onSubmit = async (data: LoginFormInput) => {
     try {
@@ -70,13 +75,13 @@ export const LoginPage = () => {
                 Forgot password?
               </Link>
             </div>
-            <input
-              {...register("password")}
-              type="password"
-              autoComplete="current-password"
-              disabled={loading}
+            <PasswordInput
+              value={passwordValue}
+              onChange={(value) => setValue("password", value)}
               placeholder="••••••••"
-              className={`auth__input ${errors.password ? "auth__input--error" : ""}`}
+              disabled={loading}
+              error={!!errors.password}
+              autoComplete="current-password"
             />
             {errors.password && (
               <span className="auth__error">{errors.password.message}</span>
