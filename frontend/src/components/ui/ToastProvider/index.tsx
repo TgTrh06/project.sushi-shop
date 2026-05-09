@@ -23,22 +23,33 @@ export const ToastProvider = () => {
           style: {
             background: "#fff",
             color: "#121212",
-            border: "1px solid rgba(0,0,0,0.06)",
+            border: "1px solid rgba(16, 185, 129, 0.2)",
           },
           iconTheme: {
-            primary: "#990011",
-            secondary: "#fcf6f5",
+            primary: "#10b981",
+            secondary: "#ecfdf5",
           },
         },
         error: {
           style: {
             background: "#fff",
             color: "#121212",
-            border: "1px solid rgba(239,68,68,0.2)",
+            border: "1px solid rgba(239, 68, 68, 0.2)",
           },
           iconTheme: {
             primary: "#ef4444",
-            secondary: "#fff",
+            secondary: "#fef2f2",
+          },
+        },
+        loading: {
+          style: {
+            background: "#fff",
+            color: "#121212",
+            border: "1px solid rgba(59, 130, 246, 0.2)",
+          },
+          iconTheme: {
+            primary: "#3b82f6",
+            secondary: "#eff6ff",
           },
         },
       }}

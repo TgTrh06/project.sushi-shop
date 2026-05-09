@@ -237,21 +237,23 @@ export default function ProductDetailPage() {
                 <h1 className="product-name">{product.name}</h1>
 
                 <div className="product-rating">
-                  {[...Array(5)].map((_, i) => (
-                    <img
-                      key={i}
-                      src={Icon.star}
-                      alt="star"
-                      className={
-                        i < Math.floor(product.ratingSummary.averageRating)
-                          ? "star--filled"
-                          : "star--empty"
-                      }
-                    />
-                  ))}
-                  <span className="rating-value">
-                    ({product.ratingSummary.averageRating.toFixed(1)})
-                  </span>
+                  <div className="product-rating__stars">
+                    {[...Array(5)].map((_, i) => (
+                      <img
+                        key={i}
+                        src={Icon.star}
+                        alt="star"
+                        className={
+                          i < Math.floor(product.ratingSummary.averageRating)
+                            ? "star--filled"
+                            : "star--empty"
+                        }
+                      />
+                    ))}
+                    <span className="rating-value">
+                      ({product.ratingSummary.averageRating.toFixed(1)})
+                    </span>
+                  </div>
                   {product.ratingSummary.totalReviews > 0 && (
                     <span className="reviews-count">
                       {product.ratingSummary.totalReviews}{" "}
