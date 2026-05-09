@@ -53,10 +53,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       showSuccess("Registration successful! You can now log in.");
     } catch (error) {
       console.error("Registration error:", error);
-      showError("Registration failed. Please try again.");
-      // throw error; // Rethrow to allow component-level handling if needed
-    } finally {
       set({ loading: false });
+      throw error; // Rethrow to allow component-level handling
     }
   },
 
@@ -70,9 +68,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       showSuccess(`Welcome back, ${user.username}!`);
     } catch (error) {
       console.error("Login error:", error);
-      showError("Login failed. Please check your credentials.");
-    } finally {
       set({ loading: false });
+      throw error; // Rethrow to allow component-level handling
     }
   },
 
