@@ -263,7 +263,7 @@
   font-size: var(--fs-body-xs);
   color: var(--secondary-color);
   background-color: var(--color-creamson);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-light);
   border-radius: 10px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -353,7 +353,7 @@
 .fieldEditBtn--cancel {
   color: var(--text-muted);
   background: transparent;
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: var(--border-light);
 }
 
 [data-theme="dark"] .fieldEditBtn--cancel {
@@ -485,7 +485,7 @@
   }
 
   .sidebarNav::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--border-light);
     border-radius: 10px;
   }
 

@@ -165,7 +165,7 @@
 .slot-pill {
   padding: 10px 24px;
   border-radius: 50px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-light);
   background-color: var(--color-white);
   color: var(--secondary-color);
   font-family: var(--plus-jakarta-sans);
@@ -263,7 +263,7 @@
 }
 
 [data-theme="dark"] .svg-kitchen-bg {
-  fill: rgba(0, 0, 0, 0.3);
+  fill: var(--border-medium);
 }
 
 .svg-stone {
@@ -387,7 +387,7 @@
   font-size: var(--fs-heading-sm);
   margin-bottom: 24px;
   color: var(--secondary-color);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--border-light);
   padding-bottom: 16px;
   transition: border-color 0.3s ease;
 }
@@ -424,7 +424,7 @@
 .form-group input {
   padding: 14px 16px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-light);
   background-color: var(--color-creamson);
   color: var(--secondary-color);
   font-family: var(--plus-jakarta-sans);
@@ -481,7 +481,7 @@
 .total-row {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  border-top: 1px dashed var(--border-light);
   font-size: var(--fs-body-lg);
   font-weight: 700;
   color: var(--secondary-color);

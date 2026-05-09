@@ -31,6 +31,11 @@
   --toast-text-dark: #121212;
   --toast-text-light: #fcf6f5;
 
+  /* Border colors for light mode */
+  --border-light: rgba(0, 0, 0, 0.1);
+  --border-medium: rgba(0, 0, 0, 0.3);
+  --border-dark: rgba(0, 0, 0, 0.5);
+
   /* Renamed from black-200/300/400/500/gray-100 for clarity */
   --text-ink: #020202;         /* was --black-200: near-black, body text */
   --text-dark: #333333;        /* was --black-300: dark gray, headings */
@@ -100,6 +105,11 @@
 
   --toast-text-dark: #fcf6f5;
   --toast-text-light: #121212;
+
+  /* Border colors for dark mode */
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-medium: rgba(255, 255, 255, 0.3);
+  --border-dark: rgba(255, 255, 255, 0.5);
   /* High-end Slate-950 equivalent */
 }
 

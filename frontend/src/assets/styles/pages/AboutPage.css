@@ -28,7 +28,7 @@
   border-radius: 16px;
   padding: 56px 64px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-light);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -135,7 +135,7 @@
   padding: 48px 32px;
   background-color: var(--color-creamson);
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-light);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
