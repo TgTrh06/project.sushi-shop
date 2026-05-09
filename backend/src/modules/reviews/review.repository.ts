@@ -14,6 +14,10 @@ export default class ReviewRepository {
     return {
       id: doc._id.toString(),
       productId: doc.productId.toString(),
+      product: {
+        slug: doc.productInfo?.slug || "",
+        name: doc.productInfo?.name || "",
+      },
       user: {
         id: doc.userId?._id?.toString() || doc.userId?.toString() || "",
         name: doc.userId?.username || "",
@@ -46,6 +50,15 @@ export default class ReviewRepository {
         },
       },
       { $unwind: { path: "$userInfo", preserveNullAndEmptyArrays: false } },
+      {
+        $lookup: {
+          from: "products",
+          localField: "productId",
+          foreignField: "_id",
+          as: "productInfo",
+        },
+      },
+      { $unwind: { path: "$productInfo", preserveNullAndEmptyArrays: true } },
     ];
 
     const matchConditions: any = {};
@@ -84,6 +97,10 @@ export default class ReviewRepository {
     const mapped: ReviewEntity[] = docs.map((doc: any) => ({
       id: doc._id.toString(),
       productId: doc.productId?.toString() || "",
+      product: {
+        slug: doc.productInfo?.slug || "",
+        name: doc.productInfo?.name || "",
+      },
       user: {
         id: doc.userInfo?._id?.toString() || "",
         name: doc.userInfo?.username || "",

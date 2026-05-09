@@ -164,6 +164,7 @@ export const ReviewsManagementPage = () => {
                 <tr>
                   <th>#</th>
                   <th>User Email</th>
+                  <th>Product</th>
                   <th>Rating</th>
                   <th>Review</th>
                   <th>Date</th>
@@ -180,6 +181,12 @@ export const ReviewsManagementPage = () => {
                       <div style={{ fontWeight: 500 }}>{r.user.email || "—"}</div>
                       <div style={{ fontSize: 11, color: "var(--admin-text-muted)" }}>
                         {r.user.name}
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 500, fontSize: 13 }}>{r.product.name || "—"}</div>
+                      <div style={{ fontSize: 11, color: "var(--admin-text-muted)", fontFamily: "monospace" }}>
+                        {r.product.slug}
                       </div>
                     </td>
                     <td>
@@ -255,6 +262,15 @@ export const ReviewsManagementPage = () => {
             </div>
             <div className="admin-modal__body">
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div className="admin-form-group">
+                  <label className="admin-form-label">Product</label>
+                  <div style={{ fontSize: 14, color: "var(--admin-text-primary)", fontWeight: 500 }}>
+                    {detailReview.product.name}
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--admin-text-muted)", fontFamily: "monospace" }}>
+                    {detailReview.product.slug}
+                  </div>
+                </div>
                 <div className="admin-form-group">
                   <label className="admin-form-label">User</label>
                   <div style={{ fontSize: 14, color: "var(--admin-text-primary)", fontWeight: 500 }}>

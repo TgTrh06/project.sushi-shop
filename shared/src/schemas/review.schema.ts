@@ -7,6 +7,10 @@ import { z } from "zod";
 export const BaseReviewSchema = z.object({
   id: z.string(),
   productId: z.string(),
+  product: z.object({
+    slug: z.string(),
+    name: z.string(),
+  }),
   user: z.object({
     id: z.string(),
     name: z.string(),
@@ -23,6 +27,7 @@ export const BaseReviewSchema = z.object({
 export const CreateReviewSchema = BaseReviewSchema.omit({
   id: true,
   user: true,      // userId is extracted from auth token on the backend
+  product: true,   // populated from DB via productId
   createdAt: true,
   updatedAt: true,
 });
