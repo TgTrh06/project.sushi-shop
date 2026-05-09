@@ -3,8 +3,8 @@
    ========================================================= */
 
 .auth__container {
-  margin-top: 4vh;
-  min-height: 96vh;
+  margin-top: 6vh;
+  min-height: 93vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,13 +13,23 @@
   font-family: var(--plus-jakarta-sans);
 }
 
+[data-theme="dark"] .auth__container {
+  background-color: var(--color-deep);
+}
+
 .auth__card {
   width: 100%;
   max-width: 480px;
   background-color: var(--color-white);
   border-radius: 24px;
-  padding: 36px 48px 48px;
+  padding: 24px 36px 36px 36px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .auth__card {
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .auth__header {
@@ -41,9 +51,17 @@
   margin-bottom: 8px;
 }
 
+[data-theme="dark"] .auth__title {
+  color: var(--raw-white);
+}
+
 .auth__subtitle {
   font-size: var(--fs-body-sm);
   color: var(--text-muted);
+}
+
+[data-theme="dark"] .auth__subtitle {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .auth__form-group {
@@ -58,6 +76,10 @@
   font-weight: 600;
   color: var(--secondary-color);
   margin-bottom: 8px;
+}
+
+[data-theme="dark"] .auth__label {
+  color: var(--raw-white);
 }
 
 .auth__link {
@@ -81,6 +103,13 @@
   outline: none;
   transition: all 0.2s ease;
   background-color: var(--raw-white);
+  color: var(--secondary-color);
+}
+
+[data-theme="dark"] .auth__input {
+  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--raw-white);
 }
 
 .auth__input:focus {
@@ -89,8 +118,21 @@
   background-color: var(--raw-beige);
 }
 
+[data-theme="dark"] .auth__input:focus {
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(177, 69, 74, 0.2);
+}
+
 .auth__input--error {
   border-color: #ef4444;
+}
+
+.auth__input::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .auth__input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .auth__error {
@@ -115,6 +157,10 @@
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
+[data-theme="dark"] .auth__button {
+  background-color: var(--primary-color);
+}
+
 .auth__button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -130,6 +176,10 @@
   margin-top: 32px;
   font-size: var(--fs-body-xs);
   color: var(--text-muted);
+}
+
+[data-theme="dark"] .auth__footer {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Media Queries */

@@ -10,7 +10,7 @@
 .user-menu-trigger {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
   padding: 4px 14px 4px 6px;
   border-radius: 24px;
   border: 1.5px solid var(--primary-color);

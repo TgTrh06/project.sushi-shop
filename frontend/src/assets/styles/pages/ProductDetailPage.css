@@ -35,7 +35,7 @@
 /* ── Card base ── */
 .detail-card {
   background-color: var(--color-white);
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 20px 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -239,11 +239,13 @@
   flex: 1;
   min-width: 0;
   background-color: var(--color-white);
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 20px 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 [data-theme="dark"] .product-info-card {
@@ -272,9 +274,15 @@
 
 .product-rating {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  gap: 4px;
   margin-bottom: 20px;
+}
+
+.product-rating__stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .product-rating img {
@@ -302,7 +310,7 @@
   font-family: var(--plus-jakarta-sans);
   font-size: var(--fs-label);
   color: var(--text-subtle);
-  margin-left: 4px;
+  margin-left: 0;
 }
 
 .product-price {
@@ -315,18 +323,19 @@
 
 .btn-wishlist {
   width: 100%;
-  padding: 16px;
+  padding: 12px;
   background-color: var(--primary-color);
   color: var(--raw-white);
   font-family: var(--plus-jakarta-sans);
   font-weight: 700;
-  font-size: var(--fs-body-md);
+  font-size: var(--fs-body-sm);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-top: auto;
 }
 
 .btn-wishlist:hover {

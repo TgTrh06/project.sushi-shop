@@ -25,7 +25,7 @@
 /* ── Card base ── */
 .about-card {
   background-color: var(--color-white);
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 56px 64px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -134,7 +134,7 @@
   text-align: center;
   padding: 48px 32px;
   background-color: var(--color-creamson);
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   position: relative;
