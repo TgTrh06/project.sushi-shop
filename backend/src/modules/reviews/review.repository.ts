@@ -53,8 +53,11 @@ export default class ReviewRepository {
       {
         $lookup: {
           from: "products",
-          localField: "productId",
-          foreignField: "_id",
+          let: { pid: { $toObjectId: "$productId" } },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$pid"] } } },
+            { $project: { slug: 1, name: 1 } },
+          ],
           as: "productInfo",
         },
       },
