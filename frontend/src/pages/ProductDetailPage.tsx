@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { ProductGallery } from "@/components/ui/ProductGallery";
 import { Icon } from "@/assets/svg";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Loader } from "@/components/ui/Loader";
@@ -18,7 +19,6 @@ export default function ProductDetailPage() {
   
   // Product state
   const [product, setProduct] = useState<Product | null>(null);
-  const [activeImageId, setActiveImageId] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -144,7 +144,6 @@ export default function ProductDetailPage() {
         // Fetch product by slug
         const productData = await productService.getProductBySlug(slug);
         setProduct(productData);
-        setActiveImageId(productData.image_id || "");
 
         // Fetch first page of reviews
         try {
@@ -224,51 +223,13 @@ export default function ProductDetailPage() {
           <div className="detail-card">
             <div className="product-gallery-wrapper">
               {/* Gallery Section - 60% */}
-              <div className="product-gallery">
-                <div className="product-gallery__main">
-                  <img
-                    src={
-                      activeImageId
-                        ? getFullUrl(activeImageId)
-                        : "https://placehold.co/800x600?text=Sushi"
-                    }
-                    alt={product.name}
-                  />
-                </div>
-                {product.gallery_ids && product.gallery_ids.length > 0 && (
-                  <div className="product-gallery__thumbnails">
-                    {product.image_id && (
-                      <div
-                        className={`thumbnail ${
-                          activeImageId === product.image_id ? "active" : ""
-                        }`}
-                        onClick={() => setActiveImageId(product.image_id!)}
-                      >
-                        <img
-                          src={getThumbnailUrl(product.image_id)}
-                          alt={`${product.name} main`}
-                        />
-                      </div>
-                    )}
-                    {product.gallery_ids.map((galleryId, idx) => (
-                      <div
-                        key={idx}
-                        className={`thumbnail ${
-                          activeImageId === galleryId ? "active" : ""
-                        }`}
-                        onClick={() => setActiveImageId(galleryId)}
-                      >
-                        <img
-                          src={getThumbnailUrl(galleryId)}
-                          alt={`${product.name} gallery ${idx + 1}`}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <ProductGallery
+                mainImageId={product.image_id ?? ""}
+                galleryIds={product.gallery_ids ?? []}
+                productName={product.name}
+              />
 
-              {/* Product Info Section - 40% */}
+              {/* Product Info Section - 30% */}
               <div className="product-info-card">
                 <span className="product-category">
                   {getCategoryName(product.categoryId) || "Japanese Dish"}
@@ -299,7 +260,7 @@ export default function ProductDetailPage() {
                   )}
                 </div>
 
-                <p className="product-price">${product.price}.00</p>
+                <p className="product-price">{product.price.toLocaleString("vi-VN")}₫</p>
 
                 <button className="btn-wishlist">Add to Wishlist</button>
               </div>

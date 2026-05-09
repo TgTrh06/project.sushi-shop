@@ -36,7 +36,7 @@
 .detail-card {
   background-color: var(--color-white);
   border-radius: 24px;
-  padding: 32px 40px;
+  padding: 20px 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -48,7 +48,7 @@
 
 .product-card-title {
   font-family: var(--playfair-display);
-  font-size: var(--fs-heading-md);
+  font-size: var(--fs-heading-sm);
   color: var(--secondary-color);
   margin-bottom: 28px;
 }
@@ -57,68 +57,18 @@
    GALLERY
    ========================================================= */
 
+/* Gallery wrapper — ProductGallery component handles its own layout */
 .product-gallery-wrapper {
   display: flex;
-  gap: 24px;
-  align-items: flex-start;
+  gap: 16px;
+  align-items: stretch;
+  height: 300px;
 }
 
-.product-gallery {
-  flex: 0 0 60%;
-}
-
-.product-gallery__main {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  background-color: var(--color-creamson);
-}
-
-.product-gallery__main img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.product-gallery__thumbnails {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.product-gallery__thumbnails::-webkit-scrollbar {
-  display: none;
-}
-
-.thumbnail {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.thumbnail:hover {
-  border-color: var(--primary-color);
-}
-
-.thumbnail.active {
-  border-color: var(--primary-color);
-  box-shadow: 0 4px 12px rgba(153, 0, 17, 0.2);
-}
-
-.thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+/* ProductGallery fills 65% of the wrapper */
+.product-gallery-wrapper > .product-gallery {
+  flex: 0 0 65%;
+  min-width: 0;
 }
 
 /* =========================================================
@@ -149,6 +99,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-left: 24px;
+  border-left: 3px solid var(--primary-color);
+  padding-left: 20px;
 }
 
 .no-reviews {
@@ -283,12 +236,14 @@
 }
 
 .product-info-card {
-  flex: 0 0 40%;
+  flex: 1;
+  min-width: 0;
   background-color: var(--color-white);
   border-radius: 24px;
-  padding: 32px 40px;
+  padding: 20px 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
 }
 
 [data-theme="dark"] .product-info-card {
@@ -309,7 +264,7 @@
 
 .product-name {
   font-family: var(--playfair-display);
-  font-size: var(--fs-heading-lg);
+  font-size: var(--fs-heading-md);
   color: var(--secondary-color);
   margin-bottom: 16px;
   line-height: 1.2;
@@ -447,7 +402,7 @@
   }
 
   .detail-card {
-    padding: 24px 20px;
+    padding: 16px 18px;
   }
 
   .product-info-card {
