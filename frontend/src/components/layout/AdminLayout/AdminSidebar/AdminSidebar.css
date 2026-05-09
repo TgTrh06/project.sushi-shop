@@ -31,7 +31,7 @@
 .admin-sidebar__brand-icon {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: 50%;
   background: var(--admin-accent);
   display: flex;
   align-items: center;

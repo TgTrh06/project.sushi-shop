@@ -36,6 +36,8 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  display: flex;
+  gap: 2px;
 }
 
 .footer__logo span {

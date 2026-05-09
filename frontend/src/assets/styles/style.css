@@ -160,7 +160,7 @@ h4 {
 }
 
 .sushi__subtitle {
-  font-size: var(--fs-body-xs);
+  font-size: var(--fs-body-lg);
   font-weight: 400;
   font-family: var(--plus-jakarta-sans);
   color: var(--primary-color);

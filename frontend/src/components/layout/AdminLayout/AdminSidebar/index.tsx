@@ -11,6 +11,7 @@ import {
   ChevronRight,
   type LucideIcon,
 } from "lucide-react";
+import { LogoIcon } from "@/components/ui/LogoIcon";
 import "./AdminSidebar.css";
 
 interface AdminSidebarProps {
@@ -40,6 +41,7 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
       {/* Brand */}
       <div className="admin-sidebar__brand">
         <div className="admin-sidebar__brand-icon">
+          <LogoIcon size={32} primaryColor="var(--primary-color)" className="header__logo-icon"/>
         </div>
         <div className="admin-sidebar__brand-text">
           <span className="admin-sidebar__brand-title">ItsuSushi Admin</span>

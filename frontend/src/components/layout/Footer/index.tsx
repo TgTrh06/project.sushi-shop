@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "./Footer.css";
 import { SocialButtons } from "@/components/ui/SocialButtons";
+import { LogoIcon } from "@/components/ui/LogoIcon";
 
 export const Footer = () => {
   return (
@@ -10,6 +11,7 @@ export const Footer = () => {
           {/* Col 1: Brand / Intro */}
           <div className="footer__col footer__col--brand">
             <h3 className="footer__logo">
+              <LogoIcon size={32} primaryColor="var(--primary-color)" className="header__logo-icon"/>
               <span>Itsu</span>Sushi
             </h3>
             <p className="footer__vision">

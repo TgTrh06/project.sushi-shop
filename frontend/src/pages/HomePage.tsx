@@ -1,9 +1,12 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { PlayCircle, Calendar, ArrowRight, ChevronRight, Sparkles } from "lucide-react";
 import { Images } from "@/assets/image";
 import { Icon } from "@/assets/svg";
 import { DotNav } from "@/components/layout/DotNav";
 
 export const HomePage = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState(0);
 
   const sectionRefs = [
@@ -72,11 +75,18 @@ export const HomePage = () => {
             </p>
 
             <div className="hero-content__buttons">
-              <button className="hero-content__order-button">
+              <button 
+                className="hero-content__order-button"
+                onClick={() => navigate("/reservation")}
+              >
+                <Calendar size={20} />
                 Reserve Now
               </button>
-              <button className="hero-content__play-button">
-                <img src={Icon.playCircle} alt="play" />
+              <button 
+                className="hero-content__play-button"
+                onClick={() => navigate("/#")}
+              >
+                <PlayCircle size={20} />
                 How to Reserve
               </button>
             </div>
@@ -111,9 +121,12 @@ export const HomePage = () => {
             <img src={Images.sushi.s3} alt="sushi" data-aos="fade-right" />
           </div>
 
-          <button className="about-us__button">
+          <button 
+            className="about-us__button"
+            onClick={() => navigate("/about")}
+          >
             Learn More
-            <img src={Icon.arrowUpRight} alt="learn more" />
+            <ChevronRight size={20} />
           </button>
 
           <div className="about-us__image-sushi2">
@@ -220,9 +233,12 @@ export const HomePage = () => {
             </article>
           </div>
 
-          <button className="popular-foods__button">
+          <button 
+            className="popular-foods__button"
+            onClick={() => navigate("/menu")}
+          >
             Explore Food
-            <img src={Icon.arrowRight} alt="arrow-right" />
+            <ArrowRight size={18} />
           </button>
         </div>
       </section>
@@ -291,9 +307,14 @@ export const HomePage = () => {
           </div>
         </section>
 
-        <div className="trending__discover" data-aos="zoom-in">
+        <button 
+          className="trending__discover" 
+          data-aos="zoom-in"
+          onClick={() => navigate("/menu")}
+        >
+          <Sparkles size={32} />
           <p>Discover</p>
-        </div>
+        </button>
 
         <section className="container-content trending-drinks">
           <div className="trending__image flex-center">

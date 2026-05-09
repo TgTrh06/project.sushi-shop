@@ -75,9 +75,11 @@ export const ProductGallery = ({
         <div className="product-gallery__thumb-strip">
           {/* Placeholder để giữ layout khi nút ẩn */}
           <div className="gallery-nav-btn-slot">
-            {canThumbUp && (
-              <GalleryNavBtn direction="up" onClick={handleThumbUp} />
-            )}
+            <GalleryNavBtn 
+              direction="up" 
+              onClick={handleThumbUp}
+              disabled={!canThumbUp}
+            />
           </div>
 
           <div className="product-gallery__thumbs">
@@ -99,9 +101,11 @@ export const ProductGallery = ({
           </div>
 
           <div className="gallery-nav-btn-slot">
-            {canThumbDown && (
-              <GalleryNavBtn direction="down" onClick={handleThumbDown} />
-            )}
+            <GalleryNavBtn 
+              direction="down" 
+              onClick={handleThumbDown}
+              disabled={!canThumbDown}
+            />
           </div>
         </div>
       )}

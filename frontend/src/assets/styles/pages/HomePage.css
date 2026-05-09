@@ -77,44 +77,62 @@
 
   display: flex;
   flex-wrap: wrap;
-  gap: 36px;
+  gap: 24px;
 }
 
-.hero-content__order-button {
-  padding: 16px 22px;
+.hero-content__order-button,
+.hero-content__play-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
   border-radius: 36px;
-  min-width: 196px;
+  border: 1.5px solid;
   outline: none;
-  border: none;
-  background: var(--primary-color);
-  cursor: pointer;
-  color: #fff;
   font-weight: 500;
   font-size: var(--fs-body-md);
   line-height: 1.4;
+  font-family: var(--plus-jakarta-sans);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.05em;
+}
+
+.hero-content__order-button {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+  min-width: 196px;
+}
+
+.hero-content__order-button:hover {
+  color: var(--primary-color);
+  background-color: var(--color-creamson);
+  border: 1px solid var(--primary-color);
+  transform: scale(1.005);
+  box-shadow: 0 8px 20px rgba(153, 0, 17, 0.3);
+}
+
+.hero-content__order-button:active {
+  transform: translateY(0);
 }
 
 .hero-content__play-button {
-  border: 1px solid var(--secondary-color);
-  outline: none;
-  background: transparent;
-  padding: 0 18px;
-  border-radius: 36px;
-  display: flex;
-  align-items: center;
-  font-weight: 300;
-  font-size: var(--fs-body-md);
-  line-height: 1.4;
-  color: var(--secondary-color);
-  font-family: var(--plus-jakarta-sans);
-  cursor: pointer;
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: var(--color-creamson);
 }
 
-.hero-content__play-button img {
-  margin-right: 12px;
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
+.hero-content__play-button:hover {
+  color: var(--secondary-color);
+  background-color: var(--color-creamson);
+  border-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(18, 18, 18, 0.3);
+}
+
+.hero-content__play-button:active {
+  transform: translateY(0);
 }
 
 .hero-content__testimonial {
@@ -229,21 +247,31 @@
   right: 0;
   padding: 12px 28px;
   min-height: 56px;
-  background: var(--secondary-color);
+  background-color: var(--secondary-color);
   border-radius: 32px 0 0 32px;
   border: 0;
   outline: 0;
   color: var(--color-white);
   font-family: var(--plus-jakarta-sans);
-  font-weight: 500;
+  font-weight: 600;
   font-size: var(--fs-body-md);
   line-height: 1.4;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
 }
 
-.about-us__button img {
-  object-fit: contain;
-  margin-left: 32px;
+.about-us__button:hover {
+  background-color: var(--primary-color);
+  color: var(--raw-white);
+  padding-right: 32px;
+  box-shadow: 0 8px 20px rgba(18, 18, 18, 0.3);
+}
+
+.about-us__button:active {
+  transform: scale(0.98);
 }
 
 .about-us__content {
@@ -339,24 +367,32 @@
   width: fit-content;
   padding: 16px 28px;
   margin: 68px auto 0;
-  font-weight: 500;
+  font-weight: 600;
   font-size: var(--fs-body-md);
   line-height: 1.4;
   font-family: var(--plus-jakarta-sans);
   color: var(--color-white);
-  border: none;
+  border: 1.5px solid var(--secondary-color);
   outline: none;
-  background: var(--secondary-color);
+  background-color: var(--secondary-color);
   border-radius: 64px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.05em;
 }
 
-.popular-foods__button img {
-  width: 14px;
-  height: 14px;
-  object-fit: contain;
+.popular-foods__button:hover {
+  background-color: var(--color-white);
+  color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(18, 18, 18, 0.3);
+}
 
-  margin-left: 21px;
+.popular-foods__button:active {
+  transform: translateY(0);
 }
 
 .popular-foods__card {
@@ -472,19 +508,43 @@
 
   border-radius: 100%;
   background-color: var(--secondary-color);
+  color: var(--color-white);
   cursor: pointer;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 8px;
+  border: 2px solid;
+  outline: none;
+  transition: all 0.6s ease;
+}
+
+.trending__discover:hover {
+  background-color: var(--color-white);
+  color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  transform: scale(1.08);
+  box-shadow: 0 12px 32px rgba(18, 18, 18, 0.4);
+}
+
+.trending__discover:active {
+  transform: scale(1);
 }
 
 .trending__discover p {
   font-size: var(--fs-body-sm);
-  font-weight: 500;
+  font-weight: 800;
   font-family: var(--plus-jakarta-sans);
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.trending__discover:hover p {
+  color: var(--secondary-color);
+  margin: 0;
 }
 
 .trending-sushi,

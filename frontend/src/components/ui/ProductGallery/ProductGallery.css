@@ -16,10 +16,11 @@
   width: 64px;
   flex-shrink: 0;
   height: 100%;
-  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border: 0.1px solid rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   padding: 4px;
   box-sizing: border-box;
+  background-color: var(--color-creamson);
 }
 
 [data-theme="dark"] .product-gallery__thumb-strip {
@@ -63,7 +64,7 @@
   cursor: pointer;
   border: 2px solid transparent;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  background-color: var(--raw-beige);
+  background-color: var(--color-creamson);
 }
 
 .thumbnail:hover {
@@ -91,7 +92,7 @@
   height: 100%;
   border-radius: 12px;
   overflow: hidden;
-  background-color: var(--raw-beige);
+  background-color: var(--color-creamson);
 }
 
 .product-gallery__main {
@@ -118,12 +119,12 @@
   transform: translateY(-50%);
   z-index: 2;
   width: 24px;
-  height: 20%;
+  height: 25%;
   min-height: 28px;
-  max-height: 56px;
+  max-height: 84px;
   border-radius: 6px;
-  border: 1.5px solid var(--primary-color);
-  background-color: transparent;
+  border: 1.5px solid transparent;
+  background-color: rgba(153, 0, 17, 0.15);
   color: var(--primary-color);
   line-height: 1;
   cursor: pointer;
@@ -145,6 +146,7 @@
 [data-theme="dark"] .gallery-main-nav {
   border-color: var(--primary-color);
   color: var(--primary-color);
+  background-color: rgba(179, 45, 58, 0.15);
 }
 
 [data-theme="dark"] .gallery-main-nav:hover {
