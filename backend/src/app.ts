@@ -2,13 +2,12 @@ import cors from "cors";
 import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
-import { env } from "./config/env.config";
 import { globalErrorHandler } from "./middleware/error.middleware";
 import { connectDB } from "./config/database.config";
 import mainRouter from "./routes";
 import "./config/cloudinary.config"; // Initialize Cloudinary
 
-const PORT = env.PORT;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 

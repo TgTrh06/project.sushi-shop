@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/common/logger.util";
-import { env } from "../config/env.config";
 
 export const globalErrorHandler = (
   err: any,
@@ -35,6 +34,6 @@ export const globalErrorHandler = (
     success: false,
     message: statusCode === 500 ? "Internal Server Error" : err.message, // Hide error 500
     // Only show when on dev enviroment for debugging
-    ...(env.NODE_ENV === "development" && { stack: err.stack }),
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
 };

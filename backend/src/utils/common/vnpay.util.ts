@@ -6,10 +6,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Các cấu hình lấy từ file .env
-const vnp_TmnCode = process.env.VNP_TMN_CODE || "";
-const vnp_HashSecret = process.env.VNP_HASH_SECRET || "";
+const vnp_TmnCode = process.env.VNP_TMN_CODE || "2DFO05CI";
+const vnp_HashSecret = process.env.VNP_HASH_SECRET || "LSJVXMBC4DFYZIP994LPIGJ2CHW7ENM0";
 const vnp_Url = process.env.VNP_URL || "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-const vnp_ReturnUrl = process.env.VNP_RETURN_URL || "http://localhost:3000/booking/callback";
+const vnp_ReturnUrl = process.env.VNP_RETURN_URL || "http://localhost:3000/api/payment/callback";
 
 interface PaymentParams {
   amount: number;
