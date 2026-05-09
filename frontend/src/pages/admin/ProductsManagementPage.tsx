@@ -8,6 +8,7 @@ import type {
   CreateProductPayload,
   UpdateProductPayload,
 } from "@/features/admin/admin.types";
+import { Search, RefreshCw, Pencil, Trash2, Plus, AlertTriangle } from "lucide-react";
 import { showSuccess, showError } from "@/lib/toast";
 
 type FormMode = "create" | "edit";
@@ -178,12 +179,16 @@ export const ProductsManagementPage = () => {
 
       <div className="admin-card">
         <div className="admin-toolbar">
-          <input
-            className="admin-search-input"
-            placeholder="🔍  Search by product name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div style={{ position: "relative", flex: 1, maxWidth: 320 }}>
+            <Search size={15} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)", pointerEvents: "none" }} />
+            <input
+              className="admin-search-input"
+              placeholder="Search by product name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ paddingLeft: 32 }}
+            />
+          </div>
           <select
             className="admin-select"
             value={selectedCategory}
@@ -203,7 +208,7 @@ export const ProductsManagementPage = () => {
               fetchData();
             }}
           >
-            🔄 Refresh
+            <RefreshCw size={14} /> Refresh
           </button>
         </div>
 
@@ -264,18 +269,18 @@ export const ProductsManagementPage = () => {
                       </span>
                     </td>
                     <td>
-                      <div style={{ display: "flex", gap: 6 }}>
+                      <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
                         <button
                           className="admin-btn admin-btn--secondary admin-btn--sm"
                           onClick={() => openEdit(p)}
                         >
-                          ✏️
+                          <Pencil size={14} />
                         </button>
                         <button
                           className="admin-btn admin-btn--danger admin-btn--sm"
                           onClick={() => setConfirmDelete(p)}
                         >
-                          🗑️
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </td>
@@ -302,7 +307,7 @@ export const ProductsManagementPage = () => {
           <div className="admin-modal admin-modal--lg" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
               <span className="admin-modal__title">
-                {formMode === "create" ? "➕ Add New Product" : "✏️ Edit Product"}
+                {formMode === "create" ? <><Plus size={16} /> Add New Product</> : <><Pencil size={16} /> Edit Product</>}
               </span>
               <button className="admin-modal__close" onClick={() => setModalOpen(false)}>×</button>
             </div>
@@ -420,7 +425,7 @@ export const ProductsManagementPage = () => {
             <div className="admin-modal__footer">
               <button className="admin-btn admin-btn--secondary" onClick={() => setModalOpen(false)}>Cancel</button>
               <button className="admin-btn admin-btn--primary" onClick={handleSave} disabled={saving}>
-                {saving ? "Saving..." : formMode === "create" ? "✓ Create Product" : "✓ Update Product"}
+                {saving ? "Saving..." : formMode === "create" ? <><Plus size={14} /> Create Product</> : <><Pencil size={14} /> Update Product</>}
               </button>
             </div>
           </div>
@@ -432,7 +437,7 @@ export const ProductsManagementPage = () => {
         <div className="admin-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <span className="admin-modal__title">⚠️ Confirm Delete</span>
+              <span className="admin-modal__title"><AlertTriangle size={16} /> Confirm Delete</span>
               <button className="admin-modal__close" onClick={() => setConfirmDelete(null)}>×</button>
             </div>
             <div className="admin-modal__body">
@@ -443,7 +448,7 @@ export const ProductsManagementPage = () => {
             <div className="admin-modal__footer">
               <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Cancel</button>
               <button className="admin-btn admin-btn--danger" onClick={handleDelete} disabled={deleting}>
-                {deleting ? "Deleting..." : "🗑️ Delete"}
+                {deleting ? "Deleting..." : <><Trash2 size={14} /> Delete</>}
               </button>
             </div>
           </div>

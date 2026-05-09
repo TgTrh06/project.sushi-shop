@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { adminService } from "@/features/admin/admin.service";
 import type { AdminBooking, BookingStatus } from "@/features/admin/admin.types";
 import { showSuccess, showError } from "@/lib/toast";
+import { Search, RefreshCw, Trash2, AlertTriangle } from "lucide-react";
 
 const STATUS_OPTIONS: BookingStatus[] = ["pending", "confirmed", "cancelled"];
 
@@ -94,18 +95,22 @@ export const ReservationsManagementPage = () => {
           </p>
         </div>
         <button className="admin-btn admin-btn--secondary admin-btn--sm" onClick={fetchBookings}>
-          🔄 Làm mới
+          <RefreshCw size={14} /> Làm mới
         </button>
       </div>
 
       <div className="admin-card">
         <div className="admin-toolbar">
-          <input
-            className="admin-search-input"
-            placeholder="🔍  Tìm theo tên, email, SĐT..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div style={{ position: "relative", flex: 1, maxWidth: 320 }}>
+            <Search size={15} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)", pointerEvents: "none" }} />
+            <input
+              className="admin-search-input"
+              placeholder="Tìm theo tên, email, SĐT..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ paddingLeft: 32 }}
+            />
+          </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {["all", ...STATUS_OPTIONS].map((s) => (
               <button
@@ -179,12 +184,12 @@ export const ReservationsManagementPage = () => {
                         </select>
                       )}
                     </td>
-                    <td>
+                    <td style={{ textAlign: "center" }}>
                       <button
                         className="admin-btn admin-btn--danger admin-btn--sm"
                         onClick={() => setConfirmDelete(b)}
                       >
-                        🗑️
+                        <Trash2 size={14} />
                       </button>
                     </td>
                   </tr>
@@ -200,7 +205,7 @@ export const ReservationsManagementPage = () => {
         <div className="admin-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <span className="admin-modal__title">⚠️ Xác nhận xóa</span>
+              <span className="admin-modal__title"><AlertTriangle size={16} /> Xác nhận xóa</span>
               <button className="admin-modal__close" onClick={() => setConfirmDelete(null)}>×</button>
             </div>
             <div className="admin-modal__body">
@@ -213,7 +218,7 @@ export const ReservationsManagementPage = () => {
             <div className="admin-modal__footer">
               <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Hủy</button>
               <button className="admin-btn admin-btn--danger" onClick={handleDelete} disabled={deleting}>
-                {deleting ? "Đang xóa..." : "🗑️ Xóa"}
+                {deleting ? "Đang xóa..." : <><Trash2 size={14} /> Xóa</>}
               </button>
             </div>
           </div>

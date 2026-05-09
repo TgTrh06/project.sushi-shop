@@ -145,7 +145,7 @@ export default function ReservePage() {
               Secure your exclusive Omakase session. Guests are invited to browse availability before signing in.
             </p>
 
-            <div className="form-group" style={{ marginBottom: "24px", maxWidth: "300px" }}>
+            <div className="form-group" style={{ marginBottom: "24px", maxWidth: "280px" }}>
               <label>1. Select Date</label>
               <input
                 type="date"

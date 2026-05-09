@@ -154,7 +154,7 @@
 .admin-table th {
   background: rgba(177, 69, 74, 0.05);
   padding: 12px 16px;
-  text-align: left;
+  text-align: center;
   font-size: var(--fs-label-sm);
   font-weight: 700;
   text-transform: uppercase;
@@ -169,6 +169,30 @@
   border-bottom: 1px solid var(--admin-border);
   color: var(--admin-text-primary);
   vertical-align: middle;
+  text-align: center;
+}
+
+/* First column (#) stays left */
+.admin-table th:first-child,
+.admin-table td:first-child {
+  text-align: left;
+}
+
+/* Actions column: center */
+.admin-table th:last-child {
+  text-align: center;
+}
+
+.admin-table td:last-child {
+  text-align: center;
+}
+
+.admin-table td:last-child > div {
+  justify-content: center;
+}
+
+.admin-table td:last-child > div {
+  justify-content: flex-end;
 }
 
 .admin-table tr:last-child td {

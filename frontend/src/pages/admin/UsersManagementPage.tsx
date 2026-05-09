@@ -4,6 +4,7 @@ import { getImageUrl } from "@/lib/cloudinary";
 import type { AdminUser } from "@/features/admin/admin.types";
 import type { PaginatedResult } from "@/types/paginated.type";
 import { showSuccess, showError } from "@/lib/toast";
+import { Search, RefreshCw, Trash2, AlertTriangle } from "lucide-react";
 
 export const UsersManagementPage = () => {
   const [result, setResult] = useState<PaginatedResult<AdminUser> | null>(null);
@@ -76,14 +77,18 @@ export const UsersManagementPage = () => {
 
       <div className="admin-card">
         <div className="admin-toolbar">
-          <input
-            className="admin-search-input"
-            placeholder="🔍  Search by username or email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div style={{ position: "relative", flex: 1, maxWidth: 320 }}>
+            <Search size={15} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)", pointerEvents: "none" }} />
+            <input
+              className="admin-search-input"
+              placeholder="Search by username or email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ paddingLeft: 32 }}
+            />
+          </div>
           <button className="admin-btn admin-btn--secondary admin-btn--sm" onClick={fetchUsers}>
-            🔄 Refresh
+            <RefreshCw size={14} /> Refresh
           </button>
         </div>
 
@@ -161,14 +166,14 @@ export const UsersManagementPage = () => {
                     <td style={{ color: "var(--admin-text-muted)", fontSize: 13 }}>
                       {user.createdAt ? new Date(user.createdAt).toLocaleDateString("vi-VN") : "—"}
                     </td>
-                    <td>
+                    <td style={{ textAlign: "center" }}>
                       <button
                         className="admin-btn admin-btn--danger admin-btn--sm"
                         onClick={() => setConfirmDelete(user)}
                         disabled={user.role === "admin"}
                         title={user.role === "admin" ? "Cannot delete admin" : "Delete user"}
                       >
-                        🗑️ Delete
+                        <Trash2 size={14} /> Delete
                       </button>
                     </td>
                   </tr>
@@ -207,7 +212,7 @@ export const UsersManagementPage = () => {
         <div className="admin-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <span className="admin-modal__title">⚠️ Confirm Delete</span>
+              <span className="admin-modal__title"><AlertTriangle size={16} /> Confirm Delete</span>
               <button className="admin-modal__close" onClick={() => setConfirmDelete(null)}>×</button>
             </div>
             <div className="admin-modal__body">
@@ -225,7 +230,7 @@ export const UsersManagementPage = () => {
                 onClick={handleDelete}
                 disabled={deleting}
               >
-                {deleting ? "Deleting..." : "🗑️ Delete"}
+                {deleting ? "Deleting..." : <><Trash2 size={14} /> Delete</>}
               </button>
             </div>
           </div>

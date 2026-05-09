@@ -5,6 +5,7 @@ import {
   Tag,
   Users,
   CalendarDays,
+  Star,
   Home,
   ChevronLeft,
   ChevronRight,
@@ -29,7 +30,8 @@ const navItems: NavItem[] = [
   { to: "/admin/products",   icon: UtensilsCrossed,  label: "Products" },
   { to: "/admin/categories", icon: Tag,              label: "Categories" },
   { to: "/admin/users",      icon: Users,            label: "Users" },
-  { to: "/admin/resevations",   icon: CalendarDays,     label: "Reservations" },
+  { to: "/admin/resevations",icon: CalendarDays,     label: "Reservations" },
+  { to: "/admin/reviews",    icon: Star,             label: "Reviews" },
 ];
 
 export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
@@ -75,7 +77,7 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
         <NavLink
           to="/"
           className="admin-sidebar__nav-item"
-          title={collapsed ? "Về trang chủ" : undefined}
+          title={collapsed ? "Back to Home" : undefined}
         >
           <span className="admin-sidebar__nav-icon">
             <Home size={18} strokeWidth={1.75} />
@@ -89,7 +91,7 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
         <button
           className="admin-sidebar__collapse-btn"
           onClick={onCollapse}
-          title={collapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           <span className="admin-sidebar__nav-icon">
             {collapsed
@@ -97,7 +99,7 @@ export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {
               : <ChevronLeft  size={18} strokeWidth={1.75} />
             }
           </span>
-          <span>{collapsed ? "" : "Thu gọn"}</span>
+          <span>{collapsed ? "" : "Collapse"}</span>
         </button>
       </div>
     </aside>
