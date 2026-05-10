@@ -12,6 +12,7 @@ import ProductDetailPage from "@/pages/ProductDetailPage";
 import ReservePage from "@/pages/customer/ReservationPage";
 import ReservationSuccessPage from "@/pages/customer/ReservationSuccessPage";
 import ReservationFailedPage from "@/pages/customer/ReservationFailedPage";
+import MyReservationsPage from "@/pages/customer/MyReservationsPage";
 import ProfilePage from "@/pages/customer/ProfilePage";
 
 // Admin Layout & Pages
@@ -46,6 +47,7 @@ export const AppRoutes = () => {
       <Route element={<ProtectedRoute allowedRoles={[Role.CUSTOMER, Role.ADMIN]} />}>
         {/* Add customer-only routes here */}
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-reservations" element={<MyReservationsPage />} />
       </Route>
 
       {/* ── Admin Routes ── */}
