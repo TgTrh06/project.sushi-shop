@@ -31,7 +31,7 @@ const navItems: NavItem[] = [
   { to: "/admin/products",   icon: UtensilsCrossed,  label: "Products" },
   { to: "/admin/categories", icon: Tag,              label: "Categories" },
   { to: "/admin/users",      icon: Users,            label: "Users" },
-  { to: "/admin/resevations",icon: CalendarDays,     label: "Reservations" },
+  { to: "/admin/reservations",icon: CalendarDays,     label: "Reservations" },
   { to: "/admin/reviews",    icon: Star,             label: "Reviews" },
 ];
 

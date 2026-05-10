@@ -1,25 +1,25 @@
 import { useEffect, useState, useCallback } from "react";
 import { adminService } from "@/features/admin/admin.service";
-import type { AdminBooking, BookingStatus } from "@/features/admin/admin.types";
+import type { AdminReservation } from "@/features/admin/admin.types";
 import { showSuccess, showError } from "@/lib/toast";
 import { Search, RefreshCw, Trash2, AlertTriangle } from "lucide-react";
 
-const STATUS_OPTIONS: BookingStatus[] = ["pending", "confirmed", "cancelled"];
+const STATUS_OPTIONS = ["PENDING_PAYMENT", "PAID", "CANCELLED"] as const;
 
 const statusLabel: Record<string, string> = {
-  pending: "Chờ xác nhận",
-  confirmed: "Đã xác nhận",
-  cancelled: "Đã hủy",
+  PENDING_PAYMENT: "Pending Payment",
+  PAID: "Paid",
+  CANCELLED: "Cancelled",
 };
 
 export const ReservationsManagementPage = () => {
-  const [bookings, setBookings] = useState<AdminBooking[]>([]);
+  const [bookings, setBookings] = useState<AdminReservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
   // Confirm delete
-  const [confirmDelete, setConfirmDelete] = useState<AdminBooking | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<AdminReservation | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   // Status update loading
@@ -28,10 +28,10 @@ export const ReservationsManagementPage = () => {
   const fetchBookings = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await adminService.getBookings();
+      const data = await adminService.getReservations();
       setBookings(data);
     } catch {
-      showError("Không thể tải danh sách đặt bàn.");
+      showError("Failed to load reservations.");
     } finally {
       setLoading(false);
     }
@@ -41,14 +41,14 @@ export const ReservationsManagementPage = () => {
     fetchBookings();
   }, [fetchBookings]);
 
-  const handleStatusChange = async (booking: AdminBooking, newStatus: BookingStatus) => {
-    setUpdatingId(booking._id);
+  const handleStatusChange = async (booking: AdminReservation, newStatus: AdminReservation["status"]) => {
+    setUpdatingId(booking.id);
     try {
-      await adminService.updateBookingStatus(booking._id, newStatus);
-      showSuccess("Đã cập nhật trạng thái đặt bàn.");
+      await adminService.updateReservationStatus(booking.id, newStatus);
+      showSuccess("Reservation status updated successfully.");
       fetchBookings();
     } catch {
-      showError("Không thể cập nhật trạng thái.");
+      showError("Failed to update status.");
     } finally {
       setUpdatingId(null);
     }
@@ -58,24 +58,23 @@ export const ReservationsManagementPage = () => {
     if (!confirmDelete) return;
     setDeleting(true);
     try {
-      await adminService.deleteBooking(confirmDelete._id);
-      showSuccess("Đã xóa đặt bàn.");
+      await adminService.deleteReservation(confirmDelete.id);
+      showSuccess("Reservation deleted successfully.");
       setConfirmDelete(null);
       fetchBookings();
     } catch {
-      showError("Không thể xóa đặt bàn.");
+      showError("Failed to delete reservation.");
     } finally {
       setDeleting(false);
     }
   };
 
-  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+  const pendingCount = bookings.filter((b) => b.status === "PENDING_PAYMENT").length;
 
   const filtered = bookings.filter((b) => {
     const matchSearch =
       b.customerName.toLowerCase().includes(search.toLowerCase()) ||
-      b.email.toLowerCase().includes(search.toLowerCase()) ||
-      b.phone.includes(search);
+      b.customerPhone.includes(search);
     const matchStatus = filterStatus === "all" || b.status === filterStatus;
     return matchSearch && matchStatus;
   });
@@ -84,18 +83,18 @@ export const ReservationsManagementPage = () => {
     <div>
       <div className="admin-page-header">
         <div>
-          <h2 className="admin-page-title">Quản lý Đặt bàn</h2>
+          <h2 className="admin-page-title">Reservations Management</h2>
           <p className="admin-page-subtitle">
-            {bookings.length} đặt bàn tổng cộng
+            {bookings.length} total reservations
             {pendingCount > 0 && (
               <span style={{ color: "var(--admin-warning)", marginLeft: 8 }}>
-                • {pendingCount} chờ xác nhận
+                • {pendingCount} pending payment
               </span>
             )}
           </p>
         </div>
         <button className="admin-btn admin-btn--secondary admin-btn--sm" onClick={fetchBookings}>
-          <RefreshCw size={14} /> Làm mới
+          <RefreshCw size={14} /> Refresh
         </button>
       </div>
 
@@ -105,7 +104,7 @@ export const ReservationsManagementPage = () => {
             <Search size={15} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)", pointerEvents: "none" }} />
             <input
               className="admin-search-input"
-              placeholder="Tìm theo tên, email, SĐT..."
+              placeholder="Search by name, phone..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{ paddingLeft: 32 }}
@@ -118,7 +117,7 @@ export const ReservationsManagementPage = () => {
                 className={`admin-btn admin-btn--sm ${filterStatus === s ? "admin-btn--primary" : "admin-btn--secondary"}`}
                 onClick={() => setFilterStatus(s)}
               >
-                {s === "all" ? "Tất cả" : statusLabel[s]}
+                {s === "all" ? "All" : statusLabel[s]}
               </button>
             ))}
           </div>
@@ -127,12 +126,12 @@ export const ReservationsManagementPage = () => {
         {loading ? (
           <div className="admin-loading">
             <div className="admin-loading__spinner" />
-            <span>Đang tải...</span>
+            <span>Loading...</span>
           </div>
         ) : filtered.length === 0 ? (
           <div className="admin-empty">
             <div className="admin-empty__icon">📅</div>
-            <p className="admin-empty__text">Không có đặt bàn nào.</p>
+            <p className="admin-empty__text">No reservations found.</p>
           </div>
         ) : (
           <div className="admin-table-wrapper">
@@ -140,41 +139,48 @@ export const ReservationsManagementPage = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Khách hàng</th>
-                  <th>SĐT</th>
-                  <th>Ngày / Giờ</th>
-                  <th>Số người</th>
-                  <th>Ghi chú</th>
-                  <th>Trạng thái</th>
-                  <th>Hành động</th>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Date / Time</th>
+                  <th>Seats</th>
+                  <th>Deposit</th>
+                  <th>Transaction ID</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((b, idx) => (
-                  <tr key={b._id}>
+                  <tr key={b.id}>
                     <td style={{ color: "var(--admin-text-muted)", fontSize: 12 }}>{idx + 1}</td>
                     <td>
                       <div style={{ fontWeight: 500 }}>{b.customerName}</div>
-                      <div style={{ fontSize: 12, color: "var(--admin-text-muted)" }}>{b.email}</div>
                     </td>
-                    <td style={{ color: "var(--admin-text-secondary)" }}>{b.phone}</td>
+                    <td style={{ color: "var(--admin-text-secondary)" }}>{b.customerPhone}</td>
                     <td>
-                      <div style={{ fontWeight: 500 }}>{b.date}</div>
-                      <div style={{ fontSize: 12, color: "var(--admin-text-muted)" }}>{b.time}</div>
-                    </td>
-                    <td>{b.guests} người</td>
-                    <td style={{ fontSize: 13, color: "var(--admin-text-secondary)", maxWidth: 150 }}>
-                      {b.note || "—"}
+                      <div style={{ fontWeight: 500 }}>{b.reservationDate}</div>
+                      <div style={{ fontSize: 12, color: "var(--admin-text-muted)" }}>{b.timeSlot}</div>
                     </td>
                     <td>
-                      {updatingId === b._id ? (
+                      <div style={{ fontSize: 13 }}>
+                        {b.seatCodes.join(", ")}
+                      </div>
+                    </td>
+                    <td style={{ fontWeight: 500 }}>
+                      {b.totalDeposit.toLocaleString("vi-VN")}₫
+                    </td>
+                    <td style={{ fontSize: 12, color: "var(--admin-text-muted)", fontFamily: "monospace" }}>
+                      {b.vnp_TxnRef}
+                    </td>
+                    <td>
+                      {updatingId === b.id ? (
                         <div className="admin-loading__spinner" style={{ width: 16, height: 16 }} />
                       ) : (
                         <select
                           className="admin-form-select"
                           style={{ padding: "4px 8px", fontSize: 12, width: "auto" }}
                           value={b.status}
-                          onChange={(e) => handleStatusChange(b, e.target.value as BookingStatus)}
+                          onChange={(e) => handleStatusChange(b, e.target.value as AdminReservation["status"])}
                         >
                           {STATUS_OPTIONS.map((s) => (
                             <option key={s} value={s}>
@@ -205,20 +211,20 @@ export const ReservationsManagementPage = () => {
         <div className="admin-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <span className="admin-modal__title"><AlertTriangle size={16} /> Xác nhận xóa</span>
+              <span className="admin-modal__title"><AlertTriangle size={16} /> Confirm Delete</span>
               <button className="admin-modal__close" onClick={() => setConfirmDelete(null)}>×</button>
             </div>
             <div className="admin-modal__body">
               <p className="admin-confirm-text">
-                Bạn có chắc muốn xóa đặt bàn của{" "}
-                <strong>"{confirmDelete.customerName}"</strong> vào ngày{" "}
-                <strong>{confirmDelete.date} {confirmDelete.time}</strong>?
+                Are you sure you want to delete the reservation for{" "}
+                <strong>"{confirmDelete.customerName}"</strong> on{" "}
+                <strong>{confirmDelete.reservationDate} {confirmDelete.timeSlot}</strong>?
               </p>
             </div>
             <div className="admin-modal__footer">
-              <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Hủy</button>
+              <button className="admin-btn admin-btn--secondary" onClick={() => setConfirmDelete(null)}>Cancel</button>
               <button className="admin-btn admin-btn--danger" onClick={handleDelete} disabled={deleting}>
-                {deleting ? "Đang xóa..." : <><Trash2 size={14} /> Xóa</>}
+                {deleting ? "Deleting..." : <><Trash2 size={14} /> Delete</>}
               </button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { adminService } from "@/features/admin/admin.service";
-import type { SystemStats, AdminBooking } from "@/features/admin/admin.types";
+import type { SystemStats, AdminReservation } from "@/features/admin/admin.types";
 import {
   BarChart,
   Bar,
@@ -60,13 +60,13 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
   }));
 
   const pieData = [
-    { name: "Chờ thanh toán", value: stats.pendingReservations, color: "#f59e0b" },
-    { name: "Hoàn thành", value: stats.completedReservations, color: "#10b981" },
+    { name: "Pending Payment", value: stats.pendingReservations, color: "#f59e0b" },
+    { name: "Completed", value: stats.completedReservations, color: "#10b981" },
   ];
   
   const others = stats.totalReservations - (stats.pendingReservations + stats.completedReservations);
   if (others > 0) {
-    pieData.push({ name: "Khác", value: others, color: "#6b7280" });
+    pieData.push({ name: "Others", value: others, color: "#6b7280" });
   }
 
   // Filter out 0 value for pie chart so it looks better
@@ -78,12 +78,12 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
       <div className="admin-card">
         <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
           <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0 }}>
-            📊 Sản phẩm theo danh mục
+            📊 Products by Category
           </h3>
         </div>
         {stats.productsByCategory.length === 0 ? (
           <div className="admin-empty">
-            <p className="admin-empty__text">Chưa có dữ liệu danh mục.</p>
+            <p className="admin-empty__text">No category data available.</p>
           </div>
         ) : (
           <div style={{ width: "100%", height: 300 }}>
@@ -106,7 +106,7 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
                   cursor={{ fill: "#f3f4f6" }}
                   contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
                 />
-                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Sản phẩm" barSize={40} />
+                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Products" barSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -117,12 +117,12 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
       <div className="admin-card">
         <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
           <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0 }}>
-            🥧 Trạng thái đặt bàn
+            🥧 Reservation Status
           </h3>
         </div>
         {filteredPieData.length === 0 ? (
           <div className="admin-empty">
-            <p className="admin-empty__text">Chưa có dữ liệu đặt bàn.</p>
+            <p className="admin-empty__text">No reservation data available.</p>
           </div>
         ) : (
           <div style={{ width: "100%", height: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -163,7 +163,7 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
 /* ─── Page Component ───────────────────────────────────── */
 export const DashboardOverviewPage = () => {
   const [stats, setStats] = useState<SystemStats | null>(null);
-  const [bookings, setBookings] = useState<AdminBooking[]>([]);
+  const [bookings, setBookings] = useState<AdminReservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -172,13 +172,13 @@ export const DashboardOverviewPage = () => {
       try {
         const [statsData, bookingsData] = await Promise.all([
           adminService.getStats(),
-          adminService.getBookings().catch(() => []), // Graceful fallback
+          adminService.getReservations().catch(() => []), // Graceful fallback
         ]);
         setStats(statsData);
         setBookings(bookingsData.slice(0, 8));
       } catch (err: any) {
         console.error("Failed to load dashboard data:", err);
-        setError(err?.message || "Không thể tải dữ liệu.");
+        setError(err?.message || "Failed to load data.");
       } finally {
         setLoading(false);
       }
@@ -187,18 +187,23 @@ export const DashboardOverviewPage = () => {
   }, []);
 
   const statusBadge = (status: string) => {
-    const map: Record<string, string> = {
-      pending: "admin-badge--amber",
-      confirmed: "admin-badge--green",
-      cancelled: "admin-badge--gray",
-      PENDING_PAYMENT: "admin-badge--amber",
-      PAID: "admin-badge--blue",
-      COMPLETED: "admin-badge--green",
-      CANCELLED_REFUNDED: "admin-badge--gray",
-      CANCELLED_NO_REFUND: "admin-badge--red",
-      NO_SHOW: "admin-badge--red",
+    const statusLabels: Record<string, string> = {
+      PENDING_PAYMENT: "Pending Payment",
+      PAID: "Paid",
+      CANCELLED: "Cancelled",
     };
-    return <span className={`admin-badge ${map[status] ?? "admin-badge--gray"}`}>{status}</span>;
+    
+    const map: Record<string, string> = {
+      PENDING_PAYMENT: "admin-badge--amber",
+      PAID: "admin-badge--green",
+      CANCELLED: "admin-badge--gray",
+    };
+    
+    return (
+      <span className={`admin-badge ${map[status] ?? "admin-badge--gray"}`}>
+        {statusLabels[status] ?? status}
+      </span>
+    );
   };
 
   return (
@@ -206,9 +211,9 @@ export const DashboardOverviewPage = () => {
       {/* Page Header */}
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-page-title">Tổng quan hệ thống</h1>
+          <h1 className="admin-page-title">System Overview</h1>
           <p className="admin-page-subtitle">
-            Chào mừng trở lại! Đây là tổng hợp hoạt động của cửa hàng.
+            Welcome back! Here's a summary of your store's activity.
           </p>
         </div>
       </div>
@@ -236,35 +241,35 @@ export const DashboardOverviewPage = () => {
               icon="👥"
               iconClass="admin-stat-card__icon--blue"
               value={stats?.totalUsers ?? 0}
-              label="Khách hàng"
-              subtitle={`+${stats?.newUsersLast30Days ?? 0} trong 30 ngày`}
+              label="Customers"
+              subtitle={`+${stats?.newUsersLast30Days ?? 0} in 30 days`}
             />
             <StatCard
               icon="🍣"
               iconClass="admin-stat-card__icon--red"
               value={stats?.totalProducts ?? 0}
-              label="Sản phẩm"
-              subtitle={`${stats?.activeProducts ?? 0} đang bán`}
+              label="Products"
+              subtitle={`${stats?.activeProducts ?? 0} active`}
             />
             <StatCard
               icon="🗂️"
               iconClass="admin-stat-card__icon--green"
               value={stats?.totalCategories ?? 0}
-              label="Danh mục"
+              label="Categories"
             />
             <StatCard
               icon="📅"
               iconClass="admin-stat-card__icon--amber"
               value={stats?.totalReservations ?? 0}
-              label="Đặt bàn"
-              subtitle={`${stats?.todayReservations ?? 0} hôm nay`}
+              label="Reservations"
+              subtitle={`${stats?.todayReservations ?? 0} today`}
             />
             <StatCard
               icon="⏳"
               iconClass="admin-stat-card__icon--red"
               value={stats?.pendingReservations ?? 0}
-              label="Chờ thanh toán"
-              subtitle={`${stats?.completedReservations ?? 0} hoàn thành`}
+              label="Pending Payment"
+              subtitle={`${stats?.completedReservations ?? 0} completed`}
             />
           </>
         )}
@@ -282,49 +287,50 @@ export const DashboardOverviewPage = () => {
         <div className="admin-toolbar">
           <div>
             <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0 }}>
-              Đặt bàn gần đây
+              Recent Reservations
             </h3>
             <p style={{ color: "var(--admin-text-muted)", fontSize: 13, margin: "4px 0 0" }}>
-              {bookings.length} đặt bàn hiển thị
+              {bookings.length} reservations displayed
             </p>
           </div>
           <a href="/admin/reservations" className="admin-btn admin-btn--secondary admin-btn--sm">
-            Xem tất cả →
+            View All →
           </a>
         </div>
 
         {loading ? (
           <div className="admin-loading">
             <div className="admin-loading__spinner" />
-            <span>Đang tải dữ liệu...</span>
+            <span>Loading data...</span>
           </div>
         ) : bookings.length === 0 ? (
           <div className="admin-empty">
             <div className="admin-empty__icon">📅</div>
-            <p className="admin-empty__text">Chưa có đặt bàn nào.</p>
+            <p className="admin-empty__text">No reservations yet.</p>
           </div>
         ) : (
           <div className="admin-table-wrapper">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Khách hàng</th>
-                  <th>Ngày</th>
-                  <th>Giờ</th>
-                  <th>Số người</th>
-                  <th>Trạng thái</th>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Seats</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {bookings.map((b) => (
-                  <tr key={b._id}>
+                  <tr key={b.id}>
                     <td>
                       <div style={{ fontWeight: 500 }}>{b.customerName}</div>
-                      <div style={{ fontSize: 12, color: "var(--admin-text-muted)" }}>{b.email}</div>
                     </td>
-                    <td>{b.date}</td>
-                    <td>{b.time}</td>
-                    <td>{b.guests} người</td>
+                    <td style={{ color: "var(--admin-text-secondary)" }}>{b.customerPhone}</td>
+                    <td>{b.reservationDate}</td>
+                    <td>{b.timeSlot}</td>
+                    <td>{b.seatCodes.join(", ")}</td>
                     <td>{statusBadge(b.status)}</td>
                   </tr>
                 ))}

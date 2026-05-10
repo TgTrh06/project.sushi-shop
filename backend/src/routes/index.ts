@@ -5,7 +5,7 @@ import adminRoutes from "@/modules/users/routes/admin.routes"
 import userRoutes from "@/modules/users/routes/user.routes";
 import categoryRoutes from "@/modules/categories/category.routes";
 import productRoutes from "@/modules/products/product.routes";
-import bookingRoutes from "@/modules/resevations/reservation.routes";
+import reservationRoutes from "@/modules/resevations/reservation.routes";
 import reviewRoutes from "@/modules/reviews/review.routes";
 import statsRoutes from "@/modules/stats/stats.routes";
 import uploadRoutes from "@/modules/upload/upload.routes";
@@ -24,7 +24,7 @@ router.use("/admin", adminRoutes);
 router.use("/users", userRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/products", productRoutes);
-router.use("/reservation", bookingRoutes);
+router.use("/reservations", reservationRoutes);
 router.use("/reviews", reviewRoutes);
 router.use("/upload", uploadRoutes);
 

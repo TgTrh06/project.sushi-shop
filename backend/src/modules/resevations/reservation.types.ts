@@ -1,13 +1,9 @@
-import { IReservation } from "@shared/schemas/reservation.schema";
-export type CreateReservationPayload = Omit<IReservation, "_id" | "status" | "vnp_TxnRef" | "createdAt" | "updatedAt">;
-export type ReservationResponse = IReservation & {
-  updatedAt?: Date;
-};
-export interface ReservationWithPayment {
-  reservation: ReservationResponse;
-  paymentUrl: string;
-}
-export interface CancellationResult {
-  message: string;
-  refundedAmount?: number;
-}
+import z from "zod";
+import { BaseReservationSchema, CreateReservationSchema } from "@shared/schemas/reservation.schema";
+
+export type ReservationEntity = z.infer<typeof BaseReservationSchema>;
+
+export type ReservationDocument = Omit<ReservationEntity, "id">;
+
+export type CreateReservationInput = z.input<typeof CreateReservationSchema>;
+export type CreateReservationDTO = z.infer<typeof CreateReservationSchema>;

@@ -1,39 +1,68 @@
 import { ReservationModel } from "./reservation.model";
-import { IReservation } from "@shared/schemas/reservation.schema";
+import { ReservationEntity } from "./reservation.types";
 
 export default class ReservationRepository {
-  async create(data: Partial<IReservation>) {
-    return await ReservationModel.create(data);
-  }
+    protected mapToEntity(doc: any): ReservationEntity {
+        return {
+            id: doc._id.toString(),
 
-  async findByTxnRef(txnRef: string) {
-    return await ReservationModel.findOne({ vnp_TxnRef: txnRef });
-  }
-  
-  async updateStatus(id: string, status: string) {
-    return await ReservationModel.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true },
-    );
-  }
+            customerName: doc.customerName,
+            customerPhone: doc.customerPhone,
 
-  async findAll() {
-    return await ReservationModel.find().sort({ createdAt: -1 });
-  }
+            seatCodes: doc.seatCodes,
+            reservationDate: doc.reservationDate,
+            timeSlot: doc.timeSlot,
 
-  async findById(id: string) {
-    return ReservationModel.findById(id);
-  }
+            totalDeposit: doc.totalDeposit,
 
-  async findOccupiedSeats(date: string, timeSlot: string) {
-    const reservations = await ReservationModel.find({
-      reservationDate: date,
-      timeSlot: timeSlot,
-      status: { $in: ["PAID", "PENDING_PAYMENT"] },
-    }).select("seatIds");
+            vnp_TxnRef: doc.vnp_TxnRef,
+            status: doc.status,
 
-    const occupiedSeats = reservations.flatMap((res) => res.seatIds);
-    return [...new Set(occupiedSeats)]; // Return unique seat IDs
-  }
+            createdAt: doc.createdAt,
+            updatedAt: doc.updatedAt,
+        };
+
+    }
+
+    async create(data: any): Promise<ReservationEntity> {
+        const doc = await ReservationModel.create(data);
+        return this.mapToEntity(doc);
+    }
+
+    async findByTxnRef(txnRef: string) {
+        return await ReservationModel.findOne({ vnp_TxnRef: txnRef });
+    }
+
+    async updateStatus(txnRef: string, status: string) {
+        return ReservationModel.findOneAndUpdate(
+            {
+                vnp_TxnRef: txnRef,
+            },
+            {
+                status,
+            },
+            {
+                new: true,
+            }
+        );
+    }
+
+    async findAll() {
+        return await ReservationModel.find().sort({ createdAt: -1 });
+    }
+
+    async findById(id: string) {
+        return ReservationModel.findById(id);
+    }
+
+    async findOccupiedSeats(date: string, timeSlot: string) {
+        const reservations = await ReservationModel.find({
+            reservationDate: date,
+            timeSlot: timeSlot,
+            status: { $in: ["PAID", "PENDING_PAYMENT"] },
+        }).select("seatIds");
+
+        const occupiedSeats = reservations.flatMap((res) => res.seatCodes);
+        return [...new Set(occupiedSeats)]; // Return unique seat IDs
+    }
 }

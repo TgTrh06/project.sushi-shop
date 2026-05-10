@@ -5,14 +5,13 @@ import type {
   AdminUser,
   AdminCategory,
   AdminProduct,
-  AdminBooking,
+  AdminReservation,
   AdminReview,
   CreateCategoryPayload,
   UpdateCategoryPayload,
   CreateProductPayload,
   UpdateProductPayload,
   SystemStats,
-  BookingStatus,
 } from "./admin.types";
 
 // ─── Dashboard ─────────────────────────────────────────
@@ -123,19 +122,19 @@ export const adminService = {
     await api.delete(`/products/${id}`);
   },
 
-  // ─── Bookings ─────────────────────────────────────────
-  async getBookings(): Promise<AdminBooking[]> {
-    const res = await api.get<ApiResponse<AdminBooking[]>>("/bookings");
+  // ─── Reservations ─────────────────────────────────────────
+  async getReservations(): Promise<AdminReservation[]> {
+    const res = await api.get<ApiResponse<AdminReservation[]>>("/reservations");
     return res.data.data;
   },
 
-  async updateBookingStatus(id: string, status: BookingStatus): Promise<AdminBooking> {
-    const res = await api.patch<ApiResponse<AdminBooking>>(`/bookings/${id}/status`, { status });
+  async updateReservationStatus(id: string, status: AdminReservation["status"]): Promise<AdminReservation> {
+    const res = await api.patch<ApiResponse<AdminReservation>>(`/reservations/${id}/status`, { status });
     return res.data.data;
   },
 
-  async deleteBooking(id: string): Promise<void> {
-    await api.delete(`/bookings/${id}`);
+  async deleteReservation(id: string): Promise<void> {
+    await api.delete(`/reservations/${id}`);
   },
 
   // ─── Reviews ──────────────────────────────────────────

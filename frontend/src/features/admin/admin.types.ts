@@ -4,6 +4,7 @@ import type { BaseProductSchema } from "@shared/schemas/product.schema";
 import type { SystemStats, CategoryBreakdown } from "@shared/schemas/stats.schema";
 import type { BaseCategorySchema, CreateCategorySchema, UpdateCategorySchema } from "@shared/schemas/category.schema";
 import type { BaseReviewSchema } from "@shared/schemas/review.schema";
+import type { BaseReservationSchema } from "@shared/schemas/reservation.schema";
 
 // Re-export shared stats types for convenience
 export type { SystemStats, CategoryBreakdown };
@@ -21,21 +22,8 @@ export type AdminProduct = z.infer<typeof BaseProductSchema>;
 export type CreateProductPayload = Omit<AdminProduct, "id" | "slug" | "createdAt" | "updatedAt"| "ratingSummary">;
 export type UpdateProductPayload = Partial<CreateProductPayload>;
 
-// ─── Booking ───────────────────────────────────────────
-export type BookingStatus = "pending" | "confirmed" | "cancelled";
-
-export interface AdminBooking {
-  _id: string;
-  customerName: string;
-  email: string;
-  phone: string;
-  date: string;
-  time: string;
-  guests: number;
-  note?: string;
-  status: BookingStatus;
-  createdAt?: string;
-}
+// ─── Reservation ───────────────────────────────────────
+export type AdminReservation = z.infer<typeof BaseReservationSchema>; 
 
 // ─── Review ────────────────────────────────────────────
 // Derived from the shared schema; dates are strings in API responses (JSON serialization)
