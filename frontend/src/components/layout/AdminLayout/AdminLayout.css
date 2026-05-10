@@ -281,6 +281,11 @@
 
 /* ── Page Header ── */
 .admin-page-header {
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  padding: 24px;
+  box-shadow: var(--admin-shadow-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
