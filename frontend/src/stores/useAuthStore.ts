@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { User } from "@/features/users/user.types";
 import { authService } from "@/features/auth/auth.service";
 import {
@@ -29,86 +30,99 @@ interface AuthState {
   initialize: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
-  accessToken: null,
-  user: null,
-  loading: false,
-  isInitialized: false,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      accessToken: null,
+      user: null,
+      loading: false,
+      isInitialized: false,
 
-  setAccessToken: (accessToken) => set({ accessToken }),
-  setLoading: (status: boolean) => set({ loading: status }),
-  updateUser: (user: User) => set({ user }),
+      setAccessToken: (accessToken) => set({ accessToken }),
+      setLoading: (status: boolean) => set({ loading: status }),
+      updateUser: (user: User) => set({ user }),
 
-  clearState: () => {
-    set({ accessToken: null, user: null });
-  },
+      clearState: () => {
+        set({ accessToken: null, user: null });
+      },
 
-  register: async (input: RegisterFormInput) => {
-    try {
-      set({ loading: true });
+      register: async (input: RegisterFormInput) => {
+        try {
+          set({ loading: true });
 
-      await authService.register(input);
+          await authService.register(input);
 
-      // showSuccess("Registration successful! Please check your email to verify your account.");
-      showSuccess("Registration successful! You can now log in.");
-    } catch (error) {
-      console.error("Registration error:", error);
-      set({ loading: false });
-      throw error; // Rethrow to allow component-level handling
+          // showSuccess("Registration successful! Please check your email to verify your account.");
+          showSuccess("Registration successful! You can now log in.");
+        } catch (error) {
+          console.error("Registration error:", error);
+          set({ loading: false });
+          throw error; // Rethrow to allow component-level handling
+        }
+      },
+
+      login: async (input: LoginFormInput) => {
+        try {
+          set({ loading: true });
+
+          const { accessToken, user } = await authService.login(input);
+          set({ accessToken, user, isInitialized: true }); // Mark as initialized after successful login
+
+          showSuccess(`Welcome back, ${user.username}!`);
+        } catch (error) {
+          console.error("Login error:", error);
+          set({ loading: false });
+          throw error; // Rethrow to allow component-level handling
+        }
+      },
+
+      logout: async () => {
+        try {
+          set({ loading: true });
+
+          await authService.logout();
+        } catch (error) {
+          console.error("Logout error:", error);
+          showError("Failed to logout.");
+        } finally {
+          get().clearState(); // Clear auth state regardless of logout API success/failure
+          showSuccess("Logged out successfully.");
+          set({ loading: false });
+        }
+      },
+
+      refreshToken: async () => {
+        try {
+          const { accessToken, user } = await authService.refresh();
+
+          set({ accessToken, user }); // Update access token and user info in state
+        } catch (error) {
+          get().clearState(); // Clear auth state if refresh fails (e.g., token expired/invalid)
+          console.error("Refresh token error:", error);
+          showError("Failed to refresh token.");
+        }
+      },
+
+      initialize: async () => {
+        if (get().isInitialized) return; // Prevent re-initialization if already done
+        try {
+          // Simulate an API call to check the current authentication status (e.g., validate existing token, fetch user info)
+          const { accessToken, user } = await authService.refresh(); // Attempt to refresh token on app load
+          set({ accessToken, user, isInitialized: true });
+        } catch {
+          // Mark as initialized even if refresh fails (expired/invalid token)
+          set({ accessToken: null, user: null, isInitialized: true });
+        }
+      },
+    }),
+    {
+      name: "auth-storage", // localStorage key
+      partialPersist: true,
+      // Only persist accessToken and user, not loading or isInitialized
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        user: state.user,
+      }),
     }
-  },
-
-  login: async (input: LoginFormInput) => {
-    try {
-      set({ loading: true });
-
-      const { accessToken, user } = await authService.login(input);
-      set({ accessToken, user, isInitialized: true }); // Mark as initialized after successful login
-
-      showSuccess(`Welcome back, ${user.username}!`);
-    } catch (error) {
-      console.error("Login error:", error);
-      set({ loading: false });
-      throw error; // Rethrow to allow component-level handling
-    }
-  },
-
-  logout: async () => {
-    try {
-      set({ loading: true });
-
-      await authService.logout();
-    } catch (error) {
-      console.error("Logout error:", error);
-      showError("Failed to logout.");
-    } finally {
-      get().clearState(); // Clear auth state regardless of logout API success/failure
-      showSuccess("Logged out successfully.");
-      set({ loading: false });
-    }
-  },
-
-  refreshToken: async () => {
-    try {
-      const { accessToken, user } = await authService.refresh();
-
-      set({ accessToken, user }); // Update access token and user info in state
-    } catch (error) {
-      get().clearState(); // Clear auth state if refresh fails (e.g., token expired/invalid)
-      console.error("Refresh token error:", error);
-      showError("Failed to refresh token.");
-    }
-  },
-
-  initialize: async () => {
-    if (get().isInitialized) return; // Prevent re-initialization if already done
-    try {
-      // Simulate an API call to check the current authentication status (e.g., validate existing token, fetch user info)
-      const { accessToken, user } = await authService.refresh(); // Attempt to refresh token on app load
-      set({ accessToken, user, isInitialized: true });
-    } catch {
-      // Mark as initialized even if refresh fails (expired/invalid token)
-      set({ accessToken: null, user: null, isInitialized: true });
-    }
-  },
-}));
+  )
+);
