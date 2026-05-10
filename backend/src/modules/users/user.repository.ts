@@ -103,7 +103,7 @@ export default class UserRepository {
         id, 
         { $set: data },
         { 
-          new: true,
+          returnDocument: 'after',
           runValidators: true
         }
       )
