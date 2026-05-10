@@ -100,6 +100,7 @@ export function generateSignedUrl(public_id: string, expiresIn: number = 3600): 
     sign_url: true,
     type: "authenticated",
     format: "webp",
+    timestamp: timestamp,
   });
 
   return signedUrl;
