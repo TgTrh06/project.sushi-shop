@@ -17,7 +17,6 @@ const ProductSchema = new Schema<ProductDocument>({
     required: true 
   },
   isAvailable: { type: Boolean, default: true },
-  stockQuantity: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

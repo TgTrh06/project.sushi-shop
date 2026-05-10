@@ -26,7 +26,6 @@ export default class ProductRepository {
       gallery_ids: doc.gallery_ids ?? [],
       categoryId: doc.categoryId?._id?.toString() || doc.categoryId,
       isAvailable: doc.isAvailable,
-      stockQuantity: doc.stockQuantity || 0,
       ratingSummary: {
         averageRating: doc.ratingSummary?.averageRating || 0,
         totalReviews: doc.ratingSummary?.totalReviews || 0

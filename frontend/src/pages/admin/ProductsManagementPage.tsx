@@ -16,7 +16,6 @@ type FormMode = "create" | "edit";
 const EMPTY_FORM: CreateProductPayload = {
   name: "",
   price: 0,
-  stockQuantity: 0,
   image_id: "",
   gallery_ids: [],
   categoryId: "",
@@ -84,7 +83,6 @@ export const ProductsManagementPage = () => {
       gallery_ids: product.gallery_ids || [],
       categoryId: product.categoryId,
       isAvailable: product.isAvailable,
-      stockQuantity: product.stockQuantity,
     });
     setImageFile(null);
     setGalleryFiles([]);
@@ -232,7 +230,6 @@ export const ProductsManagementPage = () => {
                   <th>Product Name</th>
                   <th>Category</th>
                   <th>Price</th>
-                  <th>Stock</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -262,10 +259,9 @@ export const ProductsManagementPage = () => {
                     <td style={{ fontWeight: 600, color: "var(--admin-accent)" }}>
                       {p.price.toLocaleString("vi-VN")}đ
                     </td>
-                    <td>{p.stockQuantity}</td>
                     <td>
                       <span className={`admin-badge ${p.isAvailable ? "admin-badge--green" : "admin-badge--gray"}`}>
-                        {p.isAvailable ? "In Stock" : "Out of Stock"}
+                        {p.isAvailable ? "Available" : "Unavailable"}
                       </span>
                     </td>
                     <td>
@@ -334,15 +330,17 @@ export const ProductsManagementPage = () => {
                   />
                 </div>
                 <div className="admin-form-group">
-                  <label className="admin-form-label">Stock *</label>
-                  <input
-                    className="admin-form-input"
-                    type="number"
-                    min={0}
-                    value={form.stockQuantity}
-                    onChange={(e) => setForm({ ...form, stockQuantity: Number(e.target.value) })}
-                    placeholder="50"
-                  />
+                  <label className="admin-form-label">Category *</label>
+                  <select
+                    className="admin-form-select"
+                    value={form.categoryId}
+                    onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+                  >
+                    <option value="">— Select Category —</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
                   <label className="admin-form-label">Main Image (Upload or enter URL)</label>
@@ -393,22 +391,8 @@ export const ProductsManagementPage = () => {
                     )}
                   </div>
                 </div>
-                <div className="admin-form-group">
-                  <label className="admin-form-label">Category *</label>
-                  <select
-                    className="admin-form-select"
-                    value={form.categoryId}
-                    onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-                  >
-                    <option value="">— Select Category —</option>
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="admin-form-group" style={{ display: "flex", alignItems: "center" }}>
-                  <label className="admin-form-label" style={{ marginBottom: 0 }}>&nbsp;</label>
-                  <div className="admin-form-checkbox-row" style={{ marginTop: 28 }}>
+                <div className="admin-form-group" style={{ gridColumn: "1 / -1" }}>
+                  <div className="admin-form-checkbox-row">
                     <input
                       type="checkbox"
                       id="isAvailable"
@@ -416,7 +400,7 @@ export const ProductsManagementPage = () => {
                       onChange={(e) => setForm({ ...form, isAvailable: e.target.checked })}
                     />
                     <label htmlFor="isAvailable" style={{ fontSize: 14, color: "var(--admin-text-secondary)", cursor: "pointer" }}>
-                      Is Available
+                      Is Available (Show on menu)
                     </label>
                   </div>
                 </div>

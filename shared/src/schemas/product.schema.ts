@@ -13,7 +13,6 @@ export const BaseProductSchema = z.object({
   gallery_ids: z.array(z.string()).optional(), // Cloudinary public_ids
   categoryId: z.string(),
   isAvailable: z.boolean().default(true).optional(),
-  stockQuantity: z.number().min(0).default(0),
 
   ratingSummary: z.object({
     averageRating: z.number().default(0),
