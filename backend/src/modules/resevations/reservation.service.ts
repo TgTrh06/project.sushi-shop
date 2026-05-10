@@ -82,6 +82,13 @@ export default class ReservationService {
     }
 
     /**
+     * Get reservations by user ID
+     */
+    async getReservationsByUserId(userId: string) {
+        return await this.reservationRepo.findByUserId(userId);
+    }
+
+    /**
      * Get occupied seats for a specific date, session, and slot
      */
     async getOccupiedSeats(date: string, session: string, slotId: string): Promise<string[]> {
