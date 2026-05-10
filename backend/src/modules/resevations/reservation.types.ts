@@ -3,7 +3,9 @@ import { BaseReservationSchema, CreateReservationSchema } from "@shared/schemas/
 
 export type ReservationEntity = z.infer<typeof BaseReservationSchema>;
 
-export type ReservationDocument = Omit<ReservationEntity, "id">;
+export type ReservationDocument = Omit<ReservationEntity, "id"> & {
+    userId?: any; // Mongoose ObjectId
+};
 
 export type CreateReservationInput = z.input<typeof CreateReservationSchema>;
 export type CreateReservationDTO = z.infer<typeof CreateReservationSchema>;

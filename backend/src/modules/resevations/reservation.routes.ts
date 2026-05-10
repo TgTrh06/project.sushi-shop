@@ -1,17 +1,15 @@
 import { Router } from "express";
 import { reservationController } from "@/container/reservation.container";
-import { verifyAuth, verifyAdmin } from "../../middleware/auth.middleware";
+import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
 
 const router = Router();
 
 // PUBLIC ROUTES
-router.post("/", verifyAuth, reservationController.create); // Customer creates booking
-router.get("/vnpay-return", reservationController.vnpayReturn); // VNPay sync callback
-// router.get("/vnpay_ipn", reservationController.vnpayIpn); // VNPay async webhook
-// router.get("/occupied-seats", reservationController.getOccupiedSeats);
+router.post("/", verifyAuth, reservationController.create); // Create reservation (requires auth)
+router.get("/vnpay-return", reservationController.vnpayReturn); // VNPay callback
+router.get("/occupied-seats", reservationController.getOccupiedSeats); // Get occupied seats
 
 // ADMIN ROUTES
-router.get("/", verifyAuth, verifyAdmin, reservationController.getAll);
-// router.patch("/:id/status", verifyAuth, verifyAdmin, reservationController.updateStatus);
+router.get("/", verifyAuth, verifyAdmin, reservationController.getAll); // Get all reservations
 
 export default router;

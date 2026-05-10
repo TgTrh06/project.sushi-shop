@@ -23,7 +23,14 @@ export type CreateProductPayload = Omit<AdminProduct, "id" | "slug" | "createdAt
 export type UpdateProductPayload = Partial<CreateProductPayload>;
 
 // ─── Reservation ───────────────────────────────────────
-export type AdminReservation = z.infer<typeof BaseReservationSchema>; 
+export type AdminReservation = z.infer<typeof BaseReservationSchema>;
+
+export const AdminReservationStatusLabels: Record<AdminReservation["status"], string> = {
+  PENDING_PAYMENT: "Pending Payment",
+  PAID: "Paid",
+  CANCELLED: "Cancelled",
+  COMPLETED: "Completed",
+}; 
 
 // ─── Review ────────────────────────────────────────────
 // Derived from the shared schema; dates are strings in API responses (JSON serialization)

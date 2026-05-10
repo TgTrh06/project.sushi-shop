@@ -1,41 +1,9 @@
-export interface Seat {
-  id: string;
-  x: number;
-  y: number;
-  type: "counter" | "table";
-}
-
-// Map Configuration - Boutique Omakase Layout
-const SEATS: Seat[] = [
-  // --- 2-PERSON TABLES (LEFT COLUMN) ---
-  // Table 1
-  { id: "T1-A", x: 70, y: 120, type: "table" },
-  { id: "T1-B", x: 170, y: 120, type: "table" },
-  // Table 2
-  { id: "T2-A", x: 70, y: 300, type: "table" },
-  { id: "T2-B", x: 170, y: 300, type: "table" },
-  // Table 3
-  { id: "T3-A", x: 70, y: 480, type: "table" },
-  { id: "T3-B", x: 170, y: 480, type: "table" },
-
-  // --- L-SHAPED OMAKASE COUNTER (RIGHT COLUMN) ---
-  // Vertical section seats (facing Right towards Kitchen)
-  { id: "C1", x: 480, y: 80, type: "counter" },
-  { id: "C2", x: 480, y: 140, type: "counter" },
-  { id: "C3", x: 480, y: 200, type: "counter" },
-  { id: "C4", x: 480, y: 260, type: "counter" },
-
-  // Horizontal section seats (facing Up towards Kitchen)
-  { id: "C5", x: 550, y: 390, type: "counter" },
-  { id: "C6", x: 610, y: 390, type: "counter" },
-  { id: "C7", x: 670, y: 390, type: "counter" },
-  { id: "C8", x: 730, y: 390, type: "counter" },
-];
+import { SEATS } from "@shared/config/seat-map.config";
 
 interface ReserveSeatMapProps {
   selectedSeats: Set<string>;
   occupiedSeats: Set<string>;
-  onSeatClick: (seatId: string) => void;
+  onSeatClick: (seatCode: string) => void;
 }
 
 export function ReserveSeatMap({ selectedSeats, occupiedSeats, onSeatClick }: ReserveSeatMapProps) {
@@ -106,13 +74,13 @@ export function ReserveSeatMap({ selectedSeats, occupiedSeats, onSeatClick }: Re
 
         {/* Aisle markers */}
         <text x="340" y="300" fontSize="18" textAnchor="middle" letterSpacing="8" transform="rotate(-90 340 300)" opacity="0.15" className="svg-text-accent">
-          AISLE
+          INDOOR
         </text>
 
         {/* --- SEATS --- */}
         {SEATS.map((seat) => {
-          const isOccupied = occupiedSeats.has(seat.id);
-          const isSelected = selectedSeats.has(seat.id);
+          const isOccupied = occupiedSeats.has(seat.code);
+          const isSelected = selectedSeats.has(seat.code);
 
           const cursor = isOccupied ? "not-allowed" : "pointer";
 
@@ -124,9 +92,9 @@ export function ReserveSeatMap({ selectedSeats, occupiedSeats, onSeatClick }: Re
 
           return (
             <g
-              key={seat.id}
+              key={seat.code}
               onClick={() => {
-                if (!isOccupied) onSeatClick(seat.id);
+                if (!isOccupied) onSeatClick(seat.code);
               }}
               style={{ cursor }}
               className={seatClass.join(" ")}
@@ -145,7 +113,7 @@ export function ReserveSeatMap({ selectedSeats, occupiedSeats, onSeatClick }: Re
                 className="reserve-seat__text"
                 fontWeight="600"
               >
-                {seat.id}
+                {seat.code}
               </text>
             </g>
           );
