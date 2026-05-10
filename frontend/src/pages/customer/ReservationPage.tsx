@@ -50,8 +50,6 @@ export default function ReservePage() {
         setSelectedSeats(new Set(bookingState.selectedSeats));
       }
       
-      toast.success("Your booking details have been restored. Please proceed with payment.");
-      
       // Clear the state to prevent restoration on refresh
       navigate(location.pathname, { replace: true, state: {} });
       
@@ -118,13 +116,11 @@ export default function ReservePage() {
   const handleSessionSelect = (session: SessionType) => {
     setForm({ ...form, session, slotId: null });
     setSelectedSeats(new Set());
-    toast.success(`${session.charAt(0).toUpperCase() + session.slice(1)} session selected`);
   };
 
   const handleSlotSelect = (slotId: string) => {
     setForm({ ...form, slotId });
     setSelectedSeats(new Set());
-    toast.success(`Time slot ${slotId} selected`);
   };
 
   const handleSeatClick = (seatCode: string) => {
@@ -150,20 +146,24 @@ export default function ReservePage() {
     // Check if user is logged in
     if (!user) {
       toast.error("Please login to proceed with payment");
-      // Redirect to login page with return state
-      navigate("/login", { 
-        state: { 
-          from: "/reservation",
-          bookingState: {
-            date: form.date,
-            session: form.session,
-            slotId: form.slotId,
-            selectedSeats: Array.from(selectedSeats),
-            customerName: form.customerName,
-            customerPhone: form.customerPhone,
-          }
-        } 
-      });
+      // Redirect to login page with return state - Delayed
+
+      setTimeout(() => {
+        navigate("/login", { 
+          state: { 
+            from: "/reservation",
+            bookingState: {
+              date: form.date,
+              session: form.session,
+              slotId: form.slotId,
+              selectedSeats: Array.from(selectedSeats),
+              customerName: form.customerName,
+              customerPhone: form.customerPhone,
+            }
+          } 
+        });
+      }, 800);
+      
       return;
     }
 
@@ -245,7 +245,6 @@ export default function ReservePage() {
                 value={form.date}
                 onChange={(e) => {
                   setForm({ ...form, date: e.target.value, session: null, slotId: null });
-                  toast.success(`Date selected: ${e.target.value}`);
                 }}
               />
             </div>

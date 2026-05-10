@@ -156,6 +156,50 @@
   margin-bottom: 12px;
 }
 
+/* Session Selector */
+.session-selector {
+  margin-bottom: 8px;
+}
+
+.session-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.session-pill {
+  padding: 12px 32px;
+  border-radius: 50px;
+  border: 2px solid var(--border-light);
+  background-color: var(--color-white);
+  color: var(--secondary-color);
+  font-family: var(--plus-jakarta-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: 700;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .session-pill {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.session-pill:hover:not(.is-active) {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.session-pill.is-active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(177, 69, 74, 0.3);
+}
+
+/* Time Slot Grid */
 .slot-grid {
   display: flex;
   flex-wrap: wrap;

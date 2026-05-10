@@ -191,12 +191,14 @@ export const DashboardOverviewPage = () => {
       PENDING_PAYMENT: "Pending Payment",
       PAID: "Paid",
       CANCELLED: "Cancelled",
+      COMPLETED: "Completed",
     };
     
     const map: Record<string, string> = {
       PENDING_PAYMENT: "admin-badge--amber",
       PAID: "admin-badge--green",
       CANCELLED: "admin-badge--gray",
+      COMPLETED: "admin-badge--blue",
     };
     
     return (
@@ -316,7 +318,7 @@ export const DashboardOverviewPage = () => {
                   <th>Customer</th>
                   <th>Phone</th>
                   <th>Date</th>
-                  <th>Time</th>
+                  <th>Session / Slot</th>
                   <th>Seats</th>
                   <th>Status</th>
                 </tr>
@@ -329,7 +331,10 @@ export const DashboardOverviewPage = () => {
                     </td>
                     <td style={{ color: "var(--admin-text-secondary)" }}>{b.customerPhone}</td>
                     <td>{b.reservationDate}</td>
-                    <td>{b.timeSlot}</td>
+                    <td>
+                      <div style={{ textTransform: "capitalize", fontWeight: 500 }}>{b.session}</div>
+                      <div style={{ fontSize: 11, color: "var(--admin-text-muted)" }}>{b.slotId}</div>
+                    </td>
                     <td>{b.seatCodes.join(", ")}</td>
                     <td>{statusBadge(b.status)}</td>
                   </tr>

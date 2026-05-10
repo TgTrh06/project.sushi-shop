@@ -1,16 +1,17 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from "@shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useNavigate } from "react-router-dom";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Images } from "@/assets/image";
 
 export const RegisterPage = () => {
   const signUp = useAuthStore((state) => state.register);
+  const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
+  const location = useLocation();
   const loading = useAuthStore((state) => state.loading);
 
   const {
@@ -37,8 +38,23 @@ export const RegisterPage = () => {
 
   const onSubmit = async (data: RegisterFormInput) => {
     try {
+      // Step 1: Register the user
       await signUp(data);
-      navigate('/login');
+      
+      // Step 2: Automatically login with the same credentials
+      await login({ email: data.email, password: data.password });
+      
+      // Step 3: Check if there's a booking state to preserve
+      const from = (location.state as any)?.from || "/";
+      const bookingState = (location.state as any)?.bookingState;
+      
+      if (bookingState) {
+        // Redirect back to reservation page with booking state
+        navigate(from, { state: { bookingState }, replace: true });
+      } else {
+        // Normal flow: redirect to home
+        navigate('/');
+      }
     } catch (error) {
       handleFormError(error, setError);
     }

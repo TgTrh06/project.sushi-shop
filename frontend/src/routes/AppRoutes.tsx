@@ -10,6 +10,8 @@ import { AboutPage } from "@/pages/AboutPage";
 import MenuPage from "@/pages/MenuPage";
 import ProductDetailPage from "@/pages/ProductDetailPage";
 import ReservePage from "@/pages/customer/ReservationPage";
+import ReservationSuccessPage from "@/pages/customer/ReservationSuccessPage";
+import ReservationFailedPage from "@/pages/customer/ReservationFailedPage";
 import ProfilePage from "@/pages/customer/ProfilePage";
 
 // Admin Layout & Pages
@@ -29,6 +31,8 @@ export const AppRoutes = () => {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/menu" element={<MenuPage />} />
       <Route path="/reservation" element={<ReservePage />} />
+      <Route path="/reservation-success" element={<ReservationSuccessPage />} />
+      <Route path="/reservation-failed" element={<ReservationFailedPage />} />
       <Route path="/product/:slug" element={<ProductDetailPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
