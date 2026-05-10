@@ -50,6 +50,11 @@ export default class ReservationRepository {
         return docs.map((doc) => this.mapToEntity(doc));
     }
 
+    async findByUserId(userId: string): Promise<ReservationEntity[]> {
+        const docs = await ReservationModel.find({ userId }).sort({ createdAt: -1 });
+        return docs.map((doc) => this.mapToEntity(doc));
+    }
+
     async findById(id: string): Promise<ReservationEntity | null> {
         const doc = await ReservationModel.findById(id);
         return doc ? this.mapToEntity(doc) : null;
