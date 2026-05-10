@@ -4,12 +4,13 @@ import type { AdminReservation } from "@/features/admin/admin.types";
 import { showSuccess, showError } from "@/lib/toast";
 import { Search, RefreshCw, Trash2, AlertTriangle } from "lucide-react";
 
-const STATUS_OPTIONS = ["PENDING_PAYMENT", "PAID", "CANCELLED"] as const;
+const STATUS_OPTIONS = ["PENDING_PAYMENT", "PAID", "CANCELLED", "COMPLETED"] as const;
 
 const statusLabel: Record<string, string> = {
   PENDING_PAYMENT: "Pending Payment",
   PAID: "Paid",
   CANCELLED: "Cancelled",
+  COMPLETED: "Completed",
 };
 
 export const ReservationsManagementPage = () => {
@@ -141,7 +142,8 @@ export const ReservationsManagementPage = () => {
                   <th>#</th>
                   <th>Customer</th>
                   <th>Phone</th>
-                  <th>Date / Time</th>
+                  <th>Date</th>
+                  <th>Session / Slot</th>
                   <th>Seats</th>
                   <th>Deposit</th>
                   <th>Transaction ID</th>
@@ -159,7 +161,10 @@ export const ReservationsManagementPage = () => {
                     <td style={{ color: "var(--admin-text-secondary)" }}>{b.customerPhone}</td>
                     <td>
                       <div style={{ fontWeight: 500 }}>{b.reservationDate}</div>
-                      <div style={{ fontSize: 12, color: "var(--admin-text-muted)" }}>{b.timeSlot}</div>
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 500, textTransform: "capitalize" }}>{b.session}</div>
+                      <div style={{ fontSize: 12, color: "var(--admin-text-muted)" }}>{b.slotId}</div>
                     </td>
                     <td>
                       <div style={{ fontSize: 13 }}>
@@ -218,7 +223,7 @@ export const ReservationsManagementPage = () => {
               <p className="admin-confirm-text">
                 Are you sure you want to delete the reservation for{" "}
                 <strong>"{confirmDelete.customerName}"</strong> on{" "}
-                <strong>{confirmDelete.reservationDate} {confirmDelete.timeSlot}</strong>?
+                <strong>{confirmDelete.reservationDate} ({confirmDelete.session} - {confirmDelete.slotId})</strong>?
               </p>
             </div>
             <div className="admin-modal__footer">
