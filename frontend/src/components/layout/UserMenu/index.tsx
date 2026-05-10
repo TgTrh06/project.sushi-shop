@@ -14,6 +14,7 @@ import {
   Sun,
   Moon,
   Globe,
+  Calendar,
 } from "lucide-react";
 import "./UserMenu.css";
 
@@ -127,6 +128,15 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
                   >
                     <User size={18} strokeWidth={1.5} />
                     <span>Profile</span>
+                  </Link>
+                  <Link
+                    to="/my-reservations"
+                    className="user-dropdown__item"
+                    onClick={() => setIsOpen(false)}
+                    role="menuitem"
+                  >
+                    <Calendar size={18} strokeWidth={1.5} />
+                    <span>My Reservations</span>
                   </Link>
                   {user.role === "admin" && (
                     <Link
