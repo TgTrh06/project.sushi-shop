@@ -1,14 +1,15 @@
-import env from "dotenv";
+import dotenv from "dotenv";
+dotenv.config();
+
 import cors from "cors";
 import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import { globalErrorHandler } from "./middleware/error.middleware";
 import { connectDB } from "./config/database.config";
-import mainRouter from "./routes";
 import "./config/cloudinary.config"; // Initialize Cloudinary
+import mainRouter from "./routes";
 
-env.config();
 
 const PORT = process.env.PORT || 5000;
 
