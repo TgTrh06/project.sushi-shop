@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { adminService } from "@/features/admin/admin.service";
 import type { SystemStats, AdminReservation } from "@/features/admin/admin.types";
 import {
@@ -14,6 +15,7 @@ import {
   Cell,
   Legend
 } from "recharts";
+import { Users, Package, FolderTree, Calendar, Clock, BarChart3, PieChart as PieChartIcon } from "lucide-react";
 
 /* ─── Skeleton Loader ──────────────────────────────────── */
 const SkeletonCard = () => (
@@ -28,20 +30,22 @@ const SkeletonCard = () => (
 
 /* ─── Stat Card ────────────────────────────────────────── */
 const StatCard = ({
-  icon,
+  icon: Icon,
   iconClass,
   value,
   label,
   subtitle,
 }: {
-  icon: string;
+  icon: React.ElementType;
   iconClass: string;
   value: number | string;
   label: string;
   subtitle?: string;
 }) => (
   <div className="admin-stat-card" id={`stat-${label.toLowerCase().replace(/\s+/g, "-")}`}>
-    <div className={`admin-stat-card__icon ${iconClass}`}>{icon}</div>
+    <div className={`admin-stat-card__icon ${iconClass}`}>
+      <Icon size={24} strokeWidth={2} />
+    </div>
     <div className="admin-stat-card__info">
       <div className="admin-stat-card__value">{value}</div>
       <div className="admin-stat-card__label">{label}</div>
@@ -77,8 +81,9 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
       {/* Bar Chart */}
       <div className="admin-card">
         <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
-          <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0 }}>
-            📊 Products by Category
+          <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+            <BarChart3 size={20} style={{ color: "#3b82f6" }} />
+            Products by Category
           </h3>
         </div>
         {stats.productsByCategory.length === 0 ? (
@@ -116,8 +121,9 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
       {/* Pie Chart */}
       <div className="admin-card">
         <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
-          <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0 }}>
-            🥧 Reservation Status
+          <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+            <PieChartIcon size={20} style={{ color: "#10b981" }} />
+            Reservation Status
           </h3>
         </div>
         {filteredPieData.length === 0 ? (
@@ -162,6 +168,7 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
 
 /* ─── Page Component ───────────────────────────────────── */
 export const DashboardOverviewPage = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<SystemStats | null>(null);
   const [bookings, setBookings] = useState<AdminReservation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -240,34 +247,34 @@ export const DashboardOverviewPage = () => {
         ) : (
           <>
             <StatCard
-              icon="👥"
+              icon={Users}
               iconClass="admin-stat-card__icon--blue"
               value={stats?.totalUsers ?? 0}
               label="Customers"
               subtitle={`+${stats?.newUsersLast30Days ?? 0} in 30 days`}
             />
             <StatCard
-              icon="🍣"
+              icon={Package}
               iconClass="admin-stat-card__icon--red"
               value={stats?.totalProducts ?? 0}
               label="Products"
               subtitle={`${stats?.activeProducts ?? 0} active`}
             />
             <StatCard
-              icon="🗂️"
+              icon={FolderTree}
               iconClass="admin-stat-card__icon--green"
               value={stats?.totalCategories ?? 0}
               label="Categories"
             />
             <StatCard
-              icon="📅"
+              icon={Calendar}
               iconClass="admin-stat-card__icon--amber"
               value={stats?.totalReservations ?? 0}
               label="Reservations"
               subtitle={`${stats?.todayReservations ?? 0} today`}
             />
             <StatCard
-              icon="⏳"
+              icon={Clock}
               iconClass="admin-stat-card__icon--red"
               value={stats?.pendingReservations ?? 0}
               label="Pending Payment"
@@ -295,9 +302,12 @@ export const DashboardOverviewPage = () => {
               {bookings.length} reservations displayed
             </p>
           </div>
-          <a href="/admin/reservations" className="admin-btn admin-btn--secondary admin-btn--sm">
+          <button 
+            onClick={() => navigate("/admin/reservations")} 
+            className="admin-btn admin-btn--secondary admin-btn--sm"
+          >
             View All →
-          </a>
+          </button>
         </div>
 
         {loading ? (
