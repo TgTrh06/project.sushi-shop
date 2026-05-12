@@ -76,6 +76,19 @@ export default class ReservationController {
     };
 
     /**
+     * GET /reservations/my-reservations - Get current user's reservations
+     */
+    getMyReservations = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = req.user!.id; // Required - from auth middleware
+            const data = await this.reservationService.getReservationsByUserId(userId);
+            return ResponseHandler.success(res, data, "Your reservations retrieved successfully");
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    /**
      * GET /reservations - Get all reservations (admin only)
      */
     getAll = async (req: Request, res: Response, next: NextFunction) => {
