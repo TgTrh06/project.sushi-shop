@@ -128,6 +128,11 @@ export const adminService = {
     return res.data.data;
   },
 
+  async getReservationById(id: string): Promise<AdminReservation> {
+    const res = await api.get<ApiResponse<AdminReservation>>(`/reservations/${id}`);
+    return res.data.data;
+  },
+
   async updateReservationStatus(id: string, status: AdminReservation["status"]): Promise<AdminReservation> {
     const res = await api.patch<ApiResponse<AdminReservation>>(`/reservations/${id}/status`, { status });
     return res.data.data;
