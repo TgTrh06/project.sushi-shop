@@ -99,4 +99,54 @@ export default class ReservationController {
             next(error);
         }
     };
+
+    /**
+     * GET /reservations/:id - Get reservation by ID (admin only)
+     */
+    getById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id as string;
+            const data = await this.reservationService.getReservationById(id);
+            
+            if (!data) {
+                throw new BadRequestError("Reservation not found");
+            }
+
+            return ResponseHandler.success(res, data, "Reservation retrieved successfully");
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    /**
+     * PATCH /reservations/:id/status - Update reservation status (admin only)
+     */
+    updateStatus = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id as string;
+            const { status } = req.body;
+
+            if (!status) {
+                throw new BadRequestError("Status is required");
+            }
+
+            const data = await this.reservationService.updateReservationStatus(id, status);
+            return ResponseHandler.success(res, data, "Reservation status updated successfully");
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    /**
+     * DELETE /reservations/:id - Delete reservation (admin only)
+     */
+    delete = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id as string;
+            await this.reservationService.deleteReservation(id);
+            return ResponseHandler.success(res, null, "Reservation deleted successfully");
+        } catch (error) {
+            next(error);
+        }
+    };
 }
