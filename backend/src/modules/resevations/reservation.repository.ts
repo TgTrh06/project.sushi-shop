@@ -60,6 +60,20 @@ export default class ReservationRepository {
         return doc ? this.mapToEntity(doc) : null;
     }
 
+    async updateById(id: string, data: Partial<ReservationEntity>): Promise<ReservationEntity | null> {
+        const doc = await ReservationModel.findByIdAndUpdate(
+            id,
+            data,
+            { new: true, runValidators: true }
+        );
+        return doc ? this.mapToEntity(doc) : null;
+    }
+
+    async deleteById(id: string): Promise<boolean> {
+        const result = await ReservationModel.findByIdAndDelete(id);
+        return !!result;
+    }
+
     /**
      * Find occupied seats for a specific date, session, and slot
      * Only considers PAID or PENDING_PAYMENT (not expired) reservations
