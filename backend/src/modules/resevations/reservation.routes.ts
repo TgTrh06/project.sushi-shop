@@ -14,5 +14,8 @@ router.post("/", verifyAuth, reservationController.create); // Create reservatio
 
 // ADMIN ROUTES
 router.get("/", verifyAuth, verifyAdmin, reservationController.getAll); // Get all reservations
+router.get("/:id", verifyAuth, verifyAdmin, reservationController.getById); // Get reservation by ID
+router.patch("/:id/status", verifyAuth, verifyAdmin, reservationController.updateStatus); // Update status
+router.delete("/:id", verifyAuth, verifyAdmin, reservationController.delete); // Delete reservation
 
 export default router;
