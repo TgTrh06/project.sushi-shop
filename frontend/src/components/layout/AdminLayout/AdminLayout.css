@@ -9,11 +9,11 @@
 :root {
   --admin-bg: var(--color-creamson);
   --admin-sidebar-bg: var(--color-white);
-  --admin-sidebar-hover: #fdf5eb;
+  --admin-sidebar-hover: var(--color-white);
   --admin-sidebar-active: #b1454a;
   --admin-header-bg: var(--color-white);
-  --admin-content-bg: #fff0de;
-  --admin-card-bg: #ffffff;
+  --admin-content-bg: var(--color-white);
+  --admin-card-bg: var(--color-white);
   --admin-border: rgba(0, 0, 0, 0.08);
 
   /* Text scale — maps to global style.css semantic names */
@@ -36,6 +36,15 @@
   --admin-shadow: 0 10px 40px var(--border-light);
   --admin-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
   --admin-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Chart colors - softer tones for better readability */
+  --admin-chart-blue: #60a5fa;
+  --admin-chart-green: #34d399;
+  --admin-chart-amber: #fbbf24;
+  --admin-chart-red: #f87171;
+  --admin-chart-gray: #9ca3af;
+  --admin-chart-text: #374151;
+  --admin-chart-grid: #e5e7eb;
 }
 
 /* ── Admin Root ── */
