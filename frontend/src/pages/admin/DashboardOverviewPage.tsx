@@ -63,15 +63,19 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
     count: c.count,
   }));
 
+  // Get CSS variables for chart colors
+  const chartBlue = getComputedStyle(document.documentElement).getPropertyValue('--admin-chart-blue').trim() || '#60a5fa';
+  const chartGreen = getComputedStyle(document.documentElement).getPropertyValue('--admin-chart-green').trim() || '#34d399';
+  const chartAmber = getComputedStyle(document.documentElement).getPropertyValue('--admin-chart-amber').trim() || '#fbbf24';
+  const chartRed = getComputedStyle(document.documentElement).getPropertyValue('--admin-chart-red').trim() || '#f87171';
+  const chartText = getComputedStyle(document.documentElement).getPropertyValue('--admin-text-primary').trim() || '#1f2937';
+  const chartGrid = getComputedStyle(document.documentElement).getPropertyValue('--admin-border').trim() || '#e5e7eb';
+
   const pieData = [
-    { name: "Pending Payment", value: stats.pendingReservations, color: "#f59e0b" },
-    { name: "Completed", value: stats.completedReservations, color: "#10b981" },
+    { name: "Pending Payment", value: stats.pendingReservations, color: chartAmber },
+    { name: "Completed", value: stats.completedReservations, color: chartGreen },
+    { name: "Cancelled", value: stats.totalReservations - (stats.pendingReservations + stats.completedReservations), color: chartRed },
   ];
-  
-  const others = stats.totalReservations - (stats.pendingReservations + stats.completedReservations);
-  if (others > 0) {
-    pieData.push({ name: "Others", value: others, color: "#6b7280" });
-  }
 
   // Filter out 0 value for pie chart so it looks better
   const filteredPieData = pieData.filter(d => d.value > 0);
@@ -82,7 +86,7 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
       <div className="admin-card">
         <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
           <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
-            <BarChart3 size={20} style={{ color: "#3b82f6" }} />
+            <BarChart3 size={20} style={{ color: chartBlue }} />
             Products by Category
           </h3>
         </div>
@@ -94,24 +98,30 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartGrid} />
                 <XAxis 
                   dataKey="name" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: "#6b7280", fontSize: 12 }} 
+                  tick={{ fill: chartText, fontSize: 12 }} 
                   dy={10}
                 />
                 <YAxis 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: "#6b7280", fontSize: 12 }} 
+                  tick={{ fill: chartText, fontSize: 12 }} 
                 />
                 <Tooltip 
                   cursor={{ fill: "#f3f4f6" }}
-                  contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
+                  contentStyle={{ 
+                    borderRadius: "8px", 
+                    border: "none", 
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    backgroundColor: "var(--admin-card-bg)",
+                    color: "var(--admin-text-primary)"
+                  }}
                 />
-                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Products" barSize={40} />
+                <Bar dataKey="count" fill={chartBlue} radius={[4, 4, 0, 0]} name="Products" barSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -122,7 +132,7 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
       <div className="admin-card">
         <div className="admin-toolbar" style={{ marginBottom: "24px" }}>
           <h3 style={{ color: "var(--admin-text-primary)", fontSize: 16, fontWeight: 600, margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
-            <PieChartIcon size={20} style={{ color: "#10b981" }} />
+            <PieChartIcon size={20} style={{ color: chartGreen }} />
             Reservation Status
           </h3>
         </div>
@@ -149,13 +159,19 @@ const DashboardCharts = ({ stats }: { stats: SystemStats }) => {
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
+                  contentStyle={{ 
+                    borderRadius: "8px", 
+                    border: "none", 
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    backgroundColor: "var(--admin-card-bg)",
+                    color: "var(--admin-text-primary)"
+                  }}
                 />
                 <Legend 
                   verticalAlign="bottom" 
                   height={36} 
                   iconType="circle"
-                  formatter={(value) => <span style={{ color: "#374151", fontSize: 13, fontWeight: 500 }}>{value}</span>}
+                  formatter={(value) => <span style={{ color: chartText, fontSize: 13, fontWeight: 500 }}>{value}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -204,12 +220,12 @@ export const DashboardOverviewPage = () => {
     const map: Record<string, string> = {
       PENDING_PAYMENT: "admin-badge--amber",
       PAID: "admin-badge--green",
-      CANCELLED: "admin-badge--gray",
+      CANCELLED: "admin-badge--red",
       COMPLETED: "admin-badge--blue",
     };
     
     return (
-      <span className={`admin-badge ${map[status] ?? "admin-badge--gray"}`}>
+      <span className={`admin-badge ${map[status] ?? "admin-badge--red"}`}>
         {statusLabels[status] ?? status}
       </span>
     );
