@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { adminService } from "@/features/admin/admin.service";
 import type { AdminReservation } from "@/features/admin/admin.types";
 import { showSuccess, showError } from "@/lib/toast";
-import { Search, RefreshCw, Trash2, AlertTriangle } from "lucide-react";
+import { Search, RefreshCw, Trash2, AlertTriangle, Eye, Edit2 } from "lucide-react";
 
 const STATUS_OPTIONS = ["PENDING_PAYMENT", "PAID", "CANCELLED", "COMPLETED"] as const;
 
@@ -11,6 +11,21 @@ const statusLabel: Record<string, string> = {
   PAID: "Paid",
   CANCELLED: "Cancelled",
   COMPLETED: "Completed",
+};
+
+const statusBadge = (status: string) => {
+  const map: Record<string, string> = {
+    PENDING_PAYMENT: "admin-badge--amber",
+    PAID: "admin-badge--green",
+    CANCELLED: "admin-badge--red",
+    COMPLETED: "admin-badge--blue",
+  };
+  
+  return (
+    <span className={`admin-badge ${map[status] ?? "admin-badge--red"}`}>
+      {statusLabel[status] ?? status}
+    </span>
+  );
 };
 
 export const ReservationsManagementPage = () => {
@@ -23,8 +38,11 @@ export const ReservationsManagementPage = () => {
   const [confirmDelete, setConfirmDelete] = useState<AdminReservation | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  // Status update loading
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  // Detail/Edit modal
+  const [selectedReservation, setSelectedReservation] = useState<AdminReservation | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<Partial<AdminReservation>>({});
+  const [saving, setSaving] = useState(false);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -42,19 +60,6 @@ export const ReservationsManagementPage = () => {
     fetchBookings();
   }, [fetchBookings]);
 
-  const handleStatusChange = async (booking: AdminReservation, newStatus: AdminReservation["status"]) => {
-    setUpdatingId(booking.id);
-    try {
-      await adminService.updateReservationStatus(booking.id, newStatus);
-      showSuccess("Reservation status updated successfully.");
-      fetchBookings();
-    } catch {
-      showError("Failed to update status.");
-    } finally {
-      setUpdatingId(null);
-    }
-  };
-
   const handleDelete = async () => {
     if (!confirmDelete) return;
     setDeleting(true);
@@ -68,6 +73,48 @@ export const ReservationsManagementPage = () => {
     } finally {
       setDeleting(false);
     }
+  };
+
+  const handleViewDetail = async (booking: AdminReservation) => {
+    try {
+      const detail = await adminService.getReservationById(booking.id);
+      setSelectedReservation(detail);
+      setIsEditing(false);
+    } catch {
+      showError("Failed to load reservation details.");
+    }
+  };
+
+  const handleEdit = () => {
+    if (!selectedReservation) return;
+    setEditForm({
+      customerName: selectedReservation.customerName,
+      customerPhone: selectedReservation.customerPhone,
+      status: selectedReservation.status,
+    });
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!selectedReservation || !editForm.status) return;
+    setSaving(true);
+    try {
+      await adminService.updateReservationStatus(selectedReservation.id, editForm.status);
+      showSuccess("Reservation updated successfully.");
+      setSelectedReservation(null);
+      setIsEditing(false);
+      fetchBookings();
+    } catch {
+      showError("Failed to update reservation.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setSelectedReservation(null);
+    setIsEditing(false);
+    setEditForm({});
   };
 
   const pendingCount = bookings.filter((b) => b.status === "PENDING_PAYMENT").length;
@@ -167,9 +214,7 @@ export const ReservationsManagementPage = () => {
                       <div style={{ fontSize: 12, color: "var(--admin-text-muted)" }}>{b.slotId}</div>
                     </td>
                     <td>
-                      <div style={{ fontSize: 13 }}>
-                        {b.seatCodes.join(", ")}
-                      </div>
+                      {b.seatCodes.join(", ")}
                     </td>
                     <td style={{ fontWeight: 500 }}>
                       {b.totalDeposit.toLocaleString("vi-VN")}₫
@@ -178,30 +223,25 @@ export const ReservationsManagementPage = () => {
                       {b.vnp_TxnRef}
                     </td>
                     <td>
-                      {updatingId === b.id ? (
-                        <div className="admin-loading__spinner" style={{ width: 16, height: 16 }} />
-                      ) : (
-                        <select
-                          className="admin-form-select"
-                          style={{ padding: "4px 8px", fontSize: 12, width: "auto" }}
-                          value={b.status}
-                          onChange={(e) => handleStatusChange(b, e.target.value as AdminReservation["status"])}
-                        >
-                          {STATUS_OPTIONS.map((s) => (
-                            <option key={s} value={s}>
-                              {statusLabel[s]}
-                            </option>
-                          ))}
-                        </select>
-                      )}
+                      {statusBadge(b.status)}
                     </td>
                     <td style={{ textAlign: "center" }}>
-                      <button
-                        className="admin-btn admin-btn--danger admin-btn--sm"
-                        onClick={() => setConfirmDelete(b)}
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                      <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
+                        <button
+                          className="admin-btn admin-btn--secondary admin-btn--sm"
+                          onClick={() => handleViewDetail(b)}
+                          title="View Details"
+                        >
+                          <Eye size={14} />
+                        </button>
+                        <button
+                          className="admin-btn admin-btn--danger admin-btn--sm"
+                          onClick={() => setConfirmDelete(b)}
+                          title="Delete"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -210,6 +250,134 @@ export const ReservationsManagementPage = () => {
           </div>
         )}
       </div>
+
+      {/* Detail/Edit Modal */}
+      {selectedReservation && (
+        <div className="admin-modal-overlay" onClick={handleCloseModal}>
+          <div className="admin-modal" style={{ maxWidth: 600 }} onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal__header">
+              <span className="admin-modal__title">
+                {isEditing ? <><Edit2 size={16} /> Edit Reservation</> : <><Eye size={16} /> Reservation Details</>}
+              </span>
+              <button className="admin-modal__close" onClick={handleCloseModal}>×</button>
+            </div>
+            <div className="admin-modal__body" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+              {isEditing ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  <div>
+                    <label className="admin-form-label">Customer Name</label>
+                    <input
+                      type="text"
+                      className="admin-form-input"
+                      value={editForm.customerName || ""}
+                      onChange={(e) => setEditForm({ ...editForm, customerName: e.target.value })}
+                      disabled
+                    />
+                  </div>
+                  <div>
+                    <label className="admin-form-label">Customer Phone</label>
+                    <input
+                      type="text"
+                      className="admin-form-input"
+                      value={editForm.customerPhone || ""}
+                      onChange={(e) => setEditForm({ ...editForm, customerPhone: e.target.value })}
+                      disabled
+                    />
+                  </div>
+                  <div>
+                    <label className="admin-form-label">Status</label>
+                    <select
+                      className="admin-form-select"
+                      value={editForm.status || ""}
+                      onChange={(e) => setEditForm({ ...editForm, status: e.target.value as AdminReservation["status"] })}
+                    >
+                      {STATUS_OPTIONS.map((s) => (
+                        <option key={s} value={s}>
+                          {statusLabel[s]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "12px", fontSize: 14 }}>
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Customer Name:</div>
+                  <div>{selectedReservation.customerName}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Phone:</div>
+                  <div>{selectedReservation.customerPhone}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Date:</div>
+                  <div>{selectedReservation.reservationDate}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Session:</div>
+                  <div style={{ textTransform: "capitalize" }}>{selectedReservation.session}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Time Slot:</div>
+                  <div>{selectedReservation.slotId}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Seats:</div>
+                  <div>{selectedReservation.seatCodes.join(", ")}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Deposit:</div>
+                  <div style={{ fontWeight: 600, color: "var(--admin-success)" }}>
+                    {selectedReservation.totalDeposit.toLocaleString("vi-VN")}₫
+                  </div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Transaction ID:</div>
+                  <div style={{ fontFamily: "monospace", fontSize: 12 }}>{selectedReservation.vnp_TxnRef}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Status:</div>
+                  <div>
+                    <span className={`admin-badge ${
+                      selectedReservation.status === "PENDING_PAYMENT" ? "admin-badge--amber" :
+                      selectedReservation.status === "PAID" ? "admin-badge--green" :
+                      selectedReservation.status === "CANCELLED" ? "admin-badge--red" :
+                      "admin-badge--blue"
+                    }`}>
+                      {statusLabel[selectedReservation.status]}
+                    </span>
+                  </div>
+
+                  {selectedReservation.userId && (
+                    <>
+                      <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>User ID:</div>
+                      <div style={{ fontFamily: "monospace", fontSize: 12 }}>{selectedReservation.userId}</div>
+                    </>
+                  )}
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Created At:</div>
+                  <div>{new Date(selectedReservation.createdAt).toLocaleString("vi-VN")}</div>
+
+                  <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Updated At:</div>
+                  <div>{new Date(selectedReservation.updatedAt).toLocaleString("vi-VN")}</div>
+                </div>
+              )}
+            </div>
+            <div className="admin-modal__footer">
+              {isEditing ? (
+                <>
+                  <button className="admin-btn admin-btn--secondary" onClick={() => setIsEditing(false)}>
+                    Cancel
+                  </button>
+                  <button className="admin-btn admin-btn--primary" onClick={handleSaveEdit} disabled={saving}>
+                    {saving ? "Saving..." : "Save Changes"}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="admin-btn admin-btn--secondary" onClick={handleCloseModal}>
+                    Close
+                  </button>
+                  <button className="admin-btn admin-btn--primary" onClick={handleEdit}>
+                    <Edit2 size={14} /> Edit
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Confirm Delete Modal */}
       {confirmDelete && (
