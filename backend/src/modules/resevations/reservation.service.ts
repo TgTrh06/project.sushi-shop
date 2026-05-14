@@ -3,6 +3,7 @@ import { BadRequestError } from "@/utils/common/error.util";
 import { vnpay, ProductCode, VnpLocale, dateFormat } from "@/utils/payment/vnpay.util";
 import { CreateReservationInput } from "./reservation.types";
 import { calculateDeposit, RESERVATION_CONFIG } from "@shared/config/reservation.config";
+import { ReservationStatusType } from "@shared/schemas/reservation.schema";
 
 export default class ReservationService {
     constructor(private readonly reservationRepo = new ReservationRepository()) { }
@@ -86,6 +87,35 @@ export default class ReservationService {
      */
     async getReservationsByUserId(userId: string) {
         return await this.reservationRepo.findByUserId(userId);
+    }
+
+    /**
+     * Get reservation by ID (admin)
+     */
+    async getReservationById(id: string) {
+        return await this.reservationRepo.findById(id);
+    }
+
+    /**
+     * Update reservation status by ID (admin)
+     */
+    async updateReservationStatus(id: string, status: ReservationStatusType) {
+        const reservation = await this.reservationRepo.findById(id);
+        if (!reservation) {
+            throw new BadRequestError("Reservation not found");
+        }
+        return await this.reservationRepo.updateById(id, { status });
+    }
+
+    /**
+     * Delete reservation by ID (admin)
+     */
+    async deleteReservation(id: string) {
+        const reservation = await this.reservationRepo.findById(id);
+        if (!reservation) {
+            throw new BadRequestError("Reservation not found");
+        }
+        return await this.reservationRepo.deleteById(id);
     }
 
     /**
