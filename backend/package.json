@@ -9,6 +9,7 @@
     "start": "node -r tsconfig-paths/register dist/src/app.js"
   },
   "dependencies": {
+    "@shared": "*",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
