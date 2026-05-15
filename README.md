@@ -104,7 +104,7 @@ NODE_ENV=development
 
 **Frontend** - `frontend/.env`:
 ```env
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=http://localhost:5000
 VITE_CLOUDINARY_CLOUD_NAME=your-cloudinary-name
 ```
 
@@ -113,7 +113,7 @@ VITE_CLOUDINARY_CLOUD_NAME=your-cloudinary-name
 **Terminal - Chạy tại Root dự án**:
 ```bash
 npm run dev
-# Server chạy tại http://localhost:3000
+# Server chạy tại http://localhost:5000
 # Client chạy tại http://localhost:5173
 ```
 
