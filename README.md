@@ -110,17 +110,10 @@ VITE_CLOUDINARY_CLOUD_NAME=your-cloudinary-name
 
 ### 3. Chạy Dự Án
 
-**Terminal 1 - Backend**:
+**Terminal - Chạy tại Root dự án**:
 ```bash
-cd backend
 npm run dev
 # Server chạy tại http://localhost:3000
-```
-
-**Terminal 2 - Frontend**:
-```bash
-cd frontend
-npm run dev
 # Client chạy tại http://localhost:5173
 ```
 
