@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const ReservationStatus = [
   "PENDING_PAYMENT",
+  "PENDING_APPROVAL",
   "PAID",
   "CANCELLED",
   "COMPLETED",
@@ -33,7 +34,9 @@ export const BaseReservationSchema = z.object({
 
   // Payment Information
   totalDeposit: z.number().int().min(0, "Deposit cannot be negative"),
-  vnp_TxnRef: z.string().min(1, "Transaction reference is required"),
+  transactionReference: z.string().min(1, "Transaction reference is required"),
+  // Kept optional for read compatibility with legacy reservation documents.
+  vnp_TxnRef: z.string().min(1).optional(),
   paymentExpiredAt: z.coerce.date().optional(),
 
   // Status with strict validation

@@ -21,3 +21,14 @@ export const BaseProductSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
+
+export const CreateProductSchema = BaseProductSchema.pick({
+  name: true,
+  price: true,
+  image_id: true,
+  gallery_ids: true,
+  categoryId: true,
+  isAvailable: true,
+});
+
+export const UpdateProductSchema = CreateProductSchema.partial();
