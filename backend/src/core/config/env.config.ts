@@ -18,6 +18,9 @@ const EnvSchema = z.object({
   VNP_RETURN_URL: z.string().url(),
   FRONTEND_URL: z.string().url(),
   CORS_ORIGINS: z.string().optional(),
+  ADMIN_EMAIL: z.email().optional(),
+  ADMIN_USERNAME: z.string().min(2).max(30).default("admin"),
+  ADMIN_PASSWORD: z.string().min(8).optional(),
 });
 
 export type Environment = z.infer<typeof EnvSchema>;

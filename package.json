@@ -11,6 +11,7 @@
     "dev": "npm run build --workspace=shared && concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
     "dev:backend": "npm run dev --workspace=backend",
     "start": "npm run start --workspace=backend",
+    "seed:admin": "npm run seed:admin --workspace=backend",
     "build": "npm run build -w shared && npm run build -w backend && npm run build -w frontend",
     "build:backend": "npm run build -w shared && npm run build -w backend",
     "build:frontend": "npm run build -w shared && npm run build -w frontend",
