@@ -1,6 +1,6 @@
 # ITSU Sushi
 
-Ứng dụng đặt bàn và quản lý nhà hàng sushi, gồm backend Express/MongoDB, frontend React và package `@itsu-sushi/shared`.
+Ứng dụng đặt bàn và quản lý nhà hàng sushi, gồm backend Express/MongoDB và frontend React. Backend và frontend sở hữu schema/type riêng theo module; không có package dùng chung ở root.
 
 ## Kiến trúc backend
 
