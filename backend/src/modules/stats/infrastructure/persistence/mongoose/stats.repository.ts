@@ -2,8 +2,7 @@ import { UserModel } from "@/modules/users/infrastructure/persistence/mongoose/u
 import { ProductModel } from "@/modules/products/infrastructure/persistence/mongoose/product.model";
 import { CategoryModel } from "@/modules/categories/infrastructure/persistence/mongoose/category.model";
 import { ReservationModel } from "@/modules/reservations/infrastructure/persistence/mongoose/reservation.model";
-import type { SystemStats } from "@itsu-sushi/shared/schemas/stats.schema";
-import type { StatsRepository } from "../../../domain/ports/stats-repository.port";
+import type { StatsRepository, SystemStats } from "../../../domain/ports/stats-repository.port";
 
 export class MongooseStatsRepository implements StatsRepository {
   async getSystemStats(): Promise<SystemStats> {

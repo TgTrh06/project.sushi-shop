@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateBody } from "@/core/http/validation.middleware";
-import { LoginSchema, RegisterSchema } from "@itsu-sushi/shared/schemas/auth.schema";
+import { LoginSchema, RegisterSchema } from "../validators/auth.validator";
 import type { AuthController } from "../controllers/auth.controller";
 
 export function createAuthRoutes(controller: AuthController, rateLimiters: { auth: any; refresh: any }) {

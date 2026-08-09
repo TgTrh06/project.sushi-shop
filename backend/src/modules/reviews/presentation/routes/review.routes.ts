@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateBody } from "@/core/http/validation.middleware";
-import { CreateReviewSchema } from "@itsu-sushi/shared/schemas/review.schema";
+import { CreateReviewSchema } from "../validators/review.validator";
 import type { ReviewController } from "../controllers/review.controller";
 
 export function createReviewRoutes(controller: ReviewController, auth: any, admin: any) {

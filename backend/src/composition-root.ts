@@ -35,7 +35,7 @@ import { GetSystemStatsUseCase } from "@/modules/stats/application/use-cases/get
 import { StatsController } from "@/modules/stats/presentation/controllers/stats.controller";
 import { MongooseReservationRepository } from "@/modules/reservations/infrastructure/persistence/mongoose/reservation.repository";
 import { MongooseSeatHoldRepository } from "@/modules/reservations/infrastructure/persistence/mongoose/seat-hold.repository";
-import { CreateReservationUseCase, GetOccupiedSeatsUseCase, GetMyReservationsUseCase, GetAdminReservationsUseCase, GetReservationPaymentUseCase, ConfirmCustomerPaymentUseCase, ApproveManualPaymentUseCase, RejectManualPaymentUseCase, UpdateReservationStatusUseCase, DeleteReservationUseCase } from "@/modules/reservations/application/use-cases/reservation.use-cases";
+import { CreateReservationUseCase, GetOccupiedSeatsUseCase, GetMyReservationsUseCase, GetAdminReservationsUseCase, GetReservationPaymentUseCase, ConfirmCustomerPaymentUseCase, ApproveManualPaymentUseCase, RejectManualPaymentUseCase, UpdateReservationStatusUseCase, DeleteReservationUseCase, GetReservationConfigUseCase } from "@/modules/reservations/application/use-cases/reservation.use-cases";
 import { ReservationController } from "@/modules/reservations/presentation/controllers/reservation.controller";
 import { MongoosePaymentSettingsRepository, MongooseReservationPaymentRepository } from "@/modules/payments/infrastructure/persistence/mongoose/payment.repository";
 import { VietQrQuickLinkGenerator } from "@/modules/payments/infrastructure/vietqr-generator";
@@ -83,6 +83,7 @@ export function createCompositionRoot() {
     new RejectManualPaymentUseCase(reservations, holds, payments, unitOfWork, clock),
     new UpdateReservationStatusUseCase(reservations, holds, unitOfWork),
     new DeleteReservationUseCase(reservations, holds),
+    new GetReservationConfigUseCase(),
   );
   const paymentSettingsController = new PaymentSettingsController(new GetPaymentSettingsUseCase(settings), new ConfigurePaymentSettingsUseCase(settings));
 

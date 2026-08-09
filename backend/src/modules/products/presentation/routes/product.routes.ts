@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateBody } from "@/core/http/validation.middleware";
-import { CreateProductSchema, UpdateProductSchema } from "@itsu-sushi/shared/schemas/product.schema";
+import { CreateProductSchema, UpdateProductSchema } from "../validators/product.validator";
 import type { ProductController } from "../controllers/product.controller";
 
 export function createProductRoutes(controller: ProductController, auth: any, admin: any) {

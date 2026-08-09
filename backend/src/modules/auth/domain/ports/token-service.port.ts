@@ -1,4 +1,4 @@
-import type { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import type { Role } from "@/modules/users/domain/entities/role";
 
 export interface TokenService {
   createAccessToken(payload: { id: string; role: Role }): string;

@@ -1,4 +1,4 @@
-import { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import { Role } from "@/modules/users/domain/entities/role";
 import { ConflictError } from "@/core/errors";
 import type { UserRepository } from "@/modules/users/domain/ports/user-repository.port";
 import type { PasswordHasher } from "../../domain/ports/password-hasher.port";

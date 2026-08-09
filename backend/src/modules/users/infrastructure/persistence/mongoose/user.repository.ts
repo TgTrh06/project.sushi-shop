@@ -2,7 +2,7 @@ import type { Model } from "mongoose";
 import { UserModel, type UserDocument } from "./user.model";
 import type { NewUser, UserEntity } from "@/modules/users/domain/entities/user.entity";
 import type { UserRepository } from "@/modules/users/domain/ports/user-repository.port";
-import type { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import type { Role } from "@/modules/users/domain/entities/role";
 
 export class MongooseUserRepository implements UserRepository {
   constructor(private readonly model: Model<UserDocument> = UserModel) {}

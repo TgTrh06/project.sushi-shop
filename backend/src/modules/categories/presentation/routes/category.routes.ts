@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateBody } from "@/core/http/validation.middleware";
-import { CreateCategorySchema, UpdateCategorySchema } from "@itsu-sushi/shared/schemas/category.schema";
+import { CreateCategorySchema, UpdateCategorySchema } from "../validators/category.validator";
 import type { CategoryController } from "../controllers/category.controller";
 
 export function createCategoryRoutes(controller: CategoryController, auth: any, admin: any) {

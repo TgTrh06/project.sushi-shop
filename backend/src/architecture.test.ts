@@ -12,7 +12,7 @@ function filesUnder(root: string): string[] {
 
 describe("module dependency direction", () => {
   it("keeps domain and application free of infrastructure/framework imports", () => {
-    const forbidden = /from ["'][^"']*(express|mongoose|cloudinary|jsonwebtoken|bcrypt|vnpay)[^"']*["']/;
+    const forbidden = /from ["'][^"']*(express|mongoose|cloudinary|jsonwebtoken|bcrypt|vnpay|zod|presentation)[^"']*["']/;
     const moduleRoot = path.resolve(__dirname, "modules");
     const files = fs.readdirSync(moduleRoot).flatMap((name) => ["domain", "application"].flatMap((layer) => filesUnder(path.join(moduleRoot, name, layer))));
     const violations = files.filter((file) => forbidden.test(fs.readFileSync(file, "utf8")));

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import { Role } from "@/modules/users/domain/entities/role";
 import { ForbiddenError, UnauthorizedError } from "@/core/errors";
 import type { TokenService } from "@/modules/auth/domain/ports/token-service.port";
 

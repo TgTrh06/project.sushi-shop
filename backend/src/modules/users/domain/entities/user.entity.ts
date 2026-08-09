@@ -1,4 +1,4 @@
-import type { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import type { Role } from "./role";
 
 export interface UserEntity {
   id: string;

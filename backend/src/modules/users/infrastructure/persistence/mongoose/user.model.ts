@@ -1,5 +1,5 @@
 import { Schema, model, type Document } from "mongoose";
-import type { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import type { Role } from "@/modules/users/domain/entities/role";
 
 export interface UserDocument extends Document {
   username: string;

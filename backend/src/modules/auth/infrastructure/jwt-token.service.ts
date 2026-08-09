@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { hashToken } from "@/core/security/token-hash";
 import { env } from "@/core/config/env.config";
-import type { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import type { Role } from "@/modules/users/domain/entities/role";
 import type { TokenService } from "../domain/ports/token-service.port";
 
 export class JwtTokenService implements TokenService {

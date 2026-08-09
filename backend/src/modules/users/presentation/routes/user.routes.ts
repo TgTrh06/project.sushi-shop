@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateBody } from "@/core/http/validation.middleware";
-import { UpdateUserSchema, ChangePasswordSchema } from "@itsu-sushi/shared/schemas/user.schema";
+import { UpdateUserSchema, ChangePasswordSchema } from "../validators/user.validator";
 import type { UserController } from "../controllers/user.controller";
 
 export function createUserRoutes(controller: UserController, auth: any, admin: any) {

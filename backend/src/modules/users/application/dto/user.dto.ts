@@ -1,4 +1,11 @@
-import type { UpdateUserFormValues, ChangePasswordFormValues } from "@itsu-sushi/shared/schemas/user.schema";
+export interface UpdateProfileInput {
+  username?: string;
+  avatar_id?: string;
+  phoneNumber?: number;
+}
 
-export type UpdateProfileInput = UpdateUserFormValues;
-export type ChangePasswordInput = ChangePasswordFormValues;
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
