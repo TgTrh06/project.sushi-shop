@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "@/utils/common/response.util";
 import ReservationService from "./reservation.service";
 import { BadRequestError } from "@/utils/common/error.util";
+import { env } from "@/core/config/env.config";
 
 export default class ReservationController {
     constructor(private readonly reservationService: ReservationService) { }
@@ -40,12 +41,12 @@ export default class ReservationController {
             if (result) {
                 // Redirect to success page
                 return res.redirect(
-                    `${process.env.FRONTEND_URL}/reservation-success?ref=${result.vnp_TxnRef}`
+                    `${env.FRONTEND_URL}/reservation-success?ref=${result.vnp_TxnRef}`
                 );
             }
 
             // Redirect to failure page
-            return res.redirect(`${process.env.FRONTEND_URL}/reservation-failed`);
+            return res.redirect(`${env.FRONTEND_URL}/reservation-failed`);
         } catch (error) {
             next(error);
         }

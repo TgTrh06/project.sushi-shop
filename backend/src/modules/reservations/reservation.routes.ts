@@ -1,6 +1,9 @@
 import { Router } from "express";
-import { reservationController } from "@/container/reservation.container";
+import { reservationController } from "@/composition-root";
 import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
+import { zodValidator } from "@/middleware/validate.middleware";
+import { CreateReservationSchema } from "@itsu-sushi/shared/schemas/reservation.schema";
+import { reservationRateLimiter } from "@/config/rateLimit.config";
 
 const router = Router();
 
@@ -10,7 +13,7 @@ router.get("/occupied-seats", reservationController.getOccupiedSeats); // Get oc
 
 // USER ROUTES (must be before generic routes to avoid conflicts)
 router.get("/my-reservations", verifyAuth, reservationController.getMyReservations); // Get user's reservations
-router.post("/", verifyAuth, reservationController.create); // Create reservation (requires auth)
+  router.post("/", reservationRateLimiter, verifyAuth, zodValidator(CreateReservationSchema), reservationController.create); // Create reservation (requires auth)
 
 // ADMIN ROUTES
 router.get("/", verifyAuth, verifyAdmin, reservationController.getAll); // Get all reservations

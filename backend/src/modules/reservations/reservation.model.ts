@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import { ReservationDocument } from "./reservation.types";
-import { ReservationStatus } from "@shared/schemas/reservation.schema";
+import { ReservationStatus } from "@itsu-sushi/shared/schemas/reservation.schema";
 
 const ReservationSchema = new Schema<ReservationDocument>(
   {
