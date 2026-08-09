@@ -11,12 +11,13 @@ import { ToastProvider } from "./components/ui/ToastProvider";
 import { Loader } from "@/components/ui/Loader";
 import { ScrollToTopButton } from "@/components/ui/ScrollToTopButton";
 import { useState } from "react";
+import { QueryProvider } from "@/app/providers/QueryProvider";
 
 // Wrapper to conditionally render Navbar/Footer for non-admin routes
 const AppShell = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
-  const isAuthRoute = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/forgot-password";
+  const isAuthRoute = location.pathname === "/login" || location.pathname === "/register";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -70,14 +71,16 @@ function App() {
   }, [initialize]);
 
   return (
-    <BrowserRouter>
-      <ScrollToTop />
+    <QueryProvider>
+      <BrowserRouter>
+        <ScrollToTop />
 
-      <ToastProvider />
-      
-      {/* Loading screen while checking auth status */}
-      {!isInitialized ? <Loader /> : <AppShell />}
-    </BrowserRouter>
+        <ToastProvider />
+
+        {/* Loading screen while checking auth status */}
+        {!isInitialized ? <Loader /> : <AppShell />}
+      </BrowserRouter>
+    </QueryProvider>
   );
 }
 

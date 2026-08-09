@@ -9,7 +9,7 @@ interface DotNavProps {
 export const DotNav = ({ activeSection, totalSections, scrollToSection }: DotNavProps) => {
     return (
         <div className="dot-nav">
-            {Array.from({ length: totalSections }).map((_: any, index: number) => (
+            {Array.from({ length: totalSections }, (_, index) => (
                 <button
                     key={index}
                     className={`dot-nav__item ${activeSection === index ? "is-active" : ""}`}
