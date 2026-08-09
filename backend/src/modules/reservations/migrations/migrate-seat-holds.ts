@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
-import { connectDB } from "@/config/database.config";
-import { ReservationModel } from "../reservation.model";
-import {
-  ReservationSeatHoldModel,
-  type ReservationSeatHoldStatus,
-} from "../reservation-seat-hold.model";
+import { connectDatabase } from "@/core/database/mongoose.connection";
+import { ReservationModel } from "../infrastructure/persistence/mongoose/reservation.model";
+import { SeatHoldModel, type SeatHoldDocument } from "../infrastructure/persistence/mongoose/seat-hold.model";
 import { getSessionById } from "@itsu-sushi/shared/config/reservation.config";
 
 const dryRun = process.argv.includes("--dry-run");
@@ -19,32 +16,32 @@ function paidSeatExpiry(
 }
 
 async function migrate() {
-  await connectDB();
-  await ReservationSeatHoldModel.syncIndexes();
+  await connectDatabase();
+  await SeatHoldModel.syncIndexes();
 
   const reservations = await ReservationModel.find({
-    status: { $in: ["PAID", "PENDING_PAYMENT"] },
+    status: { $in: ["PAID", "PENDING_PAYMENT", "PENDING_APPROVAL"] },
   }).lean();
   let inserted = 0;
   let skipped = 0;
 
   for (const reservation of reservations) {
-    const status = reservation.status as "PAID" | "PENDING_PAYMENT";
+    const status = reservation.status as "PAID" | "PENDING_PAYMENT" | "PENDING_APPROVAL";
     const expiresAt = status === "PAID"
       ? paidSeatExpiry(reservation.reservationDate, reservation.session, reservation.slotId)
-      : reservation.paymentExpiredAt;
+      : status === "PENDING_APPROVAL" ? reservation.approvalExpiresAt : reservation.paymentExpiredAt;
 
     if (!expiresAt || expiresAt <= new Date()) {
       skipped += reservation.seatCodes.length;
       continue;
     }
 
-    const holdStatus: ReservationSeatHoldStatus = status === "PAID" ? "CONFIRMED" : "HELD";
+    const holdStatus: SeatHoldDocument["status"] = status === "PAID" ? "CONFIRMED" : status === "PENDING_APPROVAL" ? "PENDING_APPROVAL" : "HELD";
     for (const seatCode of new Set(reservation.seatCodes)) {
       inserted += 1;
       if (dryRun) continue;
 
-      await ReservationSeatHoldModel.updateOne(
+      await SeatHoldModel.updateOne(
         {
           reservationDate: reservation.reservationDate,
           session: reservation.session,
