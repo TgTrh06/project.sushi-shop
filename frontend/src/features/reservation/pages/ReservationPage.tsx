@@ -6,8 +6,21 @@ import { TimeSlotPicker } from "@/components/ui/Reserve/TimeSlotPicker";
 import { SeatMapSkeleton } from "@/components/ui/Reserve/SeatMapSkeleton";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { type SessionType, calculateDeposit } from "@shared/config/reservation.config";
-import api from "@/lib/axios";
+import { type SessionType, calculateDeposit } from "@itsu-sushi/shared/config/reservation.config";
+import { createReservation, getOccupiedSeats } from "../api/reservation.api";
+
+interface BookingState {
+  customerName?: string;
+  customerPhone?: string;
+  date: string;
+  session: SessionType | null;
+  slotId: string | null;
+  selectedSeats?: string[];
+}
+
+interface ReservationLocationState {
+  bookingState?: BookingState;
+}
 
 export default function ReservePage() {
   const navigate = useNavigate();
@@ -31,7 +44,7 @@ export default function ReservePage() {
 
   // Restore booking state after login/register
   useEffect(() => {
-    const bookingState = (location.state as any)?.bookingState;
+    const bookingState = (location.state as ReservationLocationState | null)?.bookingState;
     if (bookingState) {
       console.log("Restoring booking state:", bookingState);
       
@@ -68,19 +81,15 @@ export default function ReservePage() {
 
     try {
       const response = await Promise.race([
-        api.get(`/reservations/occupied-seats`, {
-          params: { date, session, slotId },
-        }),
-        timeoutPromise
-      ]) as any;
+        getOccupiedSeats(date, session as SessionType, slotId),
+        timeoutPromise,
+      ]) as string[];
 
-      if (response.data.success) {
-        setOccupiedSeats(new Set(response.data.data));
-        toast.success("Seat availability loaded successfully");
-      }
-    } catch (error: any) {
+      setOccupiedSeats(new Set(response));
+      toast.success("Seat availability loaded successfully");
+    } catch (error: unknown) {
       console.error("Failed to fetch availability:", error);
-      if (error.message === 'Timeout') {
+      if (error instanceof Error && error.message === 'Timeout') {
         toast.error("Loading seats is taking longer than expected. Showing all seats as available.");
         setOccupiedSeats(new Set()); // Show all seats as available
       } else {
@@ -189,7 +198,7 @@ export default function ReservePage() {
     try {
       const totalDeposit = calculateDeposit(selectedSeats.size);
 
-      const response = await api.post("/reservations", {
+      const response = await createReservation({
         customerName: form.customerName.trim(),
         customerPhone: form.customerPhone.trim(),
         reservationDate: form.date,
@@ -199,20 +208,16 @@ export default function ReservePage() {
         totalDeposit,
       });
 
-      if (response.data.success) {
-        const { paymentUrl } = response.data.data;
-        
-        toast.success("Reservation created! Redirecting to payment...", { id: "reservation-loading" });
-        
-        // Small delay before redirect for better UX
-        setTimeout(() => {
-          window.location.href = paymentUrl;
-        }, 1000);
-      }
-    } catch (error: any) {
+      toast.success("Reservation created! Redirecting to payment...", { id: "reservation-loading" });
+
+      // Small delay before redirect for better UX
+      setTimeout(() => {
+        window.location.href = response.paymentUrl;
+      }, 1000);
+    } catch (error: unknown) {
       console.error("Failed to create reservation:", error);
       toast.error(
-        error.response?.data?.message || "Failed to create reservation. Please try again.",
+        error instanceof Error ? error.message : "Failed to create reservation. Please try again.",
         { id: "reservation-loading" }
       );
     } finally {

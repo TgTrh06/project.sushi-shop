@@ -1,5 +1,5 @@
 import React from "react";
-import { type SessionType, RESERVATION_CONFIG } from "@shared/config/reservation.config";
+import { type SessionType, RESERVATION_CONFIG } from "@itsu-sushi/shared/config/reservation.config";
 
 interface TimeSlotPickerProps {
   selectedSession: SessionType | null;
