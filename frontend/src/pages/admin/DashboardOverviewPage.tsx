@@ -199,9 +199,9 @@ export const DashboardOverviewPage = () => {
         ]);
         setStats(statsData);
         setBookings(bookingsData.slice(0, 8));
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to load dashboard data:", err);
-        setError(err?.message || "Failed to load data.");
+        setError(err instanceof Error ? err.message : "Failed to load data.");
       } finally {
         setLoading(false);
       }

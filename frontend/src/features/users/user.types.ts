@@ -4,4 +4,4 @@ export type {
   UpdateUserFormValues,
   ChangePasswordFormInput,
   ChangePasswordFormValues,
-} from "@shared/schemas/user.schema";
+} from "@itsu-sushi/shared/schemas/user.schema";

@@ -9,7 +9,7 @@ import { showSuccess, showError } from "@/lib/toast";
 import {
   ChangePasswordSchema,
   type ChangePasswordFormInput,
-} from "@shared/schemas/user.schema";
+} from "@itsu-sushi/shared/schemas/user.schema";
 
 type TabType = "overview" | "personal" | "security";
 
