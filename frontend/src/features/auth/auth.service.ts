@@ -1,7 +1,7 @@
 import api from "@/lib/axios";
 import type { AuthResponse } from "./auth.type";
 import type { ApiResponse } from "@/types/response.type";
-import type { LoginFormInput, RegisterFormInput } from "@itsu-sushi/shared/schemas/auth.schema";
+import type { LoginFormInput, RegisterFormInput } from "./schemas/auth.schema";
 
 export const authService = {
   async register(input: RegisterFormInput): Promise<AuthResponse> {

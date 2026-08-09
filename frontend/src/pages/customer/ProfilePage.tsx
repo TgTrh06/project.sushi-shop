@@ -9,7 +9,7 @@ import { showSuccess, showError } from "@/lib/toast";
 import {
   ChangePasswordSchema,
   type ChangePasswordFormInput,
-} from "@itsu-sushi/shared/schemas/user.schema";
+} from "@/features/users/schemas/user.schema";
 
 type TabType = "overview" | "personal" | "security";
 
@@ -110,7 +110,7 @@ const ProfilePage: React.FC = () => {
     return `${name[0]}****${name.slice(-2)}@${domain}`;
   };
 
-  const formatDate = (d?: Date) =>
+  const formatDate = (d?: string | Date) =>
     d ? new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "Never";
 
   // ── Save handlers ──

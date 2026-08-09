@@ -4,7 +4,7 @@ import { authService } from "@/features/auth/auth.service";
 import type {
   LoginFormInput,
   RegisterFormInput,
-} from "@itsu-sushi/shared/schemas/auth.schema";
+} from "@/features/auth/schemas/auth.schema";
 import { showError, showSuccess } from "@/lib/toast";
 
 interface AuthState {

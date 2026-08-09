@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from "@itsu-sushi/shared/schemas/auth.schema";
+import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from "@/features/auth/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { PasswordInput } from "@/components/ui/PasswordInput";
