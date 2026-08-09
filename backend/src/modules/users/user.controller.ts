@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ResponseHandler } from "../../utils/common/response.util";
 import UserService from "./user.service";
 import { PaginationUtils } from "../../utils/common/pagination.util";
-import { UpdateUserFormInput, ChangePasswordFormInput } from "@shared/schemas/user.schema";
+import { UpdateUserFormInput, ChangePasswordFormInput } from "@itsu-sushi/shared/schemas/user.schema";
 import { GetByIdParams } from "@/types/params.type";
 
 export default class UserController {

@@ -61,8 +61,8 @@ export default class ReviewController {
   delete = async (req: Request<GetByIdParams>, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const userId = (req as any).user.id;
-      const isAdmin = (req as any).user.role === "admin";
+      const userId = req.user!.id;
+      const isAdmin = req.user!.role === "admin";
 
       const result = await this.reviewService.deleteReview(id, userId, isAdmin);
       return ResponseHandler.success(res, result, "Review deleted successfully.");

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyAuth, verifyAdmin } from "../../../middleware/auth.middleware";
-import { userController } from "@/container/user.container";
+import { userController } from "@/composition-root";
 
 const router = Router();
 

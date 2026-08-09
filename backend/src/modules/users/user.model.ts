@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { Role } from "@shared/schemas/user.schema";
-import type { User } from "@shared/schemas/user.schema";
+import { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import type { User } from "@itsu-sushi/shared/schemas/user.schema";
 
 // =========================================================
 // BUSINESS ENTITY — extends shared User with hashedPassword

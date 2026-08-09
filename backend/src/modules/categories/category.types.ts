@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BaseCategorySchema } from "@shared/schemas/category.schema";
+import { BaseCategorySchema } from "@itsu-sushi/shared/schemas/category.schema";
 
 // DTO's Schemas
 export const CreateCategorySchema = BaseCategorySchema.pick({

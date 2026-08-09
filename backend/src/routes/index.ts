@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
-import authRoutes from "@/modules/auth/auth.routes";
+import { createAuthRouter } from "@/modules/auth/auth.routes";
+import { authController } from "@/composition-root";
 import adminRoutes from "@/modules/users/routes/admin.routes"
 import userRoutes from "@/modules/users/routes/user.routes";
 import categoryRoutes from "@/modules/categories/category.routes";
 import productRoutes from "@/modules/products/product.routes";
-import reservationRoutes from "@/modules/resevations/reservation.routes";
+import reservationRoutes from "@/modules/reservations/reservation.routes";
 import reviewRoutes from "@/modules/reviews/review.routes";
 import statsRoutes from "@/modules/stats/stats.routes";
 import uploadRoutes from "@/modules/upload/upload.routes";
@@ -18,7 +19,7 @@ router.get("/", (req, res) => {
 });
 
 // API routes
-router.use("/auth", authRoutes);
+  router.use("/auth", createAuthRouter(authController));
 router.use("/admin/stats", verifyAuth, verifyAdmin, statsRoutes);
 router.use("/admin", adminRoutes);
 router.use("/users", userRoutes);

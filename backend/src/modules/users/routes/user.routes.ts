@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { verifyAuth, verifyAdmin } from "../../../middleware/auth.middleware";
-import { UpdateUserSchema, ChangePasswordSchema } from "@shared/schemas/user.schema";
+import { UpdateUserSchema, ChangePasswordSchema } from "@itsu-sushi/shared/schemas/user.schema";
 import { zodValidator } from "@/middleware/validate.middleware";
-import { userController } from "@/container/user.container";
+import { userController } from "@/composition-root";
 
 const router = Router();
 

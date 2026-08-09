@@ -1,13 +1,18 @@
 import ReviewRepository from "./review.repository";
 import { CreateReviewDTO, ReviewEntity } from "./review.types";
-import { NotFoundError, BadRequestError } from "../../utils/common/error.util";
+import { NotFoundError, BadRequestError, ForbiddenError } from "../../utils/common/error.util";
 import * as cloudinaryService from "@/modules/upload/cloudinary.service";
+import ProductRepository from "@/modules/products/product.repository";
 
 export default class ReviewService {
-  constructor(private readonly reviewRepo = new ReviewRepository()) {}
+  constructor(
+    private readonly reviewRepo = new ReviewRepository(),
+    private readonly productRepo = new ProductRepository(),
+  ) {}
 
   async addReview(dto: CreateReviewDTO): Promise<ReviewEntity> {
-    // Optionally check if product exists here if needed
+    const product = await this.productRepo.findById(dto.productId);
+    if (!product) throw new NotFoundError("Product not found.");
     return this.reviewRepo.create(dto);
   }
 
@@ -65,9 +70,12 @@ export default class ReviewService {
   }
 
   async deleteReview(id: string, userId: string, isAdmin: boolean): Promise<ReviewEntity> {
-    // Check ownership or admin status before deleting (logic simplified for brevity)
     const review = await this.reviewRepo.findById(id);
     if (!review) throw new NotFoundError("Review not found.");
+
+    if (!isAdmin && review.user.id !== userId) {
+      throw new ForbiddenError("You can only delete your own review.");
+    }
 
     // Clean up Cloudinary photos before deletion
     if (review.photo_ids && review.photo_ids.length > 0) {
