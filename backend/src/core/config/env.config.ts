@@ -3,7 +3,7 @@ import { z } from "zod";
 
 dotenv.config();
 
-const EnvSchema = z.object({
+const EnvironmentSchema = z.object({
   PORT: z.coerce.number().int().positive().default(5000),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   MONGO_URI: z.string().min(1),
@@ -12,10 +12,6 @@ const EnvSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string().min(1),
   CLOUDINARY_API_KEY: z.string().min(1),
   CLOUDINARY_API_SECRET: z.string().min(1),
-  VNP_TMNCODE: z.string().min(1),
-  VNP_SECRET: z.string().min(1),
-  VNP_URL: z.string().url(),
-  VNP_RETURN_URL: z.string().url(),
   FRONTEND_URL: z.string().url(),
   CORS_ORIGINS: z.string().optional(),
   ADMIN_EMAIL: z.email().optional(),
@@ -23,9 +19,9 @@ const EnvSchema = z.object({
   ADMIN_PASSWORD: z.string().min(8).optional(),
 });
 
-export type Environment = z.infer<typeof EnvSchema>;
+export type Environment = z.infer<typeof EnvironmentSchema>;
 
-export const env: Environment = EnvSchema.parse({
+export const env: Environment = EnvironmentSchema.parse({
   ...process.env,
   PORT: process.env.PORT ?? 5000,
   NODE_ENV: process.env.NODE_ENV ?? "development",

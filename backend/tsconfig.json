@@ -19,7 +19,7 @@
       "@itsu-sushi/shared/*": ["../shared/dist/*"]
     }
   },
-  "files": ["src/types/express.d.ts"],
+  "files": ["src/core/types/express.d.ts"],
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

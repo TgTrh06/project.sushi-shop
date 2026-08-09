@@ -1,4 +1,4 @@
-import { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import type { Role } from "@itsu-sushi/shared/schemas/user.schema";
 
 declare global {
   namespace Express {
@@ -8,4 +8,4 @@ declare global {
   }
 }
 
-export { };
+export {};

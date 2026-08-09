@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
 import { env } from "@/core/config/env.config";
-import { UserModel } from "@/modules/users/user.model";
-import { hashPassword } from "@/utils/security/bcrypt.util";
+import { connectDatabase } from "@/core/database/mongoose.connection";
+import { UserModel } from "@/modules/users/infrastructure/persistence/mongoose/user.model";
+import { BcryptPasswordHasher } from "@/modules/auth/infrastructure/bcrypt-password-hasher";
 import { Role } from "@itsu-sushi/shared/schemas/user.schema";
 
 async function seedAdmin() {
@@ -11,7 +11,7 @@ async function seedAdmin() {
     );
   }
 
-  await mongoose.connect(env.MONGO_URI);
+  await connectDatabase();
 
   const email = env.ADMIN_EMAIL.toLowerCase();
   const existingUser = await UserModel.findOne({ email }).select("+hashedPassword");
@@ -27,10 +27,11 @@ async function seedAdmin() {
     return;
   }
 
+  const hasher = new BcryptPasswordHasher();
   await UserModel.create({
     email,
     username: env.ADMIN_USERNAME,
-    hashedPassword: await hashPassword(env.ADMIN_PASSWORD),
+    hashedPassword: await hasher.hash(env.ADMIN_PASSWORD),
     role: Role.ADMIN,
   });
 
@@ -44,6 +45,4 @@ seedAdmin()
     );
     process.exitCode = 1;
   })
-  .finally(async () => {
-    await mongoose.disconnect();
-  });
+  ;
