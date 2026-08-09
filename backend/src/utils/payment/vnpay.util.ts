@@ -6,16 +6,14 @@ import {
   dateFormat,
   HashAlgorithm,
 } from "vnpay";
-
-// console.log("VNP_SECRET Check:", process.env.VNP_SECRET);
-// console.log("VNP_TMNCODE Check:", process.env.VNP_TMNCODE);
+import { env } from "@/core/config/env.config";
 
 export const vnpay = new VNPay({
-  tmnCode: process.env.VNP_TMNCODE!,
-  secureSecret: process.env.VNP_SECRET!,
+  tmnCode: env.VNP_TMNCODE,
+  secureSecret: env.VNP_SECRET,
 
-  vnpayHost: "https://sandbox.vnpayment.vn",
-  testMode: true,
+  vnpayHost: new URL(env.VNP_URL).origin,
+  testMode: env.NODE_ENV !== "production",
 
   hashAlgorithm: HashAlgorithm.SHA512,
 
