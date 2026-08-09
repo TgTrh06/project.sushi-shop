@@ -1,8 +1,8 @@
 import { Model } from "mongoose";
 import { UserModel, UserEntity, UserDocument } from "./user.model";
-import { Role } from "@shared/schemas/user.schema";
-import { RegisterFormValues } from "@shared/schemas/auth.schema";
-import { UpdateUserFormValues } from "@shared/schemas/user.schema";
+import { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import { RegisterFormValues } from "@itsu-sushi/shared/schemas/auth.schema";
+import { UpdateUserFormValues } from "@itsu-sushi/shared/schemas/user.schema";
 
 export default class UserRepository {
   private model: Model<UserDocument>;

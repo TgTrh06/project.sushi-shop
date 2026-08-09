@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { UserModel } from "@/modules/users/user.model";
 import { ProductModel } from "@/modules/products/product.model";
 import { CategoryModel } from "@/modules/categories/category.model";
-import { ReservationModel } from "@/modules/resevations/reservation.model";
-import type { SystemStats } from "@shared/schemas/stats.schema";
+import { ReservationModel } from "@/modules/reservations/reservation.model";
+import type { SystemStats } from "@itsu-sushi/shared/schemas/stats.schema";
 
 export default class StatsController {
   /**

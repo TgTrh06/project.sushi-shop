@@ -3,13 +3,13 @@ import { Schema, model, Types } from "mongoose";
 export interface SessionEntity {
   id: string;
   userId: string;
-  refreshToken: string;
+  tokenHash: string;
   expiresAt: Date;
 }
 
 export interface SessionDocument {
   userId: Types.ObjectId;
-  refreshToken: string;
+  tokenHash: string;
   expiresAt: Date;
 }
 
@@ -20,7 +20,7 @@ const SessionSchema = new Schema<SessionDocument>(
       ref: "User", 
       required: true 
     },
-    refreshToken: {
+    tokenHash: {
       type: String,
       required: true,
       unique: true,

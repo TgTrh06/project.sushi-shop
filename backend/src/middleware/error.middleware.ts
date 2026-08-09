@@ -1,26 +1,30 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/common/logger.util";
+import { env } from "@/core/config/env.config";
 
 export const globalErrorHandler = (
-  err: any,
+  err: unknown,
   req: Request,
   res: Response,
   _next: NextFunction,
 ) => {
-  const statusCode = err.statusCode || err.status || 500;
+  const error = err instanceof Error ? err : new Error("Unknown error");
+  const statusCode = typeof err === "object" && err !== null && "statusCode" in err
+    ? Number((err as { statusCode?: number }).statusCode) || 500
+    : 500;
 
   // Log detail error based on status code
   if (statusCode >= 500) {
-    logger.error(err.message, {
+    logger.error(error.message, {
       metadata: {
-        stack: err.stack,
+        stack: error.stack,
         path: req.path,
         method: req.method,
         ip: req.ip,
       }
     });
   } else {
-    logger.warn(`[${statusCode}] ${err.message}`, {
+    logger.warn(`[${statusCode}] ${error.message}`, {
       metadata: {
         path: req.path,
         method: req.method,
@@ -32,8 +36,8 @@ export const globalErrorHandler = (
   // Setup response
   res.status(statusCode).json({
     success: false,
-    message: statusCode === 500 ? "Internal Server Error" : err.message, // Hide error 500
+    message: statusCode === 500 ? "Internal Server Error" : error.message,
     // Only show when on dev enviroment for debugging
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    ...(env.NODE_ENV === "development" && { stack: error.stack }),
   });
 };

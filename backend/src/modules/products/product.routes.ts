@@ -1,4 +1,4 @@
-import { productController } from "@/container/product.container";
+import { productController } from "@/composition-root";
 import { verifyAdmin, verifyAuth } from "@/middleware/auth.middleware";
 import { zodValidator } from "@/middleware/validate.middleware";
 import { Router } from "express";

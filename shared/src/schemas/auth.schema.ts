@@ -1,5 +1,4 @@
 import z from "zod";
-import { Role } from "./user.schema";
 
 // =========================================================
 // AUTH SCHEMAS
@@ -14,7 +13,6 @@ export const RegisterSchema = LoginSchema.extend({
   username: z.string().min(2, "Name must be at least 2 characters").max(30),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string().min(1, "Please confirm your password"),
-  role: z.enum(Object.values(Role)).default(Role.CUSTOMER),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],

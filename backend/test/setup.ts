@@ -1,0 +1,14 @@
+process.env.NODE_ENV = "test";
+process.env.PORT = "5000";
+process.env.MONGO_URI = "mongodb://127.0.0.1:27017/itsu-sushi-test";
+process.env.JWT_ACCESS_SECRET = "test-access-secret-with-at-least-32-characters";
+process.env.JWT_REFRESH_SECRET = "test-refresh-secret-with-at-least-32-characters";
+process.env.CLOUDINARY_CLOUD_NAME = "test-cloud";
+process.env.CLOUDINARY_API_KEY = "test-api-key";
+process.env.CLOUDINARY_API_SECRET = "test-api-secret";
+process.env.VNP_TMNCODE = "TESTCODE";
+process.env.VNP_SECRET = "test-vnp-secret";
+process.env.VNP_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+process.env.VNP_RETURN_URL = "http://localhost:5000/api/v1/reservations/vnpay-return";
+process.env.FRONTEND_URL = "http://localhost:5173";
+process.env.CORS_ORIGINS = "http://localhost:5173";

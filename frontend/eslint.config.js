@@ -19,5 +19,9 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // React Hook Form exposes imperative APIs that React Compiler intentionally skips.
+      'react-hooks/incompatible-library': 'off',
+    },
   },
 ])

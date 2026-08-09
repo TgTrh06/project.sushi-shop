@@ -1,11 +1,16 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { LoginSchema, type LoginFormInput, type LoginFormValues } from "@shared/schemas/auth.schema";
+import { LoginSchema, type LoginFormInput, type LoginFormValues } from "@itsu-sushi/shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Images } from "@/assets/image";
+
+interface LoginLocationState {
+  from?: string;
+  bookingState?: unknown;
+}
 
 export const LoginPage = () => {
   const login = useAuthStore((state) => state.login);
@@ -31,8 +36,9 @@ export const LoginPage = () => {
     try {
       await login(data);
       // Redirect back to original page with state preservation
-      const from = (location.state as any)?.from || "/";
-      const bookingState = (location.state as any)?.bookingState;
+      const state = location.state as LoginLocationState | null;
+      const from = state?.from || "/";
+      const bookingState = state?.bookingState;
 
       navigate(from, { state: { bookingState }, replace: true });
     } catch (error) {
@@ -71,9 +77,9 @@ export const LoginPage = () => {
           <div className="auth__form-group">
             <div className="auth__label">
               <span>Password</span>
-              <Link to="/reset-password" className="auth__link">
-                Forgot password?
-              </Link>
+              <span className="auth__link" aria-label="Password recovery is not available">
+                Contact support for password recovery
+              </span>
             </div>
             <PasswordInput
               value={passwordValue}

@@ -1,10 +1,10 @@
 import { z } from "zod";
-import type { User } from "@shared/schemas/user.schema";
-import type { BaseProductSchema } from "@shared/schemas/product.schema";
-import type { SystemStats, CategoryBreakdown } from "@shared/schemas/stats.schema";
-import type { BaseCategorySchema, CreateCategorySchema, UpdateCategorySchema } from "@shared/schemas/category.schema";
-import type { BaseReviewSchema } from "@shared/schemas/review.schema";
-import type { BaseReservationSchema } from "@shared/schemas/reservation.schema";
+import type { User } from "@itsu-sushi/shared/schemas/user.schema";
+import type { BaseProductSchema } from "@itsu-sushi/shared/schemas/product.schema";
+import type { SystemStats, CategoryBreakdown } from "@itsu-sushi/shared/schemas/stats.schema";
+import type { BaseCategorySchema, CreateCategorySchema, UpdateCategorySchema } from "@itsu-sushi/shared/schemas/category.schema";
+import type { BaseReviewSchema } from "@itsu-sushi/shared/schemas/review.schema";
+import type { BaseReservationSchema } from "@itsu-sushi/shared/schemas/reservation.schema";
 
 // Re-export shared stats types for convenience
 export type { SystemStats, CategoryBreakdown };

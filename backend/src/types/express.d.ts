@@ -1,4 +1,4 @@
-import { Role } from "@shared/schemas/user.schema";
+import { Role } from "@itsu-sushi/shared/schemas/user.schema";
 
 declare global {
   namespace Express {

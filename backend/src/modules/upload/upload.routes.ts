@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { uploadController } from "./upload.controller";
+import { uploadController } from "@/composition-root";
 import { uploadCloudinaryMiddleware } from "@/middleware/upload.middleware";
 import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
 
@@ -52,6 +52,7 @@ router.post(
 router.delete(
   "/image/:public_id",
   verifyAuth,
+  verifyAdmin,
   uploadController.deleteImage
 );
 
@@ -59,6 +60,7 @@ router.delete(
 router.post(
   "/delete-multiple",
   verifyAuth,
+  verifyAdmin,
   uploadController.deleteImages
 );
 

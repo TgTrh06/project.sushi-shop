@@ -1,5 +1,5 @@
 import { z } from "zod";    
-import { BaseProductSchema } from "@shared/schemas/product.schema";
+import { BaseProductSchema } from "@itsu-sushi/shared/schemas/product.schema";
 
 // DTO's Schemas
 export const CreateProductSchema = BaseProductSchema.pick({

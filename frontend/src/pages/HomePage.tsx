@@ -9,14 +9,13 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState(0);
 
-  const sectionRefs = [
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-  ];
+  const heroRef = useRef<HTMLElement>(null);
+  const aboutRef = useRef<HTMLElement>(null);
+  const popularRef = useRef<HTMLElement>(null);
+  const trendingRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    const sectionRefs = [heroRef, aboutRef, popularRef, trendingRef];
     const observerOptions = {
       root: null,
       rootMargin: "0px",
@@ -39,10 +38,10 @@ export const HomePage = () => {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [aboutRef, heroRef, popularRef, trendingRef]);
 
   const scrollToSection = (index: number) => {
-    sectionRefs[index].current?.scrollIntoView({ behavior: "smooth" });
+    [heroRef, aboutRef, popularRef, trendingRef][index]?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -50,12 +49,12 @@ export const HomePage = () => {
       {/* VERTICAL DOT NAVIGATION */}
       <DotNav
         activeSection={activeSection}
-        totalSections={sectionRefs.length}
+        totalSections={4}
         scrollToSection={scrollToSection}
       />
 
       {/* SECTION 0: HERO */}
-      <section ref={sectionRefs[0]} className="container-content hero">
+      <section ref={heroRef} className="container-content hero">
         <div className="hero-image">
           <img src={Images.sushi.s1} alt="sushi" data-aos="fade-up" />
           <h2 data-aos="fade-up">
@@ -115,7 +114,7 @@ export const HomePage = () => {
       </section>
 
       {/* SECTION 1: ABOUT US */}
-      <section ref={sectionRefs[1]} className="container-content about-us" id="about-us">
+      <section ref={aboutRef} className="container-content about-us" id="about-us">
         <div className="about-us__image">
           <div className="about-us__image-sushi3">
             <img src={Images.sushi.s3} alt="sushi" data-aos="fade-right" />
@@ -148,7 +147,7 @@ export const HomePage = () => {
       </section>
 
       {/* SECTION 2: POPULAR */}
-      <section ref={sectionRefs[2]} className="container-content" id="menu">
+      <section ref={popularRef} className="container-content" id="menu">
         <div className="popular-foods">
           <h2 className="popular-foods__title" data-aos="flip-up">
             Popular Food / 人気
@@ -244,7 +243,7 @@ export const HomePage = () => {
       </section>
 
       {/* SECTION 3: TRENDING */}
-      <section ref={sectionRefs[3]} className="container-content trending" id="food">
+      <section ref={trendingRef} className="container-content trending" id="food">
         <section className="trending-sushi">
           <div className="trending__content" data-aos="fade-right">
             <p className="sushi__subtitle">What’s Trending / トレンド</p>

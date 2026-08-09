@@ -1,4 +1,4 @@
-import type { User } from "@shared/schemas/user.schema";
+import type { User } from "@itsu-sushi/shared/schemas/user.schema";
 
 export type { User };
 

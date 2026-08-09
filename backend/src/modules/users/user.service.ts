@@ -1,6 +1,6 @@
 import UserRepository from "./user.repository";
 import { type SafeUser, UserEntity } from "./user.model";
-import { UpdateUserFormValues, ChangePasswordFormValues } from "@shared/schemas/user.schema";
+import { UpdateUserFormValues, ChangePasswordFormValues } from "@itsu-sushi/shared/schemas/user.schema";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "@/utils/common/error.util";
 import { PaginationResult, PaginationUtils } from "@/utils/common/pagination.util";
 import { hashPassword, comparePassword } from "@/utils/security/bcrypt.util";

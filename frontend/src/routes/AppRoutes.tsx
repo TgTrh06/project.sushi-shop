@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { Role } from "@shared/schemas/user.schema";
+import { Role } from "@itsu-sushi/shared/schemas/user.schema";
 
 // Public pages
 import { LoginPage } from "@/pages/auth/LoginPage";
@@ -9,10 +9,10 @@ import { HomePage } from "@/pages/HomePage";
 import { AboutPage } from "@/pages/AboutPage";
 import MenuPage from "@/pages/MenuPage";
 import ProductDetailPage from "@/pages/ProductDetailPage";
-import ReservePage from "@/pages/customer/ReservationPage";
+import ReservePage from "@/features/reservation/pages/ReservationPage";
 import ReservationSuccessPage from "@/pages/customer/ReservationSuccessPage";
 import ReservationFailedPage from "@/pages/customer/ReservationFailedPage";
-import MyReservationsPage from "@/pages/customer/MyReservationsPage";
+import MyReservationsPage from "@/features/reservation/pages/MyReservationsPage";
 import ProfilePage from "@/pages/customer/ProfilePage";
 
 // Admin Layout & Pages

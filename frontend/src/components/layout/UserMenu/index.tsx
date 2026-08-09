@@ -39,21 +39,23 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsOpen(false);
+        setView("main");
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Reset view when closed
-  useEffect(() => {
-    if (!isOpen) setView("main");
-  }, [isOpen]);
-
   const handleLogout = () => {
     logout();
     setIsOpen(false);
+    setView("main");
     navigate(redirectOnLogout);
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
+    setView("main");
   };
 
   const displayName = user ? (user.username || "User") : "Guest";
@@ -63,7 +65,10 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
       {/* Trigger button */}
       <button
         className={`user-menu-trigger ${isOpen ? "is-open" : ""}`}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+          setView("main");
+        }}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
@@ -99,7 +104,7 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
                   <Link
                     to="/login"
                     className="user-dropdown__item"
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMenu}
                     role="menuitem"
                   >
                     <LogIn size={18} strokeWidth={1.5} />
@@ -108,7 +113,7 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
                   <Link
                     to="/register"
                     className="user-dropdown__item"
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMenu}
                     role="menuitem"
                   >
                     <UserPlus size={18} strokeWidth={1.5} />
@@ -123,7 +128,7 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
                   <Link
                     to="/profile"
                     className="user-dropdown__item"
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMenu}
                     role="menuitem"
                   >
                     <User size={18} strokeWidth={1.5} />
@@ -132,7 +137,7 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
                   <Link
                     to="/my-reservations"
                     className="user-dropdown__item"
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMenu}
                     role="menuitem"
                   >
                     <Calendar size={18} strokeWidth={1.5} />
@@ -142,7 +147,7 @@ export const UserMenu = ({ redirectOnLogout = "/" }: UserMenuProps) => {
                     <Link
                       to="/admin/dashboard"
                       className="user-dropdown__item"
-                      onClick={() => setIsOpen(false)}
+                      onClick={closeMenu}
                       role="menuitem"
                     >
                       <LayoutDashboard size={18} strokeWidth={1.5} />

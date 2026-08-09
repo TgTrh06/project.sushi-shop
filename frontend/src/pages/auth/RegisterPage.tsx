@@ -1,11 +1,16 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from "@shared/schemas/auth.schema";
+import { RegisterSchema, type RegisterFormInput, type RegisterFormValues } from "@itsu-sushi/shared/schemas/auth.schema";
 import { handleFormError } from "@/utils/errorHandler";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Images } from "@/assets/image";
+
+interface RegisterLocationState {
+  from?: string;
+  bookingState?: unknown;
+}
 
 export const RegisterPage = () => {
   const signUp = useAuthStore((state) => state.register);
@@ -29,7 +34,6 @@ export const RegisterPage = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      role: "customer", // default role is customer, users cannot choose role during registration
     },
   });
 
@@ -45,8 +49,9 @@ export const RegisterPage = () => {
       await login({ email: data.email, password: data.password });
       
       // Step 3: Check if there's a booking state to preserve
-      const from = (location.state as any)?.from || "/";
-      const bookingState = (location.state as any)?.bookingState;
+      const state = location.state as RegisterLocationState | null;
+      const from = state?.from || "/";
+      const bookingState = state?.bookingState;
       
       if (bookingState) {
         // Redirect back to reservation page with booking state

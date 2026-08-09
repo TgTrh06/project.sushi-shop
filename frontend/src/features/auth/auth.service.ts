@@ -1,7 +1,7 @@
 import api from "@/lib/axios";
 import type { AuthResponse } from "./auth.type";
 import type { ApiResponse } from "@/types/response.type";
-import type { LoginFormInput, RegisterFormInput, ResetPasswordFormInput } from "@shared/schemas/auth.schema";
+import type { LoginFormInput, RegisterFormInput } from "@itsu-sushi/shared/schemas/auth.schema";
 
 export const authService = {
   async register(input: RegisterFormInput): Promise<AuthResponse> {
@@ -19,19 +19,12 @@ export const authService = {
   },
 
   async refresh(): Promise<AuthResponse> {
-    const result = await api.post<ApiResponse<AuthResponse>>("/auth/refresh");
-    return result.data.data; // accessToken
-  },
-
-  async forgotPassword(email: string): Promise<void> {
-    await api.post("/auth/forgot-password", { email });
-  },
-
-  async resetPassword(input: ResetPasswordFormInput): Promise<void> {
-    await api.post("/auth/reset-password", {
-      email: input.email,
-      newPassword: input.newPassword,
-      confirmPassword: input.confirmPassword,
+    const result = await api.post<ApiResponse<{ accessToken: string }>>("/auth/refresh");
+    const { accessToken } = result.data.data;
+    const profile = await api.get<ApiResponse<AuthResponse["user"]>>("/users/me", {
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
-  }
+    return { accessToken, user: profile.data.data };
+  },
+
 };

@@ -1,22 +1,16 @@
 import { Router } from "express";
 import { AuthController } from "./auth.controller";
-import { loginRateLimiter } from "../../config/rateLimit.config";
-import { LoginSchema, RegisterSchema } from "@shared/schemas/auth.schema";
+import { loginRateLimiter, refreshRateLimiter } from "../../config/rateLimit.config";
+import { LoginSchema, RegisterSchema } from "@itsu-sushi/shared/schemas/auth.schema";
 import { zodValidator } from "@/middleware/validate.middleware";
 
-const router = Router();
+export function createAuthRouter(controller: AuthController): Router {
+  const router = Router();
 
-router.post(
-  "/register", 
-  zodValidator(RegisterSchema),
-  AuthController.register
-);
-router.post("/login", 
-  loginRateLimiter, 
-  zodValidator(LoginSchema),
-  AuthController.login
-);
-router.post("/logout", AuthController.logout);
-router.post("/refresh", AuthController.refresh);
+  router.post("/register", loginRateLimiter, zodValidator(RegisterSchema), controller.register);
+  router.post("/login", loginRateLimiter, zodValidator(LoginSchema), controller.login);
+  router.post("/logout", controller.logout);
+  router.post("/refresh", refreshRateLimiter, controller.refresh);
 
-export default router;
+  return router;
+}

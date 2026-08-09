@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { BaseProductSchema } from "@shared/schemas/product.schema";
-import type { BaseReviewSchema } from "@shared/schemas/review.schema";
+import type { BaseProductSchema } from "@itsu-sushi/shared/schemas/product.schema";
+import type { BaseReviewSchema } from "@itsu-sushi/shared/schemas/review.schema";
 
 export type Product = z.infer<typeof BaseProductSchema>;
 

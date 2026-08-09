@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import cors from "cors";
 import express from "express";
 import path from "path";
@@ -9,31 +6,41 @@ import { globalErrorHandler } from "./middleware/error.middleware";
 import { connectDB } from "./config/database.config";
 import "./config/cloudinary.config"; // Initialize Cloudinary
 import mainRouter from "./routes";
+import { allowedCorsOrigins, env } from "@/core/config/env.config";
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
-const app = express();
+export function createApp() {
+  const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true, // HttpOnly Cookies
-  })
-);
+  app.use(
+    cors({
+      origin: allowedCorsOrigins,
+      credentials: true, // HttpOnly Cookies
+    }),
+  );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+  app.use(express.json({ limit: "1mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+  app.use(cookieParser());
 
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+  app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-app.use("/api/v1", mainRouter);
+  app.use("/api/v1", mainRouter);
 
-app.use(globalErrorHandler);
+  app.use(globalErrorHandler);
+  return app;
+}
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+const app = createApp();
+
+if (require.main === module) {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
   });
-});
+}
+
+export default app;

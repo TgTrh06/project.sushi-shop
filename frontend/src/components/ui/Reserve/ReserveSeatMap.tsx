@@ -1,4 +1,4 @@
-import { SEATS } from "@shared/config/seat-map.config";
+import { SEATS } from "@itsu-sushi/shared/config/seat-map.config";
 
 interface ReserveSeatMapProps {
   selectedSeats: Set<string>;

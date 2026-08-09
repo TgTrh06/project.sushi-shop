@@ -2,7 +2,7 @@ import { Router } from "express";
 import { verifyAuth, verifyAdmin } from "@/middleware/auth.middleware";
 import { zodValidator } from "@/middleware/validate.middleware";
 import { CreateCategorySchema, UpdateCategorySchema } from "./category.types";
-import { categoryController } from "@/container/category.container";
+import { categoryController } from "@/composition-root";
 
 const router = Router();
 

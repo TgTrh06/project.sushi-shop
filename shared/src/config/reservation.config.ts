@@ -15,6 +15,7 @@ export interface SessionConfig {
 
 export const RESERVATION_CONFIG = {
   depositPerSeat: 100000, // VND per seat
+  maxSeatsPerReservation: 8,
   paymentExpiryMinutes: 15, // Payment must be completed within 15 minutes
 
   sessions: [
