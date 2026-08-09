@@ -1,4 +1,8 @@
-import { z } from "zod";
-import { BaseCategorySchema } from "@itsu-sushi/shared/schemas/category.schema";
-
-export type Category = z.infer<typeof BaseCategorySchema>;
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}

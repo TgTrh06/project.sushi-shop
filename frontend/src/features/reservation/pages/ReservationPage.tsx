@@ -6,8 +6,8 @@ import { TimeSlotPicker } from "@/components/ui/Reserve/TimeSlotPicker";
 import { SeatMapSkeleton } from "@/components/ui/Reserve/SeatMapSkeleton";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { type SessionType, calculateDeposit } from "@itsu-sushi/shared/config/reservation.config";
-import { createReservation, getOccupiedSeats } from "../api/reservation.api";
+import { createReservation, getOccupiedSeats, getReservationConfig } from "../api/reservation.api";
+import type { ReservationConfig, SessionType } from "../types/reservation.types";
 
 interface BookingState {
   customerName?: string;
@@ -32,6 +32,9 @@ export default function ReservePage() {
   const [occupiedSeats, setOccupiedSeats] = useState<Set<string>>(new Set());
   const [isLoadingSeats, setIsLoadingSeats] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reservationConfig, setReservationConfig] = useState<ReservationConfig | null>(null);
+  const [isLoadingConfig, setIsLoadingConfig] = useState(true);
+  const [configError, setConfigError] = useState<string | null>(null);
   const [isRestoringState, setIsRestoringState] = useState(false); // Flag to prevent clearing seats during restoration
 
   const [form, setForm] = useState({
@@ -41,6 +44,15 @@ export default function ReservePage() {
     session: null as SessionType | null,
     slotId: null as string | null,
   });
+
+  useEffect(() => {
+    let active = true;
+    getReservationConfig()
+      .then((config) => { if (active) setReservationConfig(config); })
+      .catch(() => { if (active) setConfigError("Reservation configuration could not be loaded. Please try again later."); })
+      .finally(() => { if (active) setIsLoadingConfig(false); });
+    return () => { active = false; };
+  }, []);
 
   // Restore booking state after login/register
   useEffect(() => {
@@ -187,6 +199,11 @@ export default function ReservePage() {
       return;
     }
 
+    if (!reservationConfig) {
+      toast.error("Reservation configuration is unavailable. Please try again later.");
+      return;
+    }
+
     if (!form.customerName.trim() || !form.customerPhone.trim()) {
       toast.error("Please provide your name and phone number.");
       return;
@@ -196,7 +213,7 @@ export default function ReservePage() {
     toast.loading("Creating reservation...", { id: "reservation-loading" });
 
     try {
-      const totalDeposit = calculateDeposit(selectedSeats.size);
+      const totalDeposit = reservationConfig.depositPerSeat * selectedSeats.size;
 
       const response = await createReservation({
         customerName: form.customerName.trim(),
@@ -225,7 +242,7 @@ export default function ReservePage() {
     }
   };
 
-  const totalDeposit = calculateDeposit(selectedSeats.size);
+  const totalDeposit = reservationConfig ? reservationConfig.depositPerSeat * selectedSeats.size : 0;
 
   return (
     <div className="page-container reserve-page-container">
@@ -233,6 +250,8 @@ export default function ReservePage() {
       <Breadcrumb items={[{ label: "Reservation" }]} />
 
       <div className="reserve-page-content">
+        {isLoadingConfig && <p>Loading reservation configuration...</p>}
+        {configError && <p role="alert">{configError}</p>}
         {/* Left Side: Seat Map & Slots */}
         <div className="reserve-map-section">
           <div className="reserve-map-header">
@@ -259,12 +278,17 @@ export default function ReservePage() {
               <label className="session-title" style={{ display: "block", marginBottom: "16px" }}>
                 2. Choose Session & Time Slot
               </label>
-              <TimeSlotPicker
-                selectedSession={form.session}
-                selectedSlotId={form.slotId}
-                onSessionSelect={handleSessionSelect}
-                onSlotSelect={handleSlotSelect}
-              />
+              {reservationConfig ? (
+                <TimeSlotPicker
+                  config={reservationConfig}
+                  selectedSession={form.session}
+                  selectedSlotId={form.slotId}
+                  onSessionSelect={handleSessionSelect}
+                  onSlotSelect={handleSlotSelect}
+                />
+              ) : (
+                <p>Reservation options are unavailable.</p>
+              )}
             </div>
 
             {/* Legend */}
@@ -287,12 +311,13 @@ export default function ReservePage() {
               <SeatMapSkeleton />
             ) : (
               <ReserveSeatMap
+                seats={reservationConfig?.seats ?? []}
                 selectedSeats={selectedSeats}
                 occupiedSeats={occupiedSeats}
                 onSeatClick={handleSeatClick}
               />
             )}
-            {(!form.session || !form.slotId) && !isLoadingSeats && (
+            {(!reservationConfig || !form.session || !form.slotId) && !isLoadingSeats && (
               <div className="map-overlay-message" style={{
                 position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
                 background: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center",
@@ -397,7 +422,7 @@ export default function ReservePage() {
             <button 
               type="submit" 
               className="btn-proceed-payment"
-              disabled={isSubmitting || selectedSeats.size === 0}
+              disabled={isSubmitting || selectedSeats.size === 0 || !reservationConfig || isLoadingConfig || !!configError}
             >
               {isSubmitting 
                 ? "Processing..." 

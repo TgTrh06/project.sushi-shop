@@ -1,10 +1,7 @@
 import type { ApiResponse } from "@/types/response.type";
 import api from "@/lib/axios";
-import {
-  RESERVATION_CONFIG,
-  type SessionType,
-} from "@itsu-sushi/shared/config/reservation.config";
 import type { ReservationFormValues } from "../schemas/reservation.schema";
+import type { ReservationConfig, SessionType } from "../types/reservation.types";
 
 export interface CreateReservationResult {
   paymentUrl: string;
@@ -33,8 +30,9 @@ export interface ReservationPaymentResponse {
   payment: ReservationPayment;
 }
 
-export async function getReservationConfig() {
-  return RESERVATION_CONFIG;
+export async function getReservationConfig(): Promise<ReservationConfig> {
+  const response = await api.get<ApiResponse<ReservationConfig>>("/reservations/config");
+  return response.data.data;
 }
 
 export async function getOccupiedSeats(

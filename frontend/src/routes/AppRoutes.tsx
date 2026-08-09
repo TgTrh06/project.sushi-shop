@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { Role } from "@itsu-sushi/shared/schemas/user.schema";
+import { Role } from "@/features/users/user.types";
 
 // Public pages
 import { LoginPage } from "@/pages/auth/LoginPage";
@@ -10,8 +10,6 @@ import { AboutPage } from "@/pages/AboutPage";
 import MenuPage from "@/pages/MenuPage";
 import ProductDetailPage from "@/pages/ProductDetailPage";
 import ReservePage from "@/features/reservation/pages/ReservationPage";
-import ReservationSuccessPage from "@/pages/customer/ReservationSuccessPage";
-import ReservationFailedPage from "@/pages/customer/ReservationFailedPage";
 import ReservationPaymentPage from "@/features/reservation/pages/ReservationPaymentPage";
 import MyReservationsPage from "@/features/reservation/pages/MyReservationsPage";
 import ProfilePage from "@/pages/customer/ProfilePage";
@@ -34,8 +32,6 @@ export const AppRoutes = () => {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/menu" element={<MenuPage />} />
       <Route path="/reservation" element={<ReservePage />} />
-      <Route path="/reservation-success" element={<ReservationSuccessPage />} />
-      <Route path="/reservation-failed" element={<ReservationFailedPage />} />
       <Route path="/product/:slug" element={<ProductDetailPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />

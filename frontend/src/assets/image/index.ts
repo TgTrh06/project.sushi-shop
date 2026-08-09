@@ -5,16 +5,11 @@ import logo from "./src/shark-svgrepo-com.png";
 import aboutBg1 from "./src/about_bg1.png";
 import aboutBg2 from "./src/about_bg2.png";
 import popularBg from "./src/popular_bg.png";
-import subscribeBg from "./src/subscribe_bg.png";
 
 // Category / Special
-import japaneseDrinks from "./src/japanese_drinks.png";
-import japaneseSushi from "./src/japanese_sushi.png";
 import userAvatar from "./src/user.png";
-import userAvatarSmall from "./src/user-small.png";
 
 // Sushi List
-import sushiMain from "./src/sushi.png";
 import sushi1 from "./src/sushi-1.png";
 import sushi2 from "./src/sushi-2.png";
 import sushi3 from "./src/sushi-3.png";
@@ -36,16 +31,9 @@ export const Images = {
   common: {
     logo,
     popularBg,
-    subscribeBg,
     userAvatar,
-    userAvatarSmall,
-  },
-  categories: {
-    drinks: japaneseDrinks,
-    sushi: japaneseSushi,
   },
   sushi: {
-    main: sushiMain,
     s1: sushi1,
     s2: sushi2,
     s3: sushi3,
