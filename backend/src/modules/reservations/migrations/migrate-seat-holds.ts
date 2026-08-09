@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { connectDatabase } from "@/core/database/mongoose.connection";
 import { ReservationModel } from "../infrastructure/persistence/mongoose/reservation.model";
 import { SeatHoldModel, type SeatHoldDocument } from "../infrastructure/persistence/mongoose/seat-hold.model";
-import { getSessionById } from "@itsu-sushi/shared/config/reservation.config";
+import { getSessionById } from "../domain/config/reservation.config";
 
 const dryRun = process.argv.includes("--dry-run");
 

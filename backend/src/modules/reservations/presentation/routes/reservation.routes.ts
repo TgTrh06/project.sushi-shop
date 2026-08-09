@@ -1,14 +1,11 @@
 import { Router } from "express";
 import { validateBody } from "@/core/http/validation.middleware";
-import { CreateReservationSchema } from "@itsu-sushi/shared/schemas/reservation.schema";
+import { CreateReservationSchema, ApprovePaymentSchema, RejectPaymentSchema } from "../validators/reservation.validator";
 import type { ReservationController } from "../controllers/reservation.controller";
-import { z } from "zod";
-
-const ApprovePaymentSchema = z.object({ receivedAmount: z.coerce.number().int().nonnegative(), note: z.string().trim().max(500).optional() });
-const RejectPaymentSchema = z.object({ note: z.string().trim().max(500).optional() });
 
 export function createReservationRoutes(controller: ReservationController, auth: any, admin: any, rateLimiter: any) {
   const router = Router();
+  router.get("/config", controller.configHandler);
   router.get("/occupied-seats", controller.occupiedHandler);
   router.get("/my-reservations", auth, controller.mineHandler);
   router.post("/", rateLimiter, auth, validateBody(CreateReservationSchema), controller.createHandler);

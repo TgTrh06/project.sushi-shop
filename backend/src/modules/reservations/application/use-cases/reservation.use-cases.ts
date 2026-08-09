@@ -2,8 +2,8 @@ import { BadRequestError, ConflictError, ForbiddenError, NotFoundError } from "@
 import type { Clock } from "@/core/ports/clock.port";
 import type { IdGenerator } from "@/core/ports/id-generator.port";
 import type { UnitOfWork } from "@/core/transactions/transaction.port";
-import { calculateDeposit, getSessionById, RESERVATION_CONFIG } from "@itsu-sushi/shared/config/reservation.config";
-import { SEATS } from "@itsu-sushi/shared/config/seat-map.config";
+import { calculateDeposit, getSessionById, RESERVATION_CONFIG } from "../../domain/config/reservation.config";
+import { SEATS } from "../../domain/config/seat-map.config";
 import type { ReservationEntity, ReservationSession, ReservationStatus } from "../../domain/entities/reservation.entity";
 import type { ReservationSeatHoldRepository } from "../../domain/ports/seat-hold-repository.port";
 import type { ReservationRepository } from "../../domain/ports/reservation-repository.port";
@@ -11,6 +11,13 @@ import type { PaymentSettingsRepository, ReservationPaymentRepository } from "@/
 import type { VietQrGenerator } from "@/modules/payments/domain/ports/vietqr-generator.port";
 import type { CreateReservationCommand, CreateReservationResult } from "../dto/reservation.dto";
 import { paymentView } from "../dto/reservation.dto";
+import { reservationConfigView, type ReservationConfigDto } from "../dto/reservation-config.dto";
+
+export class GetReservationConfigUseCase {
+  execute(): ReservationConfigDto {
+    return reservationConfigView();
+  }
+}
 
 export class CreateReservationUseCase {
   constructor(private readonly reservations: ReservationRepository, private readonly holds: ReservationSeatHoldRepository, private readonly payments: ReservationPaymentRepository, private readonly settings: PaymentSettingsRepository, private readonly qr: VietQrGenerator, private readonly unitOfWork: UnitOfWork, private readonly clock: Clock, private readonly ids: IdGenerator, private readonly frontendUrl: string) {}
