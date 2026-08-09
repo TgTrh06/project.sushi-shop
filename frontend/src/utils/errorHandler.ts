@@ -3,6 +3,11 @@ import { showError } from "@/lib/toast";
 import type { AppError } from "@/types/error.type";
 import axios from "axios";
 
+interface ErrorResponseBody {
+  errors?: Record<string, string>;
+  message?: string;
+}
+
 // Custom error messages for specific HTTP status codes
 const ERROR_MESSAGES: Record<number, string> = {
   429: "Too many attempts. Please try again later.",
@@ -17,16 +22,17 @@ export const handleFormError = <T extends FieldValues>(
   const error = err as AppError;
 
   // Handle axios errors
-  if (axios.isAxiosError(error)) {
+  if (axios.isAxiosError<ErrorResponseBody>(error)) {
     const status = error.response?.status;
-    const data = error.response?.data as any;
+    const data = error.response?.data;
 
     // 1. Process field errors from server
-    if (data?.errors && typeof data.errors === "object") {
-      Object.keys(data.errors).forEach((field) => {
+    const fieldErrors = data?.errors;
+    if (fieldErrors && typeof fieldErrors === "object") {
+      Object.keys(fieldErrors).forEach((field) => {
         setError(field as Path<T>, {
           type: "server",
-          message: data.errors[field],
+          message: fieldErrors[field],
         });
       });
       return;

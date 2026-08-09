@@ -6,54 +6,54 @@ const api: AxiosInstance = axios.create({
   withCredentials: true,
 });
 
-// REQUEST INTERCEPTOR - Attach Access Token to Authorization Header
-api.interceptors.request.use(
-  (config) => {
-    const { accessToken } = useAuthStore.getState();
-    
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+let refreshPromise: Promise<string | null> | null = null;
 
-    return config;
+const refreshAccessToken = async (): Promise<string | null> => {
+  if (!refreshPromise) {
+    refreshPromise = api.post("/auth/refresh")
+      .then((response) => {
+        const token = response.data.data?.accessToken ?? response.data.accessToken ?? null;
+        if (token) useAuthStore.getState().setAccessToken(token);
+        return token;
+      })
+      .catch(() => null)
+      .finally(() => {
+        refreshPromise = null;
+      });
   }
-);
 
-// RESPONSE INTERCEPTOR
+  return refreshPromise;
+};
+
+api.interceptors.request.use((config) => {
+  const { accessToken } = useAuthStore.getState();
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    if (!originalRequest) return Promise.reject(error);
 
-    // Skip refresh for auth endpoints to prevent infinite loops
-    if (
-      originalRequest.url.includes("/auth/login") ||
-      originalRequest.url.includes("/auth/register") ||
-      originalRequest.url.includes("/auth/refresh")
-    ) {
+    const isAuthRequest = ["/auth/login", "/auth/register", "/auth/refresh"]
+      .some((path) => originalRequest.url?.includes(path));
+
+    if (isAuthRequest || error.response?.status !== 401 || originalRequest._retried) {
       return Promise.reject(error);
     }
 
-    // Only attempt refresh once per request
-    if (error.response?.status === 401 && !originalRequest._retried) {
-      originalRequest._retried = true;
+    originalRequest._retried = true;
+    const newAccessToken = await refreshAccessToken();
 
-      try {
-        const response = await api.post("/auth/refresh");
-        const newAccessToken = response.data.data?.accessToken ?? response.data.accessToken;
-
-        if (newAccessToken) {
-          useAuthStore.getState().setAccessToken(newAccessToken);
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return api(originalRequest); // retry original request with new token
-        }
-      } catch {
-        // Refresh failed — clear auth state and reject
-        useAuthStore.getState().logout?.();
-      }
+    if (!newAccessToken) {
+      useAuthStore.getState().clearState();
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+    return api(originalRequest);
   },
 );
 

@@ -26,8 +26,8 @@
     
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["../shared/src/*"]
+      "@itsu-sushi/shared/*": ["../shared/dist/*"]
     }
   },
-  "include": ["src", "../shared"]
+  "include": ["src"]
 }
