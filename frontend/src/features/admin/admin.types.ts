@@ -25,8 +25,19 @@ export type UpdateProductPayload = Partial<CreateProductPayload>;
 // ─── Reservation ───────────────────────────────────────
 export type AdminReservation = z.infer<typeof BaseReservationSchema>;
 
+export interface PaymentSettings {
+  enabled: boolean;
+  bankCode: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+  qrTemplate: string;
+  paymentInstructions: string;
+}
+
 export const AdminReservationStatusLabels: Record<AdminReservation["status"], string> = {
   PENDING_PAYMENT: "Pending Payment",
+  PENDING_APPROVAL: "Pending Approval",
   PAID: "Paid",
   CANCELLED: "Cancelled",
   COMPLETED: "Completed",

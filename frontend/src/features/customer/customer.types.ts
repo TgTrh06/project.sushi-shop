@@ -7,8 +7,9 @@ export interface CustomerReservation {
   slotId: string;
   seatCodes: string[];
   totalDeposit: number;
-  status: "PENDING_PAYMENT" | "PAID" | "CANCELLED" | "COMPLETED";
-  vnp_TxnRef: string;
+  status: "PENDING_PAYMENT" | "PENDING_APPROVAL" | "PAID" | "CANCELLED" | "COMPLETED";
+  transactionReference?: string;
+  vnp_TxnRef?: string;
   paymentExpiredAt?: string;
   createdAt: string;
   updatedAt: string;

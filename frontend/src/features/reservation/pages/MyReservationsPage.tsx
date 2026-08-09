@@ -56,6 +56,12 @@ export default function MyReservationsPage() {
         bg: "#fef3c7",
         label: "Chờ Thanh Toán",
       },
+      PENDING_APPROVAL: {
+        icon: AlertCircle,
+        color: "#2563eb",
+        bg: "#dbeafe",
+        label: "Chờ admin duyệt",
+      },
       PAID: {
         icon: CheckCircle,
         color: "#10b981",
@@ -119,7 +125,7 @@ export default function MyReservationsPage() {
     today.setHours(0, 0, 0, 0);
     return (
       reservationDate >= today &&
-      (reservation.status === "PAID" || reservation.status === "PENDING_PAYMENT")
+      (reservation.status === "PAID" || reservation.status === "PENDING_PAYMENT" || reservation.status === "PENDING_APPROVAL")
     );
   };
 
@@ -273,7 +279,7 @@ export default function MyReservationsPage() {
                     <div className="reservation-item__header">
                       {getStatusBadge(reservation.status)}
                       <span className="transaction-ref">
-                        #{reservation.vnp_TxnRef}
+                        #{reservation.transactionReference || reservation.vnp_TxnRef}
                       </span>
                     </div>
 

@@ -2,12 +2,13 @@ import { useEffect, useState, useCallback } from "react";
 import { adminService } from "@/features/admin/admin.service";
 import type { AdminReservation } from "@/features/admin/admin.types";
 import { showSuccess, showError } from "@/lib/toast";
-import { Search, RefreshCw, Trash2, AlertTriangle, Eye, Edit2 } from "lucide-react";
+import { Search, RefreshCw, Trash2, AlertTriangle, Eye, Edit2, CheckCircle, XCircle } from "lucide-react";
 
-const STATUS_OPTIONS = ["PENDING_PAYMENT", "PAID", "CANCELLED", "COMPLETED"] as const;
+const STATUS_OPTIONS = ["PENDING_PAYMENT", "PENDING_APPROVAL", "PAID", "CANCELLED", "COMPLETED"] as const;
 
 const statusLabel: Record<string, string> = {
   PENDING_PAYMENT: "Pending Payment",
+  PENDING_APPROVAL: "Pending Approval",
   PAID: "Paid",
   CANCELLED: "Cancelled",
   COMPLETED: "Completed",
@@ -16,6 +17,7 @@ const statusLabel: Record<string, string> = {
 const statusBadge = (status: string) => {
   const map: Record<string, string> = {
     PENDING_PAYMENT: "admin-badge--amber",
+    PENDING_APPROVAL: "admin-badge--amber",
     PAID: "admin-badge--green",
     CANCELLED: "admin-badge--red",
     COMPLETED: "admin-badge--blue",
@@ -83,6 +85,22 @@ export const ReservationsManagementPage = () => {
     } catch {
       showError("Failed to load reservation details.");
     }
+  };
+
+  const handleApprovePayment = async (booking: AdminReservation) => {
+    try {
+      await adminService.approveReservationPayment(booking.id, booking.totalDeposit);
+      showSuccess("Payment approved successfully.");
+      fetchBookings();
+    } catch { showError("Không thể duyệt thanh toán. Kiểm tra số tiền hoặc thời hạn."); }
+  };
+
+  const handleRejectPayment = async (booking: AdminReservation) => {
+    try {
+      await adminService.rejectReservationPayment(booking.id);
+      showSuccess("Payment rejected and seats released.");
+      fetchBookings();
+    } catch { showError("Không thể từ chối thanh toán."); }
   };
 
   const handleEdit = () => {
@@ -220,7 +238,7 @@ export const ReservationsManagementPage = () => {
                       {b.totalDeposit.toLocaleString("vi-VN")}₫
                     </td>
                     <td style={{ fontSize: 12, color: "var(--admin-text-muted)", fontFamily: "monospace" }}>
-                      {b.vnp_TxnRef}
+                      {b.transactionReference || b.vnp_TxnRef}
                     </td>
                     <td>
                       {statusBadge(b.status)}
@@ -234,6 +252,16 @@ export const ReservationsManagementPage = () => {
                         >
                           <Eye size={14} />
                         </button>
+                        {b.status === "PENDING_APPROVAL" && (
+                          <>
+                            <button className="admin-btn admin-btn--primary admin-btn--sm" onClick={() => handleApprovePayment(b)} title="Approve payment">
+                              <CheckCircle size={14} />
+                            </button>
+                            <button className="admin-btn admin-btn--danger admin-btn--sm" onClick={() => handleRejectPayment(b)} title="Reject payment">
+                              <XCircle size={14} />
+                            </button>
+                          </>
+                        )}
                         <button
                           className="admin-btn admin-btn--danger admin-btn--sm"
                           onClick={() => setConfirmDelete(b)}
@@ -325,7 +353,7 @@ export const ReservationsManagementPage = () => {
                   </div>
 
                   <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Transaction ID:</div>
-                  <div style={{ fontFamily: "monospace", fontSize: 12 }}>{selectedReservation.vnp_TxnRef}</div>
+                  <div style={{ fontFamily: "monospace", fontSize: 12 }}>{selectedReservation.transactionReference || selectedReservation.vnp_TxnRef}</div>
 
                   <div style={{ fontWeight: 600, color: "var(--admin-text-secondary)" }}>Status:</div>
                   <div>

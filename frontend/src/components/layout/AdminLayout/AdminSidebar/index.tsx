@@ -6,6 +6,7 @@ import {
   Users,
   CalendarDays,
   Star,
+  Settings,
   Home,
   ChevronLeft,
   ChevronRight,
@@ -33,6 +34,7 @@ const navItems: NavItem[] = [
   { to: "/admin/users",      icon: Users,            label: "Users" },
   { to: "/admin/reservations",icon: CalendarDays,     label: "Reservations" },
   { to: "/admin/reviews",    icon: Star,             label: "Reviews" },
+  { to: "/admin/payment-settings", icon: Settings,   label: "Payment Settings" },
 ];
 
 export const AdminSidebar = ({ collapsed, onCollapse }: AdminSidebarProps) => {

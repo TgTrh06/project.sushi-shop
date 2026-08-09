@@ -212,6 +212,7 @@ export const DashboardOverviewPage = () => {
   const statusBadge = (status: string) => {
     const statusLabels: Record<string, string> = {
       PENDING_PAYMENT: "Pending Payment",
+      PENDING_APPROVAL: "Pending Approval",
       PAID: "Paid",
       CANCELLED: "Cancelled",
       COMPLETED: "Completed",
@@ -219,6 +220,7 @@ export const DashboardOverviewPage = () => {
     
     const map: Record<string, string> = {
       PENDING_PAYMENT: "admin-badge--amber",
+      PENDING_APPROVAL: "admin-badge--amber",
       PAID: "admin-badge--green",
       CANCELLED: "admin-badge--red",
       COMPLETED: "admin-badge--blue",
