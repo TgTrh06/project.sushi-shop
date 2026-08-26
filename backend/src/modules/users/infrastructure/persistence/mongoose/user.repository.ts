@@ -5,7 +5,7 @@ import type { UserRepository } from "@/modules/users/domain/ports/user-repositor
 import type { Role } from "@/modules/users/domain/entities/role";
 
 export class MongooseUserRepository implements UserRepository {
-  constructor(private readonly model: Model<UserDocument> = UserModel) {}
+  constructor(private readonly model: Model<UserDocument> = UserModel) { }
 
   private map(doc: UserDocument | Record<string, any>): UserEntity {
     return {
@@ -47,7 +47,11 @@ export class MongooseUserRepository implements UserRepository {
   listStaff(skip: number, limit: number) { return this.list({ role: { $in: ["staff", "admin"] } }, skip, limit); }
 
   async update(id: string, data: Partial<UserEntity>) {
-    const doc = await this.model.findByIdAndUpdate(id, { $set: data }, { new: true, runValidators: true }).lean();
+    const doc = await this.model.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { returnDocument: "after", runValidators: true }
+    ).lean();
     return doc ? this.map(doc) : null;
   }
 
