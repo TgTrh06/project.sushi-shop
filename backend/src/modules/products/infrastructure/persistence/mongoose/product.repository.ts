@@ -14,7 +14,7 @@ export class MongooseProductRepository implements ProductRepository {
   private async listByFilter(filter: Record<string, unknown>, skip: number, limit: number) { const [docs, total] = await Promise.all([this.model.find(filter).populate("categoryId").sort({ createdAt: -1 }).skip(skip).limit(limit).lean(), this.model.countDocuments(filter)]); return { data: docs.map((doc) => this.map(doc)), total }; }
   list(skip: number, limit: number) { return this.listByFilter({}, skip, limit); }
   findByCategory(categoryId: string, skip: number, limit: number) { return this.listByFilter({ categoryId }, skip, limit); }
-  async update(id: string, input: UpdateProductInput & { slug?: string }) { const doc = await this.model.findByIdAndUpdate(id, { $set: input }, { new: true, runValidators: true }).lean(); return doc ? this.map(doc) : null; }
+  async update(id: string, input: UpdateProductInput & { slug?: string }) { const doc = await this.model.findByIdAndUpdate(id, { $set: input }, { returnDocument: "after", runValidators: true }).lean(); return doc ? this.map(doc) : null; }
   async delete(id: string) { const doc = await this.model.findByIdAndDelete(id).lean(); return doc ? this.map(doc) : null; }
   async existsBySlug(slug: string, excludingId?: string) { return Boolean(await this.model.exists({ slug, ...(excludingId ? { _id: { $ne: excludingId } } : {}) })); }
   async updateRatingSummary(productId: string, summary: { averageRating: number; totalReviews: number }) { await this.model.findByIdAndUpdate(productId, { $set: { ratingSummary: summary } }); }
