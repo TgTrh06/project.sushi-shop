@@ -5,6 +5,7 @@ import { allowedCorsOrigins, env } from "@/core/config/env.config";
 import { connectDatabase } from "@/core/database/mongoose.connection";
 import { errorMiddleware } from "@/core/http/error.middleware";
 import { createRoutes } from "@/app/routes";
+import { ensureSessionIndexes } from "@/modules/auth/infrastructure/persistence/mongoose/session.model";
 
 export function createApp() {
   const app = express();
@@ -20,6 +21,9 @@ export function createApp() {
 
 const app = createApp();
 if (require.main === module) {
-  connectDatabase().then(() => app.listen(env.PORT, () => console.log(`Server is running on port ${env.PORT}`))).catch(() => process.exitCode = 1);
+  connectDatabase()
+    .then(() => ensureSessionIndexes())
+    .then(() => app.listen(env.PORT, () => console.log(`Server is running on port ${env.PORT}`)))
+    .catch(() => process.exitCode = 1);
 }
 export default app;
