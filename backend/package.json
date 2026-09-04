@@ -2,15 +2,15 @@
   "name": "@itsu-sushi/backend",
   "version": "1.0.0",
   "private": true,
-  "main": "dist/app.js",
+  "main": "dist/bootstrap/app.js",
   "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register src/app.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register src/bootstrap/app.ts",
     "build": "tsc",
     "lint": "tsc --noEmit",
-    "start": "cross-env TS_NODE_PROJECT=tsconfig.runtime.json node -r tsconfig-paths/register dist/app.js",
+    "start": "cross-env TS_NODE_PROJECT=tsconfig.runtime.json node -r tsconfig-paths/register dist/bootstrap/app.js",
     "seed:admin": "ts-node -r tsconfig-paths/register src/scripts/seed-admin.ts",
-    "migrate:seat-holds": "ts-node -r tsconfig-paths/register src/modules/reservations/migrations/migrate-seat-holds.ts",
-    "migrate:reservations": "ts-node -r tsconfig-paths/register src/modules/reservations/migrations/migrate-reservations.ts",
+    "migrate:seat-holds": "ts-node -r tsconfig-paths/register src/scripts/migrations/migrate-seat-holds.ts",
+    "migrate:reservations": "ts-node -r tsconfig-paths/register src/scripts/migrations/migrate-reservations.ts",
     "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {

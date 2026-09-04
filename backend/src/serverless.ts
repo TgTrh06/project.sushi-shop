@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-import app from "./app";
+import app from "./bootstrap/app";
 import { connectDatabase } from "@/core/database/mongoose.connection";
-import { ensureSessionIndexes } from "@/modules/auth/infrastructure/persistence/mongoose/session.model";
+import { ensureSessionIndexes } from "@/modules/auth/infrastructure/mongoose/session.model";
 
 export default async function handler(req: Request, res: Response, next: NextFunction) {
   try {
