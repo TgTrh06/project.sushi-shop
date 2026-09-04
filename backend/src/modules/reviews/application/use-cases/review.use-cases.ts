@@ -1,0 +1,11 @@
+import { ForbiddenError, NotFoundError } from "@/core/errors";
+import { Pagination } from "@/core/http/pagination";
+import type { FileStorage } from "@/core/ports/file-storage.port";
+import type { ProductRepository } from "@/modules/products/domain/ports/product-repository.port";
+import type { ReviewRepository } from "../../domain/ports/review-repository.port";
+import type { CreateReviewInput } from "../../domain/entities/review.entity";
+
+export class CreateReviewUseCase { constructor(private readonly reviews: ReviewRepository, private readonly products: ProductRepository) {} async execute(input: CreateReviewInput) { if (!await this.products.findById(input.productId)) throw new NotFoundError("Product not found."); return this.reviews.create(input); } }
+export class ListProductReviewsUseCase { constructor(private readonly reviews: ReviewRepository) {} async execute(productId: string) { return this.reviews.findByProduct(productId); } async paginated(productId: string, page: number, limit: number) { const result = await this.reviews.findByProductPaginated(productId, (page - 1) * limit, limit); return { reviews: result.data, total: result.total, page, hasMore: page * limit < result.total }; } }
+export class ListAdminReviewsUseCase { constructor(private readonly reviews: ReviewRepository) {} async execute(page: number, limit: number, email?: string, date?: string, sortOrder: "asc" | "desc" = "desc") { const result = await this.reviews.findAllPaginated((page - 1) * limit, limit, email, date, sortOrder); return { reviews: result.data, total: result.total, page, totalPages: Math.ceil(result.total / limit) }; } }
+export class DeleteReviewUseCase { constructor(private readonly reviews: ReviewRepository, private readonly storage: FileStorage) {} async execute(id: string, userId: string, isAdmin: boolean) { const review = await this.reviews.findById(id); if (!review) throw new NotFoundError("Review not found."); if (!isAdmin && review.user.id !== userId) throw new ForbiddenError("You can only delete your own review."); if (review.photo_ids?.length) await this.storage.deleteMany(review.photo_ids).catch(() => undefined); const deleted = await this.reviews.delete(id); if (!deleted) throw new NotFoundError("Review not found."); return deleted; } }

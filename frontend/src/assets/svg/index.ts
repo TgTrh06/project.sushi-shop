@@ -5,7 +5,6 @@ import check from "./src/check.svg";
 import twitter from "./src/twitter.svg";
 import instagram from "./src/instagram.svg";
 import facebook from "./src/facebook.svg";
-import arrowUpRight from "./src/arrow-up-right.svg";
 import arrowLeft from "./src/arrow-left.svg";
 import arrowRight from "./src/arrow-right.svg";
 import arrowHorizontal from "./src/arrow-horizontal.svg";
@@ -25,7 +24,6 @@ export const Icon = {
   arrowRight: arrowRight,
   arrowVertical: arrowVertical,
   arrowHorizontal: arrowHorizontal,
-  arrowUpRight: arrowUpRight,
   eyeOpen: eyeOpen,
   eyeClosed: eyeClosed,
 };

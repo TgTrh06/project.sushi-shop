@@ -1,12 +1,13 @@
-import { SEATS } from "@itsu-sushi/shared/config/seat-map.config";
+import type { Seat } from "@/features/reservation/types/reservation.types";
 
 interface ReserveSeatMapProps {
   selectedSeats: Set<string>;
   occupiedSeats: Set<string>;
   onSeatClick: (seatCode: string) => void;
+  seats: Seat[];
 }
 
-export function ReserveSeatMap({ selectedSeats, occupiedSeats, onSeatClick }: ReserveSeatMapProps) {
+export function ReserveSeatMap({ selectedSeats, occupiedSeats, onSeatClick, seats }: ReserveSeatMapProps) {
   return (
     <div className="reserve-svg-wrapper">
       <svg
@@ -78,7 +79,7 @@ export function ReserveSeatMap({ selectedSeats, occupiedSeats, onSeatClick }: Re
         </text>
 
         {/* --- SEATS --- */}
-        {SEATS.map((seat) => {
+        {seats.map((seat) => {
           const isOccupied = occupiedSeats.has(seat.code);
           const isSelected = selectedSeats.has(seat.code);
 

@@ -1,211 +1,143 @@
-# 🍣 Sushi Shop - Hệ Thống Đặt Bàn & Bán Hàng Sushi
+# ITSU Sushi
 
-Ứng dụng quản lý nhà hàng sushi hiện đại với tính năng đặt bàn trực tuyến, quản lý menu, thanh toán, và hệ thống quản trị toàn diện.
+Ứng dụng đặt bàn và quản lý nhà hàng sushi, gồm backend Express/MongoDB và frontend React. Backend và frontend sở hữu schema/type riêng theo module; không có package dùng chung ở root.
 
----
+## Kiến trúc backend
 
-## 📋 Mục Đích
+Backend được tổ chức theo Modular Clean Architecture:
 
-Nền tảng quản lý toàn bộ hoạt động nhà hàng sushi từ khách hàng đến quản trị viên:
-- 👥 **Khách hàng**: Xem menu, đặt bàn, thanh toán trực tuyến
-- 🍽️ **Nhà hàng**: Quản lý sản phẩm, đơn hàng, đặt chỗ
-- 📊 **Quản trị**: Thống kê, báo cáo, quản lý người dùng
-
----
-
-## 🛠️ Công Nghệ
-
-### Backend
-- **Framework**: Express.js 5 + TypeScript
-- **Database**: MongoDB + Mongoose
-- **Auth**: JWT + bcrypt
-- **File Upload**: Cloudinary
-- **Payment**: VNPay
-- **Logging**: Winston
-
-### Frontend
-- **Framework**: React 19 + TypeScript
-- **Build**: Vite
-- **Styling**: Tailwind CSS
-- **State**: Zustand
-- **Forms**: React Hook Form
-- **API**: Axios
-- **Routing**: React Router v7
-- **Charts**: Recharts
-
-### Shared
-- **Validation**: Zod schemas
-
----
-
-## 📁 Cấu Trúc Dự Án
-
-```
-project.sushi-shop/
-├── backend/              # Server Express + MongoDB
-│   ├── src/
-│   │   ├── modules/      # Auth, Categories, Products, Reservations, Reviews, Users
-│   │   ├── middleware/   # Authentication, validation, error handling
-│   │   ├── config/       # Database, Cloudinary, Payment
-│   │   └── container/    # Dependency injection
-│   └── package.json
-│
-├── frontend/             # React UI
-│   ├── src/
-│   │   ├── features/     # Admin, Auth, Categories, Products, etc.
-│   │   ├── components/   # Reusable UI components
-│   │   ├── stores/       # Zustand state management
-│   │   └── pages/        # Route pages
-│   └── package.json
-│
-└── shared/               # Shared schemas & types
-    ├── src/schemas/      # Zod validation schemas
-    └── package.json
+```text
+Presentation → Application → Domain ← Infrastructure
 ```
 
----
+Mỗi module nằm trong `backend/src/modules/<module>`:
 
-## 🚀 Hướng Dẫn Cài Đặt
+```text
+domain/          # entity, value type, port/interface; không biết Express/Mongoose
+application/     # DTO và use case class; chỉ phụ thuộc domain
+infrastructure/  # Mongoose repository, Cloudinary và adapter bên ngoài
+presentation/http/ # controller, route, validator
+```
 
-### Yêu Cầu
-- Node.js 18+
-- MongoDB (local hoặc cloud)
-- Cloudinary account (cho upload ảnh)
-- VNPay account (cho thanh toán)
+`backend/src/bootstrap/composition-root.ts` là nơi duy nhất khởi tạo dependency cụ thể. Các phần dùng chung như config, error mapping, database connection, security middleware và transaction abstraction nằm trong `backend/src/core`.
 
-### 1. Clone & Cài Đặt
+Các module hiện có: `auth`, `users`, `products`, `categories`, `reservations`, `payments`, `reviews`, `uploads`, `stats`.
+
+## Thanh toán VietQR thủ công
+
+Admin cấu hình ngân hàng tại `/admin/payment-settings`. Luồng đặt bàn:
+
+1. Khách tạo reservation; hệ thống tính deposit và giữ ghế tạm thời.
+2. Khách chuyển khoản theo QR rồi bấm xác nhận đã thanh toán.
+3. Reservation chuyển sang `PENDING_APPROVAL`; ghế vẫn bị khóa trong thời gian chờ duyệt.
+4. Admin kiểm tra giao dịch và duyệt đúng số tiền; reservation chuyển sang `PAID`.
+5. Từ chối hoặc hết hạn sẽ giải phóng seat hold.
+
+VNPay đã được loại khỏi active backend surface. Các trường `vnp_TxnRef` cũ chỉ còn để migration/đọc tương thích dữ liệu cũ.
+
+## Cài đặt và chạy local
+
+Yêu cầu: Node.js 22+, MongoDB hỗ trợ transaction và tài khoản Cloudinary.
 
 ```bash
-cd project.sushi-shop
-
-# Cài dependencies cho tất cả packages
 npm install
-
-# Hoặc cài từng phần
-cd backend && npm install
-cd ../frontend && npm install
-cd ../shared && npm install
-```
-
-### 2. Cấu Hình Environment
-
-**Backend** - `backend/.env`:
-```env
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/sushi-shop
-JWT_SECRET=your-secret-key
-CLOUDINARY_NAME=your-cloudinary-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-VNPAY_TMNCODE=your-tmncode
-VNPAY_HASHSECRET=your-hash-secret
-NODE_ENV=development
-```
-
-**Frontend** - `frontend/.env`:
-```env
-VITE_API_BASE_URL=http://localhost:5000
-VITE_CLOUDINARY_CLOUD_NAME=your-cloudinary-name
-```
-
-### 3. Chạy Dự Án
-
-**Terminal - Chạy tại Root dự án**:
-```bash
+copy backend/.env.example backend/.env
 npm run dev
-# Server chạy tại http://localhost:5000
-# Client chạy tại http://localhost:5173
 ```
 
----
+Backend chạy tại `http://localhost:5000`, frontend tại `http://localhost:5173`.
 
-## 📱 Tính Năng Chính
+`backend/.env` phải có các biến bắt buộc trong `.env.example`, đặc biệt `MONGO_URI`, hai JWT secret tối thiểu 32 ký tự và thông tin Cloudinary. Secret thật không được commit.
 
-### 👤 Khách Hàng
-- ✅ Xem menu và chi tiết sản phẩm
-- ✅ Đặt bàn theo ngày/giờ
-- ✅ Thanh toán VNPay
-- ✅ Viết review, đánh giá sản phẩm
-- ✅ Lịch sử đơn hàng
+Tạo admin từ environment:
 
-### 🏪 Nhà Hàng
-- ✅ Quản lý danh mục sản phẩm
-- ✅ Quản lý đặt chỗ
-- ✅ Xem đơn hàng
-- ✅ Upload ảnh sản phẩm
-
-### 📊 Quản Trị
-- ✅ Thống kê doanh thu, khách
-- ✅ Quản lý người dùng
-- ✅ Quản lý tất cả sản phẩm
-- ✅ Xem báo cáo chi tiết
-
----
-
-## 🔐 Authentication
-
-Dự án sử dụng JWT với Flow:
-1. Đăng ký/Đăng nhập → Nhận JWT token
-2. Token lưu trong cookie (httpOnly)
-3. Gửi kèm request API tới server
-4. Server xác thực và trả về dữ liệu
-
----
-
-## 📚 API Chính
-
-| Method | Endpoint | Mô Tả |
-|--------|----------|-------|
-| POST | `/api/auth/register` | Đăng ký tài khoản |
-| POST | `/api/auth/login` | Đăng nhập |
-| GET | `/api/products` | Danh sách sản phẩm |
-| POST | `/api/reservations` | Tạo đặt chỗ |
-| GET | `/api/users/:id` | Thông tin người dùng |
-| GET | `/api/stats` | Thống kê (admin) |
-
----
-
-## 🛠️ Build & Deploy
-
-### Build
 ```bash
-# Backend
-cd backend && npm run build
-
-# Frontend
-cd frontend && npm run build
+npm run seed:admin
 ```
 
-### Production
-```bash
-# Backend
-cd backend && npm start
+Migration dữ liệu cũ:
 
-# Frontend
-# Phục vụ file từ folder `dist/`
+```bash
+npm run migrate:reservations --workspace=backend -- --dry-run
+npm run migrate:reservations --workspace=backend
+npm run migrate:seat-holds --workspace=backend -- --dry-run
 ```
 
----
-
-## 📝 Linting & Format
+## Build, lint và test
 
 ```bash
-# Kiểm tra linting
-cd frontend && npm run lint
-
-# Build
 npm run build
+npm run lint
+npm test
 ```
 
----
+Backend chạy production bằng `dist/bootstrap/app.js`:
 
-## 📞 Hỗ Trợ
+```bash
+npm start
+```
 
-Cần giúp đỡ? Kiểm tra:
-- 🔍 Xem logs trong `backend/logs/`
-- 🗂️ Tìm hiểu struct trong thư mục modules
-- 🛠️ Đảm bảo `.env` cấu hình đúng
+## Deploy Railway + Vercel
 
----
+Backend chạy trên Railway; frontend Vite chạy trên Vercel. Frontend gọi `/api/v1` cùng origin, rồi Vercel proxy request đến Railway. Nhờ vậy refresh cookie không trở thành cookie bên thứ ba.
 
-**Made with ❤️ for Sushi Lovers**
+### 1. Railway: backend
+
+Tạo service từ repository này, giữ **Root Directory** ở repository root để npm workspaces hoạt động. Trong service settings, đặt:
+
+- Build command: `npm ci && npm run build:backend`
+- Start command: `npm run start`
+- Healthcheck path: `/api/v1/health`
+
+Khai báo các biến production dưới đây trong Railway (không commit giá trị thật):
+
+```text
+NODE_ENV=production
+MONGO_URI=<MongoDB Atlas replica-set URI>
+JWT_ACCESS_SECRET=<at least 32 characters>
+JWT_REFRESH_SECRET=<at least 32 characters>
+CLOUDINARY_CLOUD_NAME=<cloud name>
+CLOUDINARY_API_KEY=<api key>
+CLOUDINARY_API_SECRET=<api secret>
+FRONTEND_URL=https://<your-vercel-domain>
+CORS_ORIGINS=https://<your-vercel-domain>
+ADMIN_EMAIL=<initial admin email>
+ADMIN_USERNAME=<initial admin username>
+ADMIN_PASSWORD=<initial admin password>
+```
+
+Railway cấp `PORT`; không khai báo biến này trên dashboard. Dùng MongoDB Atlas có replica set vì ứng dụng sử dụng transaction. Sau khi Railway cấp public domain, mở `https://<railway-domain>/api/v1/health`; response phải có `data.status` là `ok`.
+
+### 2. Vercel: frontend
+
+Tạo Vercel project từ cùng repository, chọn **Root Directory** là `frontend`. Vercel tự nhận Vite; dùng build command `npm run build` và output `dist`.
+
+Trong [`frontend/vercel.json`](frontend/vercel.json), thay chính xác `REPLACE_WITH_YOUR_RAILWAY_DOMAIN` bằng host public Railway, **không** thêm `/` ở cuối. Ví dụ:
+
+```json
+"destination": "https://itsu-sushi-api.up.railway.app/api/v1/:path*"
+```
+
+Khai báo `VITE_CLOUDINARY_CLOUD_NAME` trên Vercel. Không đặt secrets Cloudinary hoặc JWT dưới tiền tố `VITE_`: mọi biến `VITE_*` sẽ được đưa vào JavaScript chạy trên trình duyệt.
+
+Sau khi biết domain Vercel, quay lại Railway để cập nhật `FRONTEND_URL` và `CORS_ORIGINS`, rồi redeploy backend. Nếu cần test preview Vercel, thêm preview domain vào `CORS_ORIGINS` dưới dạng danh sách phân tách bằng dấu phẩy.
+
+### 3. Kiểm tra sau deploy
+
+1. Mở `/api/v1/health` trực tiếp trên Railway và qua domain Vercel.
+2. Mở một URL SPA sâu, ví dụ `/menu`, rồi refresh trang để xác nhận rewrite về `index.html` hoạt động.
+3. Đăng ký/đăng nhập, refresh trang, và xác nhận phiên được làm mới.
+4. Kiểm tra upload Cloudinary, đặt bàn và trang quản trị.
+
+Không chạy `seed:admin` nhiều lần nếu không cần; script không thay đổi tài khoản đã tồn tại.
+
+## API
+
+Các endpoint public giữ prefix `/api/v1`. Reservation/payment mới dùng:
+
+- `POST /api/v1/reservations`
+- `GET /api/v1/reservations/:id/payment`
+- `POST /api/v1/reservations/:id/confirm-payment`
+- `POST /api/v1/reservations/:id/approve-payment` (admin)
+- `POST /api/v1/reservations/:id/reject-payment` (admin)
+- `GET/PUT /api/v1/admin/payment-settings` (admin)

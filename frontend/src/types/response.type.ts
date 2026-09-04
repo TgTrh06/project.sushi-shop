@@ -1,1 +1,11 @@
-export type { ApiResponse, ApiErrorResponse } from "@itsu-sushi/shared";
+export interface ApiResponse<T> {
+  success: true;
+  message: string;
+  data: T;
+}
+
+export interface ApiErrorResponse {
+  success: false;
+  message: string;
+  details?: unknown;
+}

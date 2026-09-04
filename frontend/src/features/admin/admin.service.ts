@@ -12,6 +12,7 @@ import type {
   CreateProductPayload,
   UpdateProductPayload,
   SystemStats,
+  PaymentSettings,
 } from "./admin.types";
 
 // ─── Dashboard ─────────────────────────────────────────
@@ -140,6 +141,26 @@ export const adminService = {
 
   async deleteReservation(id: string): Promise<void> {
     await api.delete(`/reservations/${id}`);
+  },
+
+  async approveReservationPayment(id: string, receivedAmount: number, note?: string): Promise<AdminReservation> {
+    const res = await api.post<ApiResponse<AdminReservation>>(`/reservations/${id}/approve-payment`, { receivedAmount, note });
+    return res.data.data;
+  },
+
+  async rejectReservationPayment(id: string, note?: string): Promise<AdminReservation | null> {
+    const res = await api.post<ApiResponse<AdminReservation | null>>(`/reservations/${id}/reject-payment`, { note });
+    return res.data.data;
+  },
+
+  async getPaymentSettings(): Promise<PaymentSettings | null> {
+    const res = await api.get<ApiResponse<PaymentSettings | null>>("/admin/payment-settings");
+    return res.data.data;
+  },
+
+  async updatePaymentSettings(payload: PaymentSettings): Promise<PaymentSettings> {
+    const res = await api.put<ApiResponse<PaymentSettings>>("/admin/payment-settings", payload);
+    return res.data.data;
   },
 
   // ─── Reviews ──────────────────────────────────────────
