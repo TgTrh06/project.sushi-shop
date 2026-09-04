@@ -1,6 +1,6 @@
 import { env } from "@/core/config/env.config";
 import { connectDatabase } from "@/core/database/mongoose.connection";
-import { UserModel } from "@/modules/users/infrastructure/persistence/mongoose/user.model";
+import { UserModel } from "@/modules/users/infrastructure/mongoose/user.model";
 import { BcryptPasswordHasher } from "@/modules/auth/infrastructure/bcrypt-password-hasher";
 import { Role } from "@/modules/users/domain/entities/role";
 
